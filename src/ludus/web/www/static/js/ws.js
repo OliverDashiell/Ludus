@@ -1,5 +1,5 @@
 
-function Ws(){
+function Ws(ws_url){
 	this._reconnect_time_default_ = 3;
 	this._reconnect_time_ = this._reconnect_time_default_;
 	this._reconnect_timeout_ = null;
@@ -8,6 +8,7 @@ function Ws(){
 	this.error_msg = ko.observable();
 	
 	this.ws = null;
+	this.ws_url = ws_url || '/websocket';
 	this.ws_msg = ko.observable();
 	this.callbacks = {};
 	this.next_request_id = 0;
@@ -26,7 +27,7 @@ Ws.prototype.connect = function(){
 	
 	var that = this;
 	var protocol = document.location.protocol == "https:"? "wss://" : "ws://";
-	var ws = new WebSocket(protocol + document.domain + ":" + document.location.port + '/websocket');
+	var ws = new WebSocket(protocol + document.domain + ":" + document.location.port + this.ws_url);
 	
 	ws.onopen = function() {
 		that._reconnect_time_ = that._reconnect_time_default_;

@@ -3,12 +3,12 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.03'
+version = '0.04'
 
 setup(name='Ludus',
       version=version,
       description="Web game maker",
-      long_description="""A game""",
+      long_description="""A web based game maker for 2D games""",
       author='Oliver Dashiell Bunyan',
       author_email='ludus@blueshed.co.uk',
       url='http://www.blueshed.co.uk/ludus',
@@ -22,7 +22,5 @@ setup(name='Ludus',
         'sqlalchemy'
       ],
       entry_points = {
-      'console_scripts' : [
-                           'ludus = ludus.web.web_server:main'
-                           ]
+      'console_scripts' : ['ludus = ludus.web.web_server:main']
       })
