@@ -11,7 +11,7 @@ from tornado.options import define, options, parse_config_file, parse_command_li
 import os
 import logging  # @UnresolvedImport
 
-define("port", 80, int, help="server port")
+define("port", 8080, int, help="server port")
 define("debug", False, bool, help="debug server")
 
 def main(config_path = None):
