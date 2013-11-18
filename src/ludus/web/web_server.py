@@ -10,6 +10,8 @@ from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_config_file, parse_command_line
 import os
 import logging  # @UnresolvedImport
+from ludus.control import Control
+from ludus.web.websocket_handler import WebsocketHandler
 
 define("port", 8080, int, help="server port")
 define("debug", False, bool, help="debug server")
@@ -28,10 +30,12 @@ def main(config_path = None):
     
     application = Application([
         (r"/", IndexHandler),
+        (r"/websocket", WebsocketHandler),
         (r"/fonts/(.*)", StaticFileHandler, {"path": resource_filename('ludus.web',"www/static/fonts")}),
     ],
     static_path=resource_filename('ludus.web',"www/static"),
     template_path=resource_filename('ludus.web',"www/templates"),
+    control=Control(),
     gzip=True,
     debug=options.debug)
     
