@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Ludus</title>
+	<link rel="shortcut icon" href="{{ static_url('images/favicon.png') }}">
+	<!-- 
+	<link type="text/css" rel="stylesheet" href="{{ static_url('lib/bower_components/font-awesome/css/font-awesome.css') }}">
+	<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus.css') }}">
+	-->
+	<link type="text/css" rel="stylesheet" href="{{ static_url('ludus-min.css') }}">
+</head>
+<body>
+	<img src="{{ static_url('images/ludus_logo.png') }}" alt="Ludus Logo" width="100px" height="100px">
+	<div data-bind="text: msg">loading...</div>
+	<div><i class="fa fa-gamepad"></i></div>
+	<!-- 
+	<script type="text/javascript" src="{{ static_url('lib/bower_components/jquery/jquery.js') }}"></script>
+	<script type="text/javascript" src="{{ static_url('lib/bower_components/knockout.js/knockout.js') }}"></script>
+	<script type="text/javascript" src="{{ static_url('js/ludus.js') }}"></script> 
+	-->
+	<script type="text/javascript" src="{{ static_url('ludus-min.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+
+.pydevproject
+
+.project
+
+*.pyc
+
+*bower_components*

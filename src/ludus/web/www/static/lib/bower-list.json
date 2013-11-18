@@ -1,0 +1,273 @@
+{
+  "endpoint": {
+    "name": "lib",
+    "source": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib",
+    "target": "*"
+  },
+  "canonicalDir": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib",
+  "pkgMeta": {
+    "name": "lib",
+    "dependencies": {
+      "font-awesome": "font-awesome#~4.0.3",
+      "jquery-dropdown": "jquery-dropdown#~1.0.4",
+      "knockout-mapping": "knockout-mapping#~2.4.1",
+      "knockout.js": "knockout.js#~3.0.0"
+    },
+    "devDependencies": {}
+  },
+  "dependencies": {
+    "font-awesome": {
+      "endpoint": {
+        "name": "font-awesome",
+        "source": "font-awesome",
+        "target": "~4.0.3"
+      },
+      "canonicalDir": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib/bower_components/font-awesome",
+      "pkgMeta": {
+        "name": "font-awesome",
+        "homepage": "https://github.com/FortAwesome/Font-Awesome",
+        "version": "4.0.3",
+        "_release": "4.0.3",
+        "_resolution": {
+          "type": "version",
+          "tag": "v4.0.3",
+          "commit": "dc23a94e16a8daa3cbb3c7fa34d63e2812637b8f"
+        },
+        "_source": "git://github.com/FortAwesome/Font-Awesome.git",
+        "_target": "~4.0.3",
+        "_originalSource": "font-awesome",
+        "_direct": true
+      },
+      "extraneous": true,
+      "dependencies": {},
+      "nrDependants": 1,
+      "versions": [
+        "4.0.3",
+        "4.0.2",
+        "4.0.1",
+        "4.0.0",
+        "3.2.1",
+        "3.2.0",
+        "3.1.1",
+        "3.1.0",
+        "3.0.2",
+        "3.0.1",
+        "3.0.0",
+        "2.0.0",
+        "1.0.0"
+      ],
+      "update": {
+        "target": "4.0.3",
+        "latest": "4.0.3"
+      }
+    },
+    "jquery-dropdown": {
+      "endpoint": {
+        "name": "jquery-dropdown",
+        "source": "jquery-dropdown",
+        "target": "~1.0.4"
+      },
+      "canonicalDir": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib/bower_components/jquery-dropdown",
+      "pkgMeta": {
+        "name": "jquery-dropdown",
+        "version": "1.0.4",
+        "repository": {
+          "type": "git",
+          "url": "git://github.com/claviska/jquery-dropdown.git"
+        },
+        "dependencies": {
+          "jquery": "~1.8.0"
+        },
+        "homepage": "https://github.com/claviska/jquery-dropdown",
+        "_release": "1.0.4",
+        "_resolution": {
+          "type": "version",
+          "tag": "1.0.4",
+          "commit": "081d12b4513cb70b4ab7b31ee4be9e56861f7fcc"
+        },
+        "_source": "git://github.com/claviska/jquery-dropdown.git",
+        "_target": "~1.0.4",
+        "_originalSource": "jquery-dropdown",
+        "_direct": true
+      },
+      "extraneous": true,
+      "dependencies": {
+        "jquery": {
+          "endpoint": {
+            "name": "jquery",
+            "source": "jquery",
+            "target": "~1.8.0"
+          },
+          "canonicalDir": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib/bower_components/jquery",
+          "pkgMeta": {
+            "name": "jquery",
+            "version": "1.8.3",
+            "description": "jQuery component",
+            "keywords": [
+              "jquery",
+              "component"
+            ],
+            "scripts": [
+              "jquery.js"
+            ],
+            "license": "MIT",
+            "homepage": "https://github.com/components/jquery",
+            "_release": "1.8.3",
+            "_resolution": {
+              "type": "version",
+              "tag": "1.8.3",
+              "commit": "a94bf4baa9955613937d4f4c083c9d95ad0564fb"
+            },
+            "_source": "git://github.com/components/jquery.git",
+            "_target": "~1.8.0",
+            "_originalSource": "jquery"
+          },
+          "dependencies": {},
+          "nrDependants": 1,
+          "versions": [
+            "2.0.3",
+            "2.0.2",
+            "2.0.1",
+            "2.0.0",
+            "1.10.2",
+            "1.10.1",
+            "1.10.0",
+            "1.9.1",
+            "1.9.0",
+            "1.8.3",
+            "1.8.2",
+            "1.8.1",
+            "1.8.0",
+            "1.7.2",
+            "1.7.1",
+            "1.7.0",
+            "1.6.4",
+            "1.6.3",
+            "1.6.2",
+            "1.6.1",
+            "1.6.0",
+            "1.5.2",
+            "1.5.1",
+            "1.5.0",
+            "1.4.4",
+            "1.4.3",
+            "1.4.2",
+            "1.4.1",
+            "1.4.0",
+            "1.3.2",
+            "1.3.1",
+            "1.3.0",
+            "1.2.6",
+            "1.2.3"
+          ],
+          "update": {
+            "target": "1.8.3",
+            "latest": "2.0.3"
+          }
+        }
+      },
+      "nrDependants": 1,
+      "versions": [
+        "1.0.4",
+        "1.0.3",
+        "1.0.2",
+        "1.0.1",
+        "1.0.0"
+      ],
+      "update": {
+        "target": "1.0.4",
+        "latest": "1.0.4"
+      }
+    },
+    "knockout-mapping": {
+      "endpoint": {
+        "name": "knockout-mapping",
+        "source": "knockout-mapping",
+        "target": "~2.4.1"
+      },
+      "canonicalDir": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib/bower_components/knockout-mapping",
+      "pkgMeta": {
+        "name": "knockout-mapping",
+        "homepage": "https://github.com/SteveSanderson/knockout.mapping",
+        "version": "2.4.1",
+        "_release": "2.4.1",
+        "_resolution": {
+          "type": "version",
+          "tag": "2.4.1",
+          "commit": "35482d03ee7520b1afe0b437a6e66150369378a7"
+        },
+        "_source": "git://github.com/SteveSanderson/knockout.mapping.git",
+        "_target": "~2.4.1",
+        "_originalSource": "knockout-mapping",
+        "_direct": true
+      },
+      "extraneous": true,
+      "dependencies": {},
+      "nrDependants": 1,
+      "versions": [
+        "2.4.1",
+        "2.4.0",
+        "2.3.5",
+        "2.0.1",
+        "1.2.5",
+        "1.2.4",
+        "1.2.3",
+        "1.2.2",
+        "1.2.1"
+      ],
+      "update": {
+        "target": "2.4.1",
+        "latest": "2.4.1"
+      }
+    },
+    "knockout.js": {
+      "endpoint": {
+        "name": "knockout.js",
+        "source": "knockout.js",
+        "target": "~3.0.0"
+      },
+      "canonicalDir": "/Users/dash/Documents/workspace42/Ludus/src/ludus/web/www/static/lib/bower_components/knockout.js",
+      "pkgMeta": {
+        "name": "knockout",
+        "version": "3.0.0",
+        "main": "knockout.js",
+        "scripts": [
+          "knockout.js"
+        ],
+        "dependencies": {},
+        "ignore": [
+          "**/.*",
+          "node_modules",
+          "components"
+        ],
+        "homepage": "https://github.com/bowerjs/knockout",
+        "_release": "3.0.0",
+        "_resolution": {
+          "type": "version",
+          "tag": "v3.0.0",
+          "commit": "c01eeafe598a132edef605d8d79af6bf290eb6a3"
+        },
+        "_source": "git://github.com/bowerjs/knockout.git",
+        "_target": "~3.0.0",
+        "_originalSource": "knockout.js",
+        "_direct": true
+      },
+      "extraneous": true,
+      "dependencies": {},
+      "nrDependants": 1,
+      "versions": [
+        "3.0.0",
+        "2.3.0",
+        "2.2.1",
+        "2.1.0",
+        "2.1.0"
+      ],
+      "update": {
+        "target": "3.0.0",
+        "latest": "3.0.0"
+      }
+    }
+  },
+  "nrDependants": 0,
+  "versions": []
+}
