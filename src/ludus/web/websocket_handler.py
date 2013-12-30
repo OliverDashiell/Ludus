@@ -6,20 +6,19 @@ Created on 1 Jul 2013
 import logging #@UnresolvedImport
 import tornado.websocket
 from tornado.escape import json_decode
+from ludus.web.user_mixin import UserMixin
 
-class WebsocketHandler(tornado.websocket.WebSocketHandler):
+class WebsocketHandler(UserMixin, tornado.websocket.WebSocketHandler):
     
     def __init__(self, application, request, **kwargs):
+        UserMixin.__init__(self)
         tornado.websocket.WebSocketHandler.__init__(self, application, request, **kwargs)
-        self._lock_ = False
+        
     
     def open(self):
         self.control._add_client_(self)
         logging.info("WebSocket opened")
-    
-    @property 
-    def control(self):
-        return self.application.settings["control"]
+
 
     def on_message(self, raw_msg):
         logging.info(raw_msg)

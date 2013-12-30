@@ -4,11 +4,8 @@
 	<meta charset="utf-8" />
 	<title>Ludus</title>
 	<link rel="shortcut icon" href="{{ static_url('images/favicon.png') }}">
-	<!-- 
 	<link type="text/css" rel="stylesheet" href="{{ static_url('lib/bower_components/font-awesome/css/font-awesome.css') }}">
 	<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus.css') }}">
-	-->
-	<link type="text/css" rel="stylesheet" href="{{ static_url('ludus-min.css') }}">
 </head>
 <body>
 	<noscript>Ludus requires JavaScript (you seem to have it turned off...)</noscript>
@@ -19,16 +16,17 @@
 	<div><i class="fa fa-gamepad"></i></div>
 	<div data-bind="text: ws.status"></div>
 	<div data-bind="text: debug"></div>
-	<!-- 
+	<div data-bind="text: user().name"></div>
+	<div data-bind="text: user().email"></div>
+	
 	<script type="text/javascript" src="{{ static_url('lib/bower_components/jquery/jquery.js') }}"></script>
 	<script type="text/javascript" src="{{ static_url('lib/bower_components/knockout.js/knockout.js') }}"></script>
 	<script type="text/javascript" src="{{ static_url('js/ws.js') }}"></script>
 	<script type="text/javascript" src="{{ static_url('js/ludus.js') }}"></script> 
-	-->
-	<script type="text/javascript" src="{{ static_url('ludus-min.js') }}"></script>
 	
 	<script type="text/javascript">
 		Ludus.settings.ws_url = "{{ws_url}}";
+		Ludus.settings.user = {% raw user_json %};
 		
 		{% if debug == True %}
 			Ludus.settings.debug = true;
