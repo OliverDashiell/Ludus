@@ -30,13 +30,13 @@
     <div class="container">
 
       <form class="form-signin" role="form" method="post">
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <img src="{{ static_url('images/ludus_banner.png') }}" class="img-responsive form-signin-heading" />
         <input type="text" class="form-control" placeholder="Email address" 
         	name="email" value="{{ email if email else '' }}" required autofocus>
         <input type="password" class="form-control" placeholder="Password" 
         	name="password" required>
-        <button name="action" value="register" class="btn btn-lg btn-success btn-block" type="submit">Register</button>
-        <button name="action" value="login" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button name="action" value="login" class="btn btn-primary pull-right si-btn" type="submit">Sign in</button>
+        <button name="action" value="register" class="btn btn-success rg-btn" type="submit">Register</button>
       </form>
       {% if error %}
       <div>{{ error }}</div>
