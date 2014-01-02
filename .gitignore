@@ -5,5 +5,4 @@
 
 *.pyc
 
-*bower_components*
 *.db
