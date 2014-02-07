@@ -17,5 +17,18 @@ class Protocol(object):
                 "id": user.id
                 }
 
+    @classmethod
+    def game_protocol(cls, game):
+        return {
+                "id": game.id,
+                "name": game.name,
+                "players": [cls.player_protocol(p) for p in game.players]
+                }
     
-    
+    @classmethod
+    def player_protocol(cls, player):
+        return {
+                "id": player.user.id,
+                "name": player.user.name,
+                "role": player.role
+                }

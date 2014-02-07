@@ -1,0 +1,36 @@
+@import url("../lib/bower_components/bootstrap/dist/css/bootstrap.css");
+@import url("../lib/bower_components/bootstrap/dist/css/bootstrap-theme.css");
+@import url("../lib/bower_components/font-awesome/css/font-awesome.css");
+@import url("../fonts/blanch-font/stylesheet.css");
+
+html,body {
+	/*
+	font-family: "blanchcaps", arial;
+	font-size: 18px;
+	*/
+	background-color: #565764;
+}
+
+body {
+	margin-top: 5em;
+}
+
+.connect{color: green;}
+.disconnect{color: red;}
+.reconnect{color: orange;}
+
+.connect-text{
+	margin-left: 0.5em;
+	font-size: 0.5em;
+}
+
+/*
+.navbar-container{
+	font-family: "blanchcaps_light", arial;
+	font-size: 1.5em;
+}
+
+.navbar-brand{
+	font-size: 1.5em;
+}
+*/

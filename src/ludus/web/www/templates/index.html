@@ -2,35 +2,88 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ludus landing page">
+    <meta name="author" content="Oliver Dashiell Bunyan">
+    <link rel="shortcut icon" href="{{ static_url('images/favicon.png') }}">
+
 	<title>Ludus</title>
-	<link rel="shortcut icon" href="{{ static_url('images/favicon.png') }}">
-	<link type="text/css" rel="stylesheet" href="{{ static_url('lib/bower_components/font-awesome/css/font-awesome.css') }}">
-	<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus.css') }}">
+
+	{% if debug == True %}
+		<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus-debug.css') }}">
+	{% else %}
+		<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus.css') }}">
+	{% end %}
 </head>
 <body>
 	<noscript>Ludus requires JavaScript (you seem to have it turned off...)</noscript>
-	<div data-bind="text: msg">
-		<script>document.write('loading...');</script>
-	</div>
 
-	<div><i class="fa fa-gamepad"></i></div>
-	<div data-bind="text: ws.status"></div>
-	<div data-bind="text: debug"></div>
-	<div data-bind="text: user().name"></div>
-	<div data-bind="text: user().email"></div>
-	
-	<script type="text/javascript" src="{{ static_url('lib/bower_components/jquery/jquery.js') }}"></script>
-	<script type="text/javascript" src="{{ static_url('lib/bower_components/knockout.js/knockout.js') }}"></script>
-	<script type="text/javascript" src="{{ static_url('js/ws.js') }}"></script>
-	<script type="text/javascript" src="{{ static_url('js/ludus.js') }}"></script> 
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container navbar-container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">LUDUS</a>
+
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+
+			<p class="navbar-text navbar-right">
+				<span data-bind="text:settings.user.name"></span>
+			  	<span data-bind="style:{color: $root.ws.status_()=='connected'?'green':$root.ws.status_()=='connecting'?'orange':'red'}">
+			    <i class="fa" data-bind="css:{'fa-circle-o': $root.ws.status_() == 'connected',
+			    							  'fa-dot-circle-o': $root.ws.status_() == 'connecting',
+			    							  'fa-circle': $root.ws.status_() != 'connected'}"></i>
+			    <!-- ko if: ws.status_() == 'connecting' -->
+			    <span class="connect-text" data-bind="text: ws.status"></span>
+			    <!-- /ko -->
+			    </span>
+			</p>
+
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="#about">About</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+    </div>
+
+    <!-- ko if: error -->
+    <div class="error" data-bind="text:error"></div>
+    <!-- /ko -->
+
+	<div class="container" data-bind="template:{name:panel().template}">	
+    </div><!-- /.container -->
+
+    {% include 'panels/_include_.html' %}
+
+	{% if debug == True %}
+		<script type="text/javascript" src="{{ static_url('lib/bower_components/requirejs/require.js') }}"></script>
+		<script type="text/javascript" src="{{ static_url('js/main-debug.js') }}"></script>
+	{% else %}
+		<script type="text/javascript" src="{{ static_url('lib/bower_components/requirejs/require.js') }}"></script>
+		<script type="text/javascript" src="{{ static_url('js/main.js') }}"></script>
+	{% end %}
 	
 	<script type="text/javascript">
-		Ludus.settings.ws_url = "{{ws_url}}";
-		Ludus.settings.user = {% raw user_json %};
-		
-		{% if debug == True %}
-			Ludus.settings.debug = true;
-		{% end %}
+		require(["knockout","main","bootstrap"],
+			function(ko, appl){
+
+				appl.settings.ws_url = "{{ws_url}}";
+				appl.settings.user = {% raw user_json %};
+				
+				{% if debug == True %}
+					appl.debug(true);
+				{% end %}
+
+				appl.connect();
+				ko.applyBindings(appl);
+			}
+		);
 	</script>
 </body>
 </html>

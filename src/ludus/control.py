@@ -141,3 +141,24 @@ class Control(object):
             session.execute(DropTable(table))
         
         session.commit()
+        
+        
+    def add_game(self, name, owner_id):
+        with self._session_ as session:
+            owner = session.query(model.User).get(owner_id)
+            game = model.Game(name=name)
+            
+            player = model.Player(role="owner", user=owner, game=game)
+            
+            session.add(player)
+            session.commit()
+            
+            # TODO: broadcast to all user sessions 
+            return Protocol.game_protocol(game)
+        
+    def get_games(self, owner_id):
+        with self._session_ as session:
+            owner = session.query(model.User).get(owner_id)
+            
+            return [Protocol.game_protocol(player.game) for player in owner.games]
+            

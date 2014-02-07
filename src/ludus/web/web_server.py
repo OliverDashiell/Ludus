@@ -33,7 +33,8 @@ def main(config_path = None):
     parse_command_line()
     
     control = Control(db_url=options.db_url)
-    control._drop_all_and_create_()
+    #control._drop_all_and_create_()
+    #control.add_game("Brt", 1)
     
     handlers = [
         (r"/", IndexHandler),
@@ -58,6 +59,8 @@ def main(config_path = None):
     
     application.listen(options.port)
     logging.info("Listening on %s", options.port)
+    if options.debug is True:
+        logging.info("running in debug mode")
     IOLoop.instance().start()
 
 if __name__ == "__main__":
