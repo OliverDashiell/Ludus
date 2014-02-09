@@ -5,15 +5,23 @@ require.config({
         // the right side is the path relative to baseUrl.
         // Also, the path should NOT include the '.js' file extension.
 
-        'jquery' :    'lib/bower_components/jquery/jquery',
-        'bootstrap':  'lib/bower_components/bootstrap/dist/js/bootstrap',
-        'knockout':   'lib/bower_components/knockout.js/knockout.debug',
-        'domready':   'lib/bower_components/domready/ready'
+        'jquery' :          'lib/bower_components/jquery/jquery',
+        'bootstrap':        'lib/bower_components/bootstrap/dist/js/bootstrap',
+        'bootstrap-notify': 'lib/bower_components/bootstrap-notify/js/bootstrap-notify',
+        'knockout':         'lib/bower_components/knockout.js/knockout.debug',
+        'domready':         'lib/bower_components/domready/ready',
+        'select2':          'lib/bower_components/select2/select2'
     },
     shim: {
         "bootstrap": {
           deps: ["jquery"]
-        }
+        },
+        "bootstrap-notify": {
+            deps: ["jquery","bootstrap"]
+        },
+        "select2": {
+          deps: ["jquery"]
+        },
     },
     packages: ["js/ludus"]
 });

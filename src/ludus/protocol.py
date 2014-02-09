@@ -32,3 +32,26 @@ class Protocol(object):
                 "name": player.user.name,
                 "role": player.role
                 }
+    
+    @classmethod
+    def full_game_protocol(cls, game):
+        result = cls.game_protocol(game)
+        result["state"] = game.state
+        
+        return result
+    
+    @classmethod
+    def saved_game_protocol(cls, game):
+        return {
+                "id":game.id,
+                "name":game.name,
+                "state":game.state
+                }
+        
+    @classmethod
+    def lookup_user(cls, u):
+        return {
+                "id":u.id,
+                "text":u.name
+                }
+    

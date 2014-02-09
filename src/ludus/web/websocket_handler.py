@@ -36,6 +36,7 @@ class WebsocketHandler(UserMixin, tornado.websocket.WebSocketHandler):
             
         except Exception as ex:
             error = str(ex)
+            logging.exception(msg)
         
         response = {"request_id":msg.get("request_id"), "result":result, "error":error}
         self.write_message(response)

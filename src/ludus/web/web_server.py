@@ -18,6 +18,8 @@ from ludus.web.logout_handler import LogoutHandler
 define("port", 8080, int, help="server port")
 define("debug", False, bool, help="debug server")
 define("db_url","sqlite:///ludus.db", help="sqlalchemy connection url")
+define("cookie_secret", help="cookie is salted and hashed against this value")
+define("cookie_name", help="the session cookie name")
 
 
 def main(config_path = None):
@@ -34,7 +36,6 @@ def main(config_path = None):
     
     control = Control(db_url=options.db_url)
     #control._drop_all_and_create_()
-    #control.add_game("Brt", 1)
     
     handlers = [
         (r"/", IndexHandler),
@@ -47,8 +48,8 @@ def main(config_path = None):
     settings = {
         "static_path": resource_filename('ludus.web',"www/static"),
         "template_path": resource_filename('ludus.web',"www/templates"),
-        "cookie_secret": 'ludus, it was a dark and stormy night',
-        "cookie_name": 'ludus_user',
+        "cookie_secret": options.cookie_secret,
+        "cookie_name": options.cookie_name,
         "login_url": '/login',
         "gzip": True,
         "debug": options.debug,

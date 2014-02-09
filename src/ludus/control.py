@@ -69,9 +69,10 @@ class Control(object):
         self._clients_.remove(client)
         self.broadcast({"signal":"clients","count":len(self._clients_)})
         
-    def broadcast(self, msg):
+    def broadcast(self, msg, clients=None):
         for client in self._clients_:
-            client.broadcast(msg)
+            if clients is None or client.current_user in clients:
+                client.broadcast(msg)
     
     
     
@@ -153,8 +154,44 @@ class Control(object):
             session.add(player)
             session.commit()
             
-            # TODO: broadcast to all user sessions 
-            return Protocol.game_protocol(game)
+            msg = Protocol.game_protocol(game)
+            self.broadcast({'signal':'added_game', 'message':msg}, [owner.id])
+            return game.id
+        
+        
+    def delete_game(self, game_id):
+        with self._session_ as session:
+            game = session.query(model.Game).get(game_id)
+            players = [p.user_id for p in game.players]
+            
+            session.delete(game)
+            session.commit()
+            
+            self.broadcast({'signal':'deleted_game', 'message':game_id}, players)
+            return True
+        
+        
+    def save_game(self, game_id, name, state):
+        with self._session_ as session:
+            game = session.query(model.Game).get(game_id)
+            players = [p.user_id for p in game.players]
+            
+            game.name = name
+            game.state = state
+            
+            session.commit()
+            
+            msg = Protocol.saved_game_protocol(game)
+            self.broadcast({'signal':'saved_game', 'message':msg}, players)
+            return True
+    
+        
+    def get_game(self, game_id):
+        with self._session_ as session:
+            game = session.query(model.Game).get(game_id)
+            
+            return Protocol.full_game_protocol(game)
+        
         
     def get_games(self, owner_id):
         with self._session_ as session:
@@ -162,3 +199,54 @@ class Control(object):
             
             return [Protocol.game_protocol(player.game) for player in owner.games]
             
+            
+    def add_player(self, game_id, email, role=None):
+        role=role if role is not None else model.Player.ROLE[-1]
+        
+        with self._session_ as session:
+            game = session.query(model.Game).get(game_id)
+            user = session.query(model.User).filter(model.User.email==email).first()
+            
+            if user is None:
+                raise Exception("no such user")
+            
+            player = model.Player(game=game, user=user, role=role)
+            session.commit()
+            
+            players = [p.user_id for p in game.players]
+            
+            msg = {"game_id":game_id, "player":Protocol.player_protocol(player)}
+            self.broadcast({'signal':'added_player', 'message':msg}, players)
+            return True
+    
+    
+    def remove_player(self, game_id, user_id):
+        with self._session_ as session:
+            player = session.query(model.Player).\
+                             filter_by(user_id=user_id, game_id=game_id).\
+                             first()
+                             
+            if player is None:
+                raise Exception("no such player")
+            
+            game = player.game
+            players = [p.user_id for p in game.players]
+            
+            session.delete(player)
+            session.commit()
+            
+            msg = {"game_id":game_id, "player_id":user_id}
+            self.broadcast({'signal':'removed_player', 'message':msg}, players)
+            return True
+            
+            
+    def lookup_user(self, name=None):
+        name = "{}%".format(name) if name else "%"
+        
+        with self._session_ as session:
+            users = session.query(model.User).\
+                            filter(model.User.name.like(name)).\
+                            order_by(model.User.name)
+            
+            return [Protocol.lookup_user(u) for u in users]
+        

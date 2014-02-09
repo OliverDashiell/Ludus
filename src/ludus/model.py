@@ -7,7 +7,9 @@ from sqlalchemy.types import String, Integer, Numeric, DateTime, Date, Time, Enu
 from sqlalchemy.schema import Table, Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative.api import declared_attr, has_inherited_table, declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 import re  # @UnresolvedImport
+import json  # @UnresolvedImport
 
 
 #see: http://docs.sqlalchemy.org/en/rel_0_8/orm/extensions/declarative.html#augmenting-the-base
@@ -32,11 +34,23 @@ class Game(Base):
     
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
-    state = Column(Text)
+    _state = Column("state", Text)
     players = relationship('Player', uselist=True, 
         primaryjoin='Player.game_id==Game.id', remote_side='Player.game_id',
-        back_populates='game')
-
+        back_populates='game', cascade='all, delete, delete-orphan')
+    
+    @hybrid_property
+    def state(self):
+        if self._state is not None:
+            return json.loads(self._state)
+    
+    @state.setter
+    def state(self, value):
+        if value is not None:
+            self._state = json.dumps(value)
+        else:
+            self._state = None
+        
 
 class Player(Base):
     
@@ -63,7 +77,7 @@ class User(Base):
         
     
     id = Column(Integer, primary_key=True)
-    email = Column(String(255))
+    email = Column(String(255), unique=True)
     name = Column(String(255))
     _password = Column(String(255))
     games = relationship('Player', uselist=True, 

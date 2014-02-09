@@ -6,7 +6,9 @@ Created on Jun 27, 2013
 
 from tornado.web import create_signed_value
 from tornado.escape import json_encode
+from tornado.options import define, options
 
+define("cookie_lifespan", 1, int, help="cookie will expire after this many days [default is 1]")
 
 class UserMixin(object):
     
@@ -26,7 +28,8 @@ class UserMixin(object):
     
     
     def set_current_user(self, accl_key):
-        self.set_secure_cookie(self.cookie_name, str(accl_key))
+        expires_days = options.cookie_lifespan
+        self.set_secure_cookie(self.cookie_name, str(accl_key), expires_days=expires_days)
                         
         
     def get_accl_user_dict(self):

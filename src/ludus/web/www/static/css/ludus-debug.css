@@ -1,5 +1,7 @@
 @import url("../lib/bower_components/bootstrap/dist/css/bootstrap.css");
 @import url("../lib/bower_components/bootstrap/dist/css/bootstrap-theme.css");
+@import url("../lib/bower_components/bootstrap-notify/css/bootstrap-notify.css");
+@import url("../lib/bower_components/select2/select2.css");
 @import url("../lib/bower_components/font-awesome/css/font-awesome.css");
 @import url("../fonts/blanch-font/stylesheet.css");
 
@@ -34,3 +36,16 @@ body {
 	font-size: 1.5em;
 }
 */
+
+.notifications {
+  z-index: 1040;
+}
+
+.notifications .alert{
+  padding: 10px;
+}
+.notifications .alert a{
+	position: relative;
+	top: -2px;
+  	margin-left: 8px;
+}
