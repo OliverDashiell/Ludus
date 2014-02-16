@@ -6,10 +6,7 @@
 @import url("../fonts/blanch-font/stylesheet.css");
 
 html,body {
-	/*
-	font-family: "blanchcaps", arial;
-	font-size: 18px;
-	*/
+	/*font-family: "blanchcaps", arial;*/
 	background-color: #565764;
 }
 
@@ -48,4 +45,8 @@ body {
 	position: relative;
 	top: -2px;
   	margin-left: 8px;
+}
+
+.user_lookup{
+	width:180px;
 }

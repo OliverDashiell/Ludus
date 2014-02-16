@@ -15,13 +15,15 @@
 		<form class="form-inline" role="form" data-bind="submit:$.proxy(create_game,$data)">
 			<div class="form-group">
 				<label class="sr-only" for="name">Name</label>
-				<input type="name" class="form-control" id="name" placeholder="Enter name" 
-					   data-bind="value:new_game, 
-					   			  valueUpdate:'keyup'">
+				<input type="name" class="form-control" id="name" placeholder="Enter name" data-bind="value:new_game, 
+																									  valueUpdate:'keyup'">
 			</div>
+			
 			<button type="submit" class="btn btn-default" data-bind="enable:new_game">Create</button>
-			<button class="btn btn-primary pull-right" style="margin-left:4px;" data-bind="visible:selected_game, click:$.proxy(edit_game, $data)">Edit</button>
-			<button class="btn btn-danger pull-right" data-bind="visible:selected_game, click:$.proxy(delete_game, $data)">Delete</button>
+			<button class="btn btn-primary pull-right" style="margin-left:4px;" data-bind="visible:selected_game,
+																						   enable:can_edit, 
+																						   click:$.proxy(edit_game, $data)">Edit</button>
+			<button class="btn btn-danger pull-right" data-bind="visible:can_delete, click:$.proxy(delete_game, $data)">Delete</button>
 		</form>
 	</div>
 </div>

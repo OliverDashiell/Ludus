@@ -215,7 +215,7 @@ class Control(object):
             
             players = [p.user_id for p in game.players]
             
-            msg = {"game_id":game_id, "player":Protocol.player_protocol(player)}
+            msg = {"game":Protocol.game_protocol(game), "player":Protocol.player_protocol(player)}
             self.broadcast({'signal':'added_player', 'message':msg}, players)
             return True
     
@@ -235,7 +235,7 @@ class Control(object):
             session.delete(player)
             session.commit()
             
-            msg = {"game_id":game_id, "player_id":user_id}
+            msg = {"game_id":game_id, "user_id":user_id}
             self.broadcast({'signal':'removed_player', 'message':msg}, players)
             return True
             
@@ -250,3 +250,25 @@ class Control(object):
             
             return [Protocol.lookup_user(u) for u in users]
         
+    
+    def change_role(self, game_id, user_id, role):
+        if role not in model.Player.ROLE:
+            raise Exception("no such role")
+        
+        with self._session_ as session:
+            player = session.query(model.Player).\
+                             filter_by(user_id=user_id, game_id=game_id).\
+                             first()
+                             
+            if player is None:
+                raise Exception("no such player")
+            
+            game = player.game
+            players = [p.user_id for p in game.players]
+            
+            player.role = role
+            session.commit()
+            
+            msg = {"game_id":game_id, "user_id":user_id, "role":role}
+            self.broadcast({'signal':'changed_role', 'message':msg}, players)
+            return True

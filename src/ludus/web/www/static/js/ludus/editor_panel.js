@@ -24,22 +24,54 @@ define(
 					}
 				}
 				else if(msg.signal == 'added_player'){
-					if(this.game_id() == msg.message.game_id) {
+					if(this.game_id() == msg.message.game.id) {
 						this.players.push(msg.message.player);
 					}
 				}
 				else if(msg.signal == 'removed_player'){
+					// what if i've been removed??
 					if(this.game_id() == msg.message.game_id) {
-						var player = this.get_player_by_id(msg.message.player_id)
+						var player = this.get_player_by_id(msg.message.user_id)
 						if(player){
 							this.players.remove(player);
+							this.selected_player(null);
+						}
+					}
+				}
+				else if(msg.signal == 'changed_role'){
+					// what if my role has changed??
+					if(this.game_id() == msg.message.game_id) {
+						var player = this.get_player_by_id(msg.message.user_id)
+						if(player){
+							player.role = msg.message.role;
+							
+							var index = this.players.indexOf(player);
+							this.players.splice(index, 1);
+							this.players.splice(index, 0, player);
+
+							if(this.selected_player() == player){
+								this.selected_player(null);
+								this.selected_player(player);
+							}
 						}
 					}
 				}
 			}, this);
 
+			this.is_owner = ko.computed(function(){
+				var i, item, items = this.players();
+
+				for (i=0; i < items.length; i++) {
+					item = items[i];
+					if(item.role == 'owner' && item.id == this.appl.user().id){
+						return true;
+					}
+				}
+				return false;
+			}, this);
+
 			this.can_remove_player = ko.computed(function(){
-				if(this.selected_player() && this.selected_player().role != 'owner'){
+				if(this.selected_player() && this.selected_player().role != 'owner' && this.is_owner()){
 					return true;
 				}
 				return false;
@@ -50,6 +82,8 @@ define(
 			this.game_id(id);
 			this.game_name(null);
 			this.game_state(null);
+			this.selected_player(null);
+			this.user_lookup(null);
 			this.players.removeAll();
 
 			this.appl.send({method:"get_game", kwargs:{game_id:id}}, function(response) {
@@ -90,13 +124,16 @@ define(
 				if(response.error) {
 					this.appl.error(response.error);
 				}
+				else {
+					this.user_lookup(null);
+				}
 			}, this);
 		};
 
-		EditorPanel.prototype.remove_player = function(player) {
+		EditorPanel.prototype.remove_player = function() {
 			this.appl.send({method:"remove_player", kwargs:{
 														game_id:this.game_id(),
-														player_id:player.id
+														user_id:this.selected_player().id
 														}}, function(response) {
 				if(response.error) {
 					this.appl.error(response.error);
@@ -126,6 +163,20 @@ define(
 					query.callback({results:response.result});
 				}
 			}, this);
+		};
+
+		EditorPanel.prototype.change_role = function(role) {
+			if(this.selected_player().role != role){
+				this.appl.send({method:"change_role", kwargs:{
+														game_id:this.game_id(),
+														user_id:this.selected_player().id,
+														role:role
+														}}, function(response) {
+				if(response.error) {
+					this.appl.error(response.error);
+				}
+			}, this);
+			}
 		};
 
 		return EditorPanel;

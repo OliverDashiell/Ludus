@@ -51,7 +51,7 @@ class Protocol(object):
     @classmethod
     def lookup_user(cls, u):
         return {
-                "id":u.id,
+                "id":u.email,
                 "text":u.name
                 }
     
