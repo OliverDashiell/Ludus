@@ -3,6 +3,7 @@
 	<h1 data-bind="text:game_name"></h1>
 	<textarea rows="20" class="form-control" data-bind="value:game_state"></textarea>
 	<button class="btn btn-success" data-bind="click:$.proxy(save_game, $data)">Save</button>
+	<button class="btn btn-primary" data-bind="click:$.proxy(play_game, $data)">Play</button>
 </div>
 <div class="col-md-4">
 	<div class="panel panel-default">

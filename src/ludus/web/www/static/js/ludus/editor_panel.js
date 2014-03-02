@@ -111,6 +111,15 @@ define(
 			}, this);
 		};
 
+		EditorPanel.prototype.play_game = function() {
+			this.appl.play({
+				id: this.game_id(),
+				name: this.game_name(),
+				state: $.parseJSON(this.game_state()),
+				players: this.players()
+			});
+		};
+
 		EditorPanel.prototype.update_game = function(game) {
 			this.game_name(game.name);
 			this.game_state(ko.toJSON(game.state));

@@ -9,6 +9,7 @@ require.config({
         'bootstrap':        'lib/bower_components/bootstrap/dist/js/bootstrap',
         'bootstrap-notify': 'lib/bower_components/bootstrap-notify/js/bootstrap-notify',
         'knockout':         'lib/bower_components/knockout.js/knockout.debug',
+        "crafty":           'lib/bower_components/crafty/dist/crafty',
         'domready':         'lib/bower_components/domready/ready',
         'select2':          'lib/bower_components/select2/select2'
     },
@@ -31,7 +32,7 @@ define(
     
     ["jquery", "knockout", "js/ludus", "bootstrap", "domready"],
 
-    function(jquery, knockout, Appl){
+    function($, knockout, Appl){
         var appl = window.appl = new Appl();
 
         return appl;

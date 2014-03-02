@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ludus preview page">
+    <meta name="author" content="Oliver Dashiell Bunyan">
+    <link rel="shortcut icon" href="{{ static_url('images/favicon.png') }}">
+
+	<title>Ludus</title>
+
+	{% if debug == True %}
+		<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus-debug.css') }}">
+	{% else %}
+		<link type="text/css" rel="stylesheet" href="{{ static_url('css/ludus.css') }}">
+	{% end %}
+</head>
+<body>
+<noscript>Ludus requires JavaScript (you seem to have it turned off...)</noscript>
+
+<div class="container">
+	
+</div>
+
+</body>
+</html>

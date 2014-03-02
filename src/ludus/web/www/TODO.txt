@@ -1,0 +1,6 @@
+EDITOR:
+- consolidate background layer into single image
+- sprites not used in background but used in other layers become named sprites in crafty (loaded in scenes.js)
+- 
+
+- group tool that consolidates sprite in group into one object and one image?

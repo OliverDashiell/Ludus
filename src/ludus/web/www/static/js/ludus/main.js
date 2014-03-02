@@ -1,6 +1,6 @@
 define(
-	["jquery", "knockout", "./ws", "./games_panel", "./editor_panel", "./account_panel", "bootstrap-notify", "./utils"], 
-	function($, ko, Ws, GamesPanel, EditorPanel, AccountPanel){
+	["jquery", "knockout", "./ws", "./games_panel", "./editor_panel", "./account_panel", "./play_panel", "bootstrap-notify", "./utils"], 
+	function($, ko, Ws, GamesPanel, EditorPanel, AccountPanel, PlayPanel){
 
 		function Ludus(){
 			this.debug = ko.observable(false);
@@ -8,11 +8,14 @@ define(
 			this.ws = new Ws();
 			this.user = ko.observable();
 
+			this.panel = ko.observable();
 			this.games_panel = new GamesPanel(this);
 			this.editor_panel = new EditorPanel(this);
 			this.account_panel = new AccountPanel(this);
+			this.play_panel = new PlayPanel(this);
 			this.about_panel = {template:"about-panel"};
-			this.panel = ko.observable(this.games_panel);
+
+			this.show_panel(this.games_panel);
 
 			this.error.subscribe(function(value){
 				if(value){
@@ -33,6 +36,16 @@ define(
 
 		Ludus.prototype.settings = {}; // client settings
 
+		Ludus.prototype.show_panel = function(value) {
+			if(this.panel() && this.panel().hide){
+				this.panel().hide();
+			}
+			this.panel(value);
+			if(this.panel() && this.panel().show){
+				this.panel().show();
+			}
+		};
+
 		Ludus.prototype.connect = function() {
 			this.user(this.settings.user);
 			this.ws.connect(this.settings.ws_url, this.panel().load, this.panel());
@@ -52,7 +65,7 @@ define(
 
 		Ludus.prototype.edit_game = function(game_id) {
 			this.editor_panel.edit_game(game_id);
-			this.panel(this.editor_panel);
+			this.show_panel(this.editor_panel);
 		};
 
 		Ludus.prototype.delete_game = function(game) {
@@ -81,7 +94,7 @@ define(
 		};
 
 		Ludus.prototype.view_games = function() {
-			this.panel(this.games_panel);
+			this.show_panel(this.games_panel);
 		};
 
 		Ludus.prototype.close_editor = function() {
@@ -89,11 +102,16 @@ define(
 		};
 
 		Ludus.prototype.view_account = function() {
-			this.panel(this.account_panel);
+			this.show_panel(this.account_panel);
 		};
 
 		Ludus.prototype.about = function() {
-			this.panel(this.about_panel);
+			this.show_panel(this.about_panel);
+		};
+
+		Ludus.prototype.play = function(game) {
+			this.play_panel.set_game(game);
+			this.show_panel(this.play_panel);
 		};
 
 		Ludus.prototype.notify = function(message, type, duration){
