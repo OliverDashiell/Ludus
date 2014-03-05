@@ -10,10 +10,6 @@ html,body {
 	background-color: #565764;
 }
 
-body {
-	margin-top: 5em;
-}
-
 .connect{color: green;}
 .disconnect{color: red;}
 .reconnect{color: orange;}
@@ -49,4 +45,32 @@ body {
 
 .user_lookup{
 	width:180px;
+}
+
+/* tab color */
+.nav-tabs li a {
+  background-color: #EAEAEA; 
+  border-color: #D3D3D3;
+  color:#D5D5D5;
+}
+
+/* hover tab color */
+.nav-tabs li a:hover {
+	color:#B5B5B5;
+}
+
+/* tab content */
+.tab-panel{
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	-moz-border-radius-topright: 0px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+
+	border-top: 0px;
+}
+
+#cr-stage {
+	text-align: center;
 }

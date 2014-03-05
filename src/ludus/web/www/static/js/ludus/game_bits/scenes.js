@@ -102,40 +102,6 @@ define(
           this.unbind('KeyDown', this.restart_game);
         });
 
-        function loaded(){
-            // Once the images are loaded...
-
-            // Define the individual sprites in the image
-            // Each one (spr_tree, etc.) becomes a component
-            // These components' names are prefixed with "spr_"
-            //  to remind us that they simply cause the entity
-            //  to be drawn with a certain sprite
-            Crafty.sprite(16, 'static/js/ludus/game_bits/assets/16x16_forest_2.gif', {
-              spr_tree:    [0, 0],
-              spr_bush:    [1, 0],
-              spr_village: [0, 1],
-              spr_rock:    [1, 1]
-            });
-
-            // Define the PC's sprite to be the first sprite in the third row of the
-            //  animation sprite map
-            Crafty.sprite(16, 'static/js/ludus/game_bits/assets/hunter.png', {
-              spr_player:  [0, 2],
-            }, 0, 2);
-
-            // Define our sounds for later use
-            Crafty.audio.add({
-              knock:    ['static/js/ludus/game_bits/assets/door_knock_3x.mp3', 'static/js/ludus/game_bits/assets/door_knock_3x.ogg', 'static/js/ludus/game_bits/assets/door_knock_3x.aac'],
-              applause: ['static/js/ludus/game_bits/assets/board_room_applause.mp3', 'static/js/ludus/game_bits/assets/board_room_applause.ogg', 'static/js/ludus/game_bits/assets/board_room_applause.aac'],
-              ring:     ['static/js/ludus/game_bits/assets/candy_dish_lid.mp3', 'static/js/ludus/game_bits/assets/candy_dish_lid.ogg', 'static/js/ludus/game_bits/assets/candy_dish_lid.aac']
-            });
-
-            // Now that our sprites are ready to draw, start the game
-            Crafty.scene('Game');
-
-            //assets_loaded = true;
-        }
-
         // Loading scene
         // -------------
         // Handles the loading of binary assets such as images and audio files
@@ -168,6 +134,40 @@ define(
           }
           
         });
+
+        function loaded(){
+            // Once the images are loaded...
+
+            // Define the individual sprites in the image
+            // Each one (spr_tree, etc.) becomes a component
+            // These components' names are prefixed with "spr_"
+            //  to remind us that they simply cause the entity
+            //  to be drawn with a certain sprite
+            Crafty.sprite(16, 'static/js/ludus/game_bits/assets/16x16_forest_2.gif', {
+              spr_tree:    [0, 0],
+              spr_bush:    [1, 0],
+              spr_village: [0, 1],
+              spr_rock:    [1, 1]
+            });
+
+            // Define the PC's sprite to be the first sprite in the third row of the
+            //  animation sprite map
+            Crafty.sprite(16, 'static/js/ludus/game_bits/assets/hunter.png', {
+              spr_player:  [0, 2],
+            }, 0, 2);
+
+            // Define our sounds for later use
+            Crafty.audio.add({
+              knock:    ['static/js/ludus/game_bits/assets/door_knock_3x.mp3', 'static/js/ludus/game_bits/assets/door_knock_3x.ogg', 'static/js/ludus/game_bits/assets/door_knock_3x.aac'],
+              applause: ['static/js/ludus/game_bits/assets/board_room_applause.mp3', 'static/js/ludus/game_bits/assets/board_room_applause.ogg', 'static/js/ludus/game_bits/assets/board_room_applause.aac'],
+              ring:     ['static/js/ludus/game_bits/assets/candy_dish_lid.mp3', 'static/js/ludus/game_bits/assets/candy_dish_lid.ogg', 'static/js/ludus/game_bits/assets/candy_dish_lid.aac']
+            });
+
+            // Now that our sprites are ready to draw, start the game
+            Crafty.scene('Game');
+
+            assets_loaded = true;
+        }
       }
 
       return build;

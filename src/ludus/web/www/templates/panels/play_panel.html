@@ -4,22 +4,11 @@
 		<div class="panel-heading">
 			<span data-bind="text:game().name"></span>
 		</div>
-		<div class="panel-body">
+		<div id="game-panel" class="panel-body">
 			<div id="cr-stage"></div>
-
-			<div class="about-game">
-				<p>Help Crafty visit her friends in each village.</p>
-				
-				<p class="help-text">Controls: Use W, A, S, and D or arrow keys to move around.</p>
-				
-				<small>
-					Created for the "Introduction to Crafty Game Engine" tutorial on 
-					<a href="http://buildnewgames.com" target="_blank">Build New Games</a>.
-				</small>
-			</div>
 		</div>
 		<div class="panel-footer">
-			<button class="btn btn-danger pull-right">Reset</button>
+			<button class="btn btn-danger pull-right" data-bind="click: restart">Reset</button>
 			<div class="clearfix"></div>
 		</div>
 	</div>
