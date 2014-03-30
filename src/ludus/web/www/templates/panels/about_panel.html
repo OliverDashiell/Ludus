@@ -1,10 +1,32 @@
-<div class="row" data-bind="with:panel">
-<div class="col-md-12">
-	<div class="page-header">
-		<h1 class="page-title">Ludus <small>What's it all about?</small></h1>
+<div class="about-panel" data-bind="with:panel">
+	<div class="about-page-title">
+		<img src="{{ static_url('images/ludus_banner.png') }}" class="img-responsive logo-banner" />
+		<p class="about-page-subtitle"> A Simple colaborative tool for building 2D games. </p>
 	</div>
-	<div class="jumbotron">
-		<p>Ludus is a simple, code free, way to develop your own 2D web games with friends.</p>
+
+	<div class="about-page-content">
+		<div class="row about-cols">
+			<div class="col-md-4">
+				<div class="circle center-block">
+					<i class="fa fa-user icon"></i>
+				</div>
+				<p class="about-item">Work together and play together. <br>
+									  Sign up with your friends and see your work update live.</p>
+			</div>
+			<div class="col-md-4">
+				<div class="circle center-block">
+					<i class="fa fa-wrench icon"></i>
+				</div>
+				<p class="about-item">Build your ideas into real games. <br>
+									  Its easy with the resopnsive game building tools. No code, no mess.</p>
+			</div>
+			<div class="col-md-4">
+				<div class="circle center-block">
+					<i class="fa fa-gamepad icon"></i>
+				</div>
+				<p class="about-item">After designing your game, <br>
+									  take it for a test run in play mode to get your collaborators involved.</p>
+			</div>
+		</div>
 	</div>
-</div>
 </div>

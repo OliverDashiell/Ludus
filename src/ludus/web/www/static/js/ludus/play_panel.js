@@ -42,6 +42,10 @@ define(
 			}
 		};
 
+		PlayPanel.prototype.edit_game = function() {
+			this.appl.edit_game(this.game().id);
+		};
+
 		return PlayPanel;
 	}
 );

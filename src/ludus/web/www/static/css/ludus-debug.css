@@ -5,37 +5,446 @@
 @import url("../lib/bower_components/font-awesome/css/font-awesome.css");
 @import url("../fonts/blanch-font/stylesheet.css");
 
-html,body {
-	/*font-family: "blanchcaps", arial;*/
-	background-color: #565764;
+/* ================================= */
+/* == Custom Button CSS ============ */
+/* ================================= */
+.btn-custom { 
+	color: #F2F2F2; 
+	background-image: none;
+	text-shadow: none;
+	background-color: #265497;
+	border: 2px solid #5099DC;
+
+	padding: 5px 15px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: normal;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+} 
+ 
+.btn-custom:hover { 
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #FB8C1F;
+	border: 2px solid #FFC154;
 }
 
-.connect{color: green;}
-.disconnect{color: red;}
-.reconnect{color: orange;}
+.btn-custom:disabled { 
+	color: #999;
+	background-image: none;
+	text-shadow: none;
+}
+
+.btn-custom-danger:hover { 
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #FF4C00;
+	border: 2px solid #FF2300;
+}
+
+.btn-custom-inactive { 
+	color: #999;
+	background-image: none;
+	text-shadow: none;
+	background-color: #F2F2F2;
+	border-color: #ccc;
+}
+
+.btn-group .btn-custom.active {
+	color: #F2F2F2;
+	background-color: #FB8C1F;
+	border: 2px solid #FFC154;
+}
+
+.btn-group .btn-custom { /* inactive */
+	color: #F2F2F2;
+	background-color: #265497;
+	border: 2px solid #5099DC;
+}
+
+.btn-custom .icon {
+	margin-right: 5px;
+	font-size: 14px;
+}
+
+
+/* ================================= */
+/* == Custom Input CSS  ============ */
+/* ================================= */
+.form-group .input-custom {
+	color: black;
+    padding: 5px 15px;
+    height: 100%;
+    line-height: normal;
+
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+}
+
+
+/* ================================= */
+/* == Custom Panel CSS ============= */
+/* ================================= */
+.panel-default .panel-heading-custom {
+	color: #F2F2F2;
+
+	background: -webkit-linear-gradient(#555, #222);
+	background:    -moz-linear-gradient(#555, #222);
+	background:       o-linear-gradient(#555, #222);
+	background:         linear-gradient(#555, #222);
+}
+
+.panel-heading-custom .icon {
+	margin-right: 1em;
+}
+
+.panel-default .panel-footer-custom {
+	color: #F2F2F2;
+
+	background: -webkit-linear-gradient(#555, #222);
+	background:    -moz-linear-gradient(#555, #222);
+	background:       o-linear-gradient(#555, #222);
+	background:         linear-gradient(#555, #222);
+}
+
+.panel-center-custom {
+	max-width: 500px;
+	padding: 15px;
+}
+
+
+/* ================================= */
+/* == Custom Modal CSS ============= */
+/* ================================= */
+.modal-content .modal-header-custom {
+	font-size: 11px;
+	color: #F2F2F2;
+
+	background: -webkit-linear-gradient(#555, #222);
+	background:    -moz-linear-gradient(#555, #222);
+	background:       o-linear-gradient(#555, #222);
+	background:         linear-gradient(#555, #222);
+
+	border-radius: 0px;
+	-webkit-border-top-left-radius:  3px;
+	-webkit-border-top-right-radius: 3px;
+	   -moz-border-radius-topleft: 	 3px;
+	   -moz-border-radius-topright:  3px;
+			border-top-left-radius:  3px;
+			border-top-right-radius: 3px;
+}
+
+.modal-content .modal-body-custom {
+	padding: 20px;
+}
+
+.modal-content .modal-footer-custom {
+	margin-top: 0px;
+	padding: 10px;
+
+	background: -webkit-linear-gradient(#555, #222);
+	background:    -moz-linear-gradient(#555, #222);
+	background:       o-linear-gradient(#555, #222);
+	background:         linear-gradient(#555, #222);
+
+	border-radius: 0px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius:  3px;
+       -moz-border-radius-bottomright:  3px;
+       -moz-border-radius-bottomleft:   3px;
+    		border-bottom-right-radius: 3px;
+    		border-bottom-left-radius:  3px;
+}
+
+.modal-header-custom .modal-close {
+	color: #F2F2F2;
+}
+
+.modal-header-custom .modal-title {
+	font-size: 16px;
+}
+
+
+/* ================================= */
+/* == Custom Tab CSS =============== */
+/* ================================= */
+.nav-tabs-custom li a {
+	font-size: 13px;
+	padding: 6px 20px;
+
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #265497;
+
+	border: 1px solid #5099DC;
+	border-bottom: 1px solid #265497;
+}
+
+/* active tab color */
+.nav-tabs-custom li.active a, .nav-tabs-custom li.active a:hover, .nav-tabs-custom li.active a:focus {
+	color: #F2F2F2;
+
+	background: -webkit-linear-gradient(#555, #333);
+	background:    -moz-linear-gradient(#555, #333);
+	background:       o-linear-gradient(#555, #333);
+	background:         linear-gradient(#555, #333);
+
+	border-radius: 0px;
+	-webkit-border-top-left-radius:  3px;
+	-webkit-border-top-right-radius: 3px;
+	   -moz-border-radius-topleft: 	 3px;
+	   -moz-border-radius-topright:  3px;
+			border-top-left-radius:  3px;
+			border-top-right-radius: 3px;
+
+	border: 1px solid #333;
+}
+
+/* hover tab color */
+.nav-tabs-custom li a:hover {
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #FB8C1F;
+
+	border: 1px solid #FFC154;
+	border-bottom: 1px solid #FB8C1F;
+}
+
+/* tab content */
+.tab-panel-custom .panel-heading-custom {
+	background: -webkit-linear-gradient(#333, #222);
+	background:    -moz-linear-gradient(#333, #222);
+	background:       o-linear-gradient(#333, #222);
+	background:         linear-gradient(#333, #222);
+
+	-webkit-border-top-left-radius:  0px;
+	-webkit-border-top-right-radius: 3px;
+	   -moz-border-radius-topleft:   0px;
+	   -moz-border-radius-topright:  3px;
+			border-top-left-radius:  0px;
+			border-top-right-radius: 3px;
+
+	border-top: 0px;
+}
+
+.tab-panel-custom {
+	border: 0px;
+}
+
+.tab-panel-custom .item-name {
+	margin: 0px 5px;
+}
+
+.nav-tabs-custom .icon {
+	margin-right: 8px;
+}
+
+.tab-panel-custom .list-group-item .align-right {
+	float: right;
+	position: relative;
+	bottom: 4px;
+}
+
+
+/* ================================= */
+/* == Editor Bar CSS =============== */
+/* ================================= */
+.editor-bar {
+	margin: -20px 5px 10px 5px;
+	padding: 6px 10px;
+	color: #F2F2F2;
+
+	background: -webkit-linear-gradient(#555, #222);
+	background:    -moz-linear-gradient(#555, #222);
+	background:       o-linear-gradient(#555, #222);
+	background:         linear-gradient(#555, #222);
+
+	border-radius: 0px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius:  3px;
+       -moz-border-radius-bottomright:  3px;
+       -moz-border-radius-bottomleft:   3px;
+    		border-bottom-right-radius: 3px;
+    		border-bottom-left-radius:  3px;
+}
+
+.editor-bar .icon {
+	font-size: 13px;
+}
+
+.editor-bar .btn-custom {
+	vertical-align: baseline;
+	margin: 0px 3px 0px 3px;
+	padding: 3px 15px;
+}
+
+.editor-bar .input-custom {
+	width: 70px;
+	padding: 3px 15px 3px 5px;
+}
+
+.editor-bar .label-custom {
+	margin-right: 5px;
+	font-weight: normal;
+}
+
+.editor-bar form {
+	padding-left: 30px;
+	display: inline;
+}
+
+.editor-bar .editor-bar-title {
+	font-family: "blanchcaps", arial;
+	vertical-align: baseline;
+	font-size: 25px;
+	display: inline;
+	font-weight: bold;
+	color: #FB8C1F;
+	margin-right: 20px;
+}
+
+.pull-right .btn-custom {
+	vertical-align: baseline;
+}
+
+.editor-bar .align-right {
+	float: right;
+	position: relative;
+	top: 4px;
+}
+
+
+/* ================================= */
+/* == Main CSS Stuff =============== */
+/* ================================= */
+html,body {
+	background-color: #F2F2F2;
+	height: 100%;
+}
+
+.logo-banner {
+	margin-top: 30px;
+}
+
+.icon {
+	height: 100%;
+	display: inline;
+}
+
+.navbar-inverse .navbar-brand {
+  font-family: "blanchcaps", arial;
+  font-size: 45px;
+  color: #FB8C1F;
+  padding-top: 11px;
+}
+
+.navbar-inverse .navbar-brand:hover {
+  color: #FB8C1F;
+}
+
+.navbar {
+	padding: 0px 5px;
+  	box-shadow: 0px 3px 5px #888888;
+}
+
+
+/* ================================= */
+/* == About Page =================== */
+/* ================================= */
+.about-page-title {
+	max-width: 500px;
+	padding: 15px;
+	margin: 0 auto;
+}
+
+.about-page-subtitle {
+	font-size: 30px;
+	text-align: center;
+}
+
+.about-page-content {
+	margin-top: 30px;
+	padding: 50px 0px;
+	position: relative;
+	margin-right: -30px;
+	left: -15px;
+	color: #F2F2F2;
+
+	background: -webkit-linear-gradient(#333, #222);
+	background:    -moz-linear-gradient(#333, #222);
+	background:       o-linear-gradient(#333, #222);
+	background:         linear-gradient(#333, #222);
+}
+
+.about-cols {
+	text-align: center;
+	margin: 0px;
+}
+
+.about-cols .icon {
+	font-size: 100px;
+
+	background-color: #FB8C1F;
+	color: transparent;
+	text-shadow: 0px 2px 3px rgba(255,255,255,0.2);
+	-webkit-background-clip: text;
+	   -moz-background-clip: text;
+			background-clip: text;
+}
+
+.about-cols .circle {
+	padding-top: 20px;
+	background-color: #F2F2F2;
+	width: 150px;
+	height: 150px;
+
+  	box-shadow: 0px 0px 20px rgba(251,140,31,1);
+
+	-webkit-border-radius: 75px;
+	   -moz-border-radius: 75px;
+			border-radius: 75px;
+}
+
+.about-item {
+	padding: 15px 60px;
+	font-size: 15px;
+}
+
+
+/* ================================= */
+/* == Connection Indicators ======== */
+/* ================================= */
+.connect {
+	color: #4CBB17;
+	text-shadow: 0px 0px 20px #4CBB17;
+}
+.disconnect {
+	color: #FF4C00;
+	text-shadow: 0px 0px 20px #FF4C00;
+}
+.reconnect {
+	color: #FB8C1F;
+	text-shadow: 0px 0px 20px #FB8C1F;
+}
 
 .connect-text{
 	margin-left: 0.5em;
 	font-size: 0.5em;
 }
 
-/*
-.navbar-container{
-	font-family: "blanchcaps_light", arial;
-	font-size: 1.5em;
-}
 
-.navbar-brand{
-	font-size: 1.5em;
-}
-*/
-
+/* ================================= */
+/* == Bootstrap Notify ============= */
+/* ================================= */
 .notifications {
-  z-index: 1040;
+	z-index: 1040;
 }
 
 .notifications .alert{
-  padding: 10px;
+	padding: 10px;
 }
 .notifications .alert a{
 	position: relative;
@@ -43,34 +452,15 @@ html,body {
   	margin-left: 8px;
 }
 
+
+/* ================================= */
+/* == Other Lib Stuff ============== */
+/* ================================= */
 .user_lookup{
 	width:180px;
-}
-
-/* tab color */
-.nav-tabs li a {
-  background-color: #EAEAEA; 
-  border-color: #D3D3D3;
-  color:#D5D5D5;
-}
-
-/* hover tab color */
-.nav-tabs li a:hover {
-	color:#B5B5B5;
-}
-
-/* tab content */
-.tab-panel{
-	-webkit-border-top-left-radius: 0px;
-	-webkit-border-top-right-radius: 0px;
-	-moz-border-radius-topleft: 0px;
-	-moz-border-radius-topright: 0px;
-	border-top-left-radius: 0px;
-	border-top-right-radius: 0px;
-
-	border-top: 0px;
 }
 
 #cr-stage {
 	text-align: center;
 }
+

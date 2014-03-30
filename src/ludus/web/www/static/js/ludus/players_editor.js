@@ -2,9 +2,9 @@ define(
 	["jquery", "knockout"], 
 	function($, ko){
 
-		function SpritesheetEditor(appl){
+		function PlayersEditor(appl, game_id_obs){
 			this.appl = appl;
-			this.game_id = ko.observable();
+			this.game_id = game_id_obs;
 			this.players = ko.observableArray();
 			this.selected_player = ko.observable();
 			this.user_lookup = ko.observable();
@@ -16,7 +16,10 @@ define(
 					}
 				}
 				else if(msg.signal == 'removed_player'){
-					// what if i've been removed??
+					if(this.appl.user().id == msg.message.user_id && this.appl.panel() == this.appl.editor_panel){
+						this.appl.view_games("kicked");
+					}
+
 					if(this.game_id() == msg.message.game_id) {
 						var player = this.get_player_by_id(msg.message.user_id)
 						if(player){
@@ -26,7 +29,10 @@ define(
 					}
 				}
 				else if(msg.signal == 'changed_role'){
-					// what if my role has changed??
+					if(this.appl.user().id == msg.message.user_id && this.appl.panel() == this.appl.editor_panel){
+						this.appl.view_games("stop_build");
+					}
+
 					if(this.game_id() == msg.message.game_id) {
 						var player = this.get_player_by_id(msg.message.user_id)
 						if(player){
@@ -65,7 +71,7 @@ define(
 			}, this);
 		}
 
-		SpritesheetEditor.prototype.add_player = function(form_element) {
+		PlayersEditor.prototype.add_player = function(form_element) {
 			this.appl.send({method:"add_player", kwargs:{
 														game_id:this.game_id(),
 														email:this.user_lookup()
@@ -79,10 +85,10 @@ define(
 			}, this);
 		};
 
-		SpritesheetEditor.prototype.remove_player = function() {
+		PlayersEditor.prototype.remove_player = function(selected_player) {
 			this.appl.send({method:"remove_player", kwargs:{
 														game_id:this.game_id(),
-														user_id:this.selected_player().id
+														user_id:selected_player.id
 														}}, function(response) {
 				if(response.error) {
 					this.appl.error(response.error);
@@ -90,7 +96,7 @@ define(
 			}, this);
 		};
 
-		SpritesheetEditor.prototype.get_player_by_id = function(id) {
+		PlayersEditor.prototype.get_player_by_id = function(id) {
 			var i, item, items = this.players();
 
 			for(i = 0; i < items.length; i++){
@@ -101,7 +107,7 @@ define(
 			}
 		};
 
-		SpritesheetEditor.prototype.lookup_user = function(query) {
+		PlayersEditor.prototype.lookup_user = function(query) {
 			this.appl.send({method:"lookup_user", kwargs:{
 														name:query.term
 														}}, function(response) {
@@ -114,11 +120,11 @@ define(
 			}, this);
 		};
 
-		SpritesheetEditor.prototype.change_role = function(role) {
-			if(this.selected_player().role != role){
+		PlayersEditor.prototype.change_role = function(role, selected_player) {
+			if(selected_player.role != role){
 				this.appl.send({method:"change_role", kwargs:{
 														game_id:this.game_id(),
-														user_id:this.selected_player().id,
+														user_id:selected_player.id,
 														role:role
 														}}, function(response) {
 				if(response.error) {
@@ -128,7 +134,7 @@ define(
 			}
 		};
 
-		return SpritesheetEditor;
+		return PlayersEditor;
 
 	}
 );

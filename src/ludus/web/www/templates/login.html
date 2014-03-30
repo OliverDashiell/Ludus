@@ -27,7 +27,18 @@
 
   <body>
 
-    <div class="container">
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand inner_text_shadow" href="#">
+            <img src="{{ static_url('images/favicon_orange.png') }}" class="img-responsive icon">
+            LUDUS
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
 
       <form class="form-signin" role="form" method="post">
         <img src="{{ static_url('images/ludus_banner.png') }}" class="img-responsive form-signin-heading" />
@@ -35,18 +46,32 @@
         	name="email" value="{{ email if email else '' }}" required autofocus>
         <input type="password" class="form-control" placeholder="Password" 
         	name="password" required>
-        <button name="action" value="login" class="btn btn-primary pull-right si-btn" type="submit">Sign in</button>
-        <button name="action" value="register" class="btn btn-success rg-btn" type="submit">Register</button>
+        <button name="action" value="login" class="btn btn-custom pull-right si-btn" type="submit">Sign in</button>
+        <button name="action" value="register" class="btn btn-custom rg-btn" type="submit">Register</button>
+        
+        {% if error %}
+          <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>{{ error }}</strong>
+          </div>
+        {% end %}
       </form>
-      {% if error %}
-      <div>{{ error }}</div>
-      {% end %}
 
     </div> <!-- /container -->
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
+    <script type="text/javascript" src="{{ static_url('lib/bower_components/requirejs/require.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/main.js') }}"></script>
     <!-- Placed at the end of the document so the pages load faster -->
+
+    <script type="text/javascript">
+      require(["jquery","bootstrap"],
+        function($){
+          // nothing to report...
+        }
+      );
+    </script>
   </body>
 </html>

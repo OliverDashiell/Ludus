@@ -8,7 +8,7 @@ define(
 			this.game_id = ko.observable();
 			this.game_name = ko.observable();
 			this.game_state = ko.observable();
-			this.players_editor = new PlayersEditor(appl);
+			this.players_editor = new PlayersEditor(appl, this.game_id);
 			this.spritesheet_editor = new SpritesheetEditor(appl);
 
 			this.appl.subscribe_to_broadcasts(function(msg){
@@ -29,7 +29,6 @@ define(
 			this.game_id(id);
 			this.game_name(null);
 			this.game_state(null);
-			this.players_editor.game_id(id);
 			this.players_editor.selected_player(null);
 			this.players_editor.user_lookup(null);
 			this.players_editor.players.removeAll();

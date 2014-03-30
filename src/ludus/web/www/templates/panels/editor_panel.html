@@ -1,35 +1,93 @@
 <div class="row" data-bind="with:panel">
+
+<div class="editor-bar">
+	<button class="btn btn-default align-right btn-custom" data-bind="click:$.proxy(play_game, $data)">
+		<i class="fa fa-gamepad icon"></i>
+		Play
+	</button>
+
+	<span class="label-custom">
+		Editing:
+	</span>
+	<h1 class="editor-bar-title" data-bind="text:game_name"></h1>
+	<span class="label-custom">
+		Tools:
+	</span>
+	<button class="btn btn-default btn-custom">
+		<i class="fa fa-crosshairs icon"></i>
+		Select
+	</button>
+	<button class="btn btn-default btn-custom btn-custom-inactive">
+		<i class="fa fa-pencil icon"></i>
+		Draw
+	</button>
+	<button class="btn btn-default btn-custom btn-custom-inactive">
+		<i class="fa fa-tint icon"></i>
+		Fill
+	</button>
+	<button class="btn btn-default btn-custom btn-custom-inactive">
+		<i class="fa fa-eraser icon"></i>
+		Erase
+	</button>
+	<form class="form-inline" role="form">
+		<div class="form-group">
+			<label class="label-custom" for="map_width">W:</label>
+				<input type="number" class="form-control input-custom" id="map_width" placeholder="100" name="quantity" min="5" max="1000">
+		</div>
+		<div class="form-group">
+			<label class="label-custom" for="map_height">H:</label>
+				<input type="number" class="form-control input-custom" id="map_height" placeholder="100" name="quantity" min="5" max="1000">
+		</div>
+	</form>
+</div>
+
 <div class="col-md-7">
-	<h1 data-bind="text:game_name"></h1>
 	<textarea rows="20" class="form-control" data-bind="value:game_state"></textarea>
 	<button class="btn btn-success" data-bind="click:$.proxy(save_game, $data)">Save</button>
-	<button class="btn btn-primary" data-bind="click:$.proxy(play_game, $data)">Play</button>
 </div>
 <div class="col-md-5">
-	<ul class="nav nav-tabs">
-	  <li class="active"><a href="#players" data-toggle="tab">Players</a></li>
-	  <li><a href="#spritesheets" data-toggle="tab">Sprite Sheets</a></li>
-	  <li><a href="#layers" data-toggle="tab">Layers</a></li>
+	<ul class="nav nav-tabs nav-tabs-custom">
+	  <li class="active">
+	  	<a href="#players" data-toggle="tab">
+	  		<i class="fa fa-users icon"></i>
+	  		Players
+	  	</a>
+	  </li>
+	  <li>
+	  	<a href="#spritesheets" data-toggle="tab">
+	  		<i class="fa fa-picture-o icon"></i>
+	  		Sprite Sheets
+	  	</a>
+	  </li>
+	  <li>
+	  	<a href="#layers" data-toggle="tab">
+	  		<i class="fa fa-sort-amount-asc icon"></i>
+	  		Layers
+	  	</a>
+	  </li>
 	</ul>
 	<div class="tab-content">
 	  <div class="tab-pane active" id="players">
-	  	<div class="panel panel-default tab-panel">
+	  	<div class="panel panel-default tab-panel tab-panel-custom">
 			<!-- ko template:{name:'players-editor', data:players_editor} -->
 			<!-- /ko -->
 	  	</div>
 	  </div>
 	  <div class="tab-pane" id="spritesheets">
-	  	<div class="panel panel-default tab-panel">
+	  	<div class="panel panel-default tab-panel tab-panel-custom">
 		  	<!-- ko template:{name:'spritesheet-editor', data:spritesheet_editor} -->
 			<!-- /ko -->
 		</div>
 	  </div>
 	  <div class="tab-pane" id="layers">
-	  	<div class="panel panel-default tab-panel">
+	  	<div class="panel panel-default tab-panel tab-panel-custom">
+	  		<div class="panel-heading panel-heading-custom">
+	  		</div>
   			<div class="panel-body">
   			</div>
   		</div>
 	  </div>
 	</div>
 </div>
+
 </div>

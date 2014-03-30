@@ -4,7 +4,6 @@ define(
 
 		function SpritesheetEditor(appl){
 			this.appl = appl;
-			this.title = "foo";
 			this.selected_sheet = ko.observable();
 			this.selected_sprite = ko.observable();
 		}

@@ -93,8 +93,17 @@ define(
 			});
 		};
 
-		Ludus.prototype.view_games = function() {
+		Ludus.prototype.view_games = function(data) {
 			this.show_panel(this.games_panel);
+
+			if(data == "kicked"){
+				var modal = $('#kicked_dlog').modal();
+				modal.modal('show');
+			}
+			else if(data == "stop_build"){
+				var modal = $('#stop_build_dlog').modal();
+				modal.modal('show');
+			}
 		};
 
 		Ludus.prototype.close_editor = function() {

@@ -1,16 +1,24 @@
 <div class="row" data-bind="with:panel">
-<div class="col-md-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<span data-bind="text:game().name"></span>
-		</div>
-		<div id="game-panel" class="panel-body">
-			<div id="cr-stage"></div>
-		</div>
-		<div class="panel-footer">
-			<button class="btn btn-danger pull-right" data-bind="click: restart">Reset</button>
-			<div class="clearfix"></div>
-		</div>
-	</div>
+
+<div class="editor-bar">
+	<button class="btn btn-default align-right btn-custom btn-custom-danger" data-bind="click: restart">
+		<i class="fa fa-undo icon"></i>
+		Reset
+	</button>
+
+	<button class="btn btn-default align-right btn-custom" data-bind="click: edit_game">
+		<i class="fa fa-wrench icon"></i>
+		Edit
+	</button>
+
+	<span class="label-custom">
+		Playing:
+	</span>
+	<h1 class="editor-bar-title" data-bind="text:game().name"></h1>
 </div>
+
+<div id="game-panel" class="panel-center-custom center-block">
+	<div id="cr-stage"></div>
+</div>
+
 </div>

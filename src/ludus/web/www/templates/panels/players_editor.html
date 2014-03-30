@@ -1,46 +1,55 @@
-<div class="panel-heading">
+<div class="panel-heading panel-heading-custom">
 	<!--h3 class="panel-title">Players</h3-->
 </div>
-<div class="list-group" data-bind="foreach:players">
-	<a href="#" class="list-group-item" data-bind="css:{active:$parent.selected_player() == $data},
-  												   click:$parent.selected_player">
-		<i class="fa fa-lock pull-right" data-bind="visible:role == 'owner'"></i>
-		<i class="fa fa-wrench pull-right" data-bind="visible:role == 'builder' || role == 'owner'"></i>
-		<span data-bind="text:name"></span>
-	</a>
-</div>
-<!-- ko if:is_owner -->
-<div class="panel-footer">
-	<div data-bind="if:can_remove_player">
-		<button class="btn btn-danger pull-right" data-bind="visible:can_remove_player, click:$.proxy(remove_player, $data)">
-  			Remove
-  		</button>
+<ul class="list-group" data-bind="foreach:players">
+	<li class="list-group-item">
+		<i class="fa fa-user icon"></i>
+		<span class="item-name" data-bind="text:name"></span>
+		<i class="fa fa-lock icon" data-bind="visible:role == 'owner'"></i>
 
-  		<div class="btn-group">
-  			<button type="button" class="btn btn-default" data-bind="css:{active:selected_player().role == 'builder'}, 
-																		 click:$.proxy(change_role, $data, 'builder')">
-					<i class="fa fa-wrench"></i>
+		<!-- ko ifnot:$parent.is_owner -->
+		<i class="fa fa-wrench icon pull-right" data-bind="visible:role == 'builder'"></i>
+		<i class="fa fa-gamepad icon pull-right" data-bind="visible:role == 'player'"></i>
+		<!-- /ko -->
+
+		<!-- ko if:$parent.is_owner -->
+		<div class="align-right" data-bind="if:role != 'owner'">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default btn-custom" 
+									  data-bind="css:{active:role == 'builder'}, click:$.proxy($parent.change_role, $parent, 'builder')">
+					<i class="fa fa-wrench icon"></i>
+					<!-- Builder -->
 				</button>
-				<button type="button" class="btn btn-default" data-bind="css:{active:selected_player().role == 'player'}, 
-																		 click:$.proxy(change_role, $data, 'player')">
-					<i class="fa fa-gamepad"></i>
+				<button type="button" class="btn btn-default btn-custom" 
+									  data-bind="css:{active:role == 'player'}, click:$.proxy($parent.change_role, $parent, 'player')">
+					<i class="fa fa-gamepad icon"></i>
+					<!-- Player -->
 				</button>
 			</div>
-			<div style="margin-top:6px;"></div>
-		</div>
 
-		<form class="form-inline" role="form" data-bind="submit:$.proxy(add_player,$data)">
-			<button class="btn btn-default pull-right" data-bind="enable:user_lookup" type="submit">
-				Add
+			<button class="btn btn-danger btn-custom btn-custom-danger" 
+					data-bind="click:$.proxy($parent.remove_player, $parent)">
+				<i class="fa fa-sign-out icon"></i>
+				Kick
 			</button>
-
-			<div class="form-group">
-				<label class="sr-only" for="name">Name</label>
-				<input type="name" class="user_lookup" placeholder="Enter name" data-bind="select2Value:user_lookup,
-			   																		   select2:{minimumInputLength: 1, 
-			   																		   			query:$.proxy(lookup_user, $data)}">
 		</div>
-		<div class="clearfix"></div>
+		<!-- /ko -->
+	</li>
+</ul>
+
+<div class="panel-footer panel-footer-custom">
+	<form class="form-inline" role="form" data-bind="submit:$.proxy(add_player,$data)">
+		<button class="btn btn-default pull-right btn-custom" data-bind="enable:user_lookup" type="submit">
+			<i class="fa fa-sign-in icon"></i>
+			Invite
+		</button>
+
+		<div class="form-group">
+			<label class="sr-only" for="name">Name</label>
+			<input type="name" class="user_lookup" placeholder="Enter name" data-bind="select2Value:user_lookup,
+		   																		   select2:{minimumInputLength: 1, 
+		   																		   			query:$.proxy(lookup_user, $data)}">
+	</div>
+	<div class="clearfix"></div>
 	</form>
 </div>
-<!-- /ko -->
