@@ -1,4 +1,4 @@
-<div class="row" data-bind="with:panel">
+<div data-bind="with:panel">
 
 <div class="editor-bar">
 	<button class="btn btn-default align-right btn-custom" data-bind="click:$.proxy(play_game, $data)">
@@ -41,52 +41,125 @@
 	</form>
 </div>
 
-<div class="col-md-7">
-	<textarea rows="20" class="form-control" data-bind="value:game_state"></textarea>
-	<button class="btn btn-success" data-bind="click:$.proxy(save_game, $data)">Save</button>
-</div>
-<div class="col-md-5">
-	<ul class="nav nav-tabs nav-tabs-custom">
-	  <li class="active">
-	  	<a href="#players" data-toggle="tab">
-	  		<i class="fa fa-users icon"></i>
-	  		Players
-	  	</a>
-	  </li>
-	  <li>
-	  	<a href="#spritesheets" data-toggle="tab">
-	  		<i class="fa fa-picture-o icon"></i>
-	  		Sprite Sheets
-	  	</a>
-	  </li>
-	  <li>
-	  	<a href="#layers" data-toggle="tab">
-	  		<i class="fa fa-sort-amount-asc icon"></i>
-	  		Layers
-	  	</a>
-	  </li>
-	</ul>
-	<div class="tab-content">
-	  <div class="tab-pane active" id="players">
-	  	<div class="panel panel-default tab-panel tab-panel-custom">
-			<!-- ko template:{name:'players-editor', data:players_editor} -->
-			<!-- /ko -->
-	  	</div>
-	  </div>
-	  <div class="tab-pane" id="spritesheets">
-	  	<div class="panel panel-default tab-panel tab-panel-custom">
-		  	<!-- ko template:{name:'spritesheet-editor', data:spritesheet_editor} -->
-			<!-- /ko -->
+<div class="row">
+	<div class="col-md-7">
+		<ul class="nav nav-tabs nav-justified nav-tabs-custom">
+		  <li class="active">
+		  	<a href="#grid" data-toggle="tab">
+		  		<i class="fa fa-globe icon"></i>
+		  		Grid
+		  	</a>
+		  </li>
+		  <li>
+		  	<a href="#sprites" data-toggle="tab">
+		  		<i class="fa fa-bug icon"></i>
+		  		Sprites
+		  	</a>
+		  </li>
+		  <li>
+		  	<a href="#raw" data-toggle="tab">
+		  		<i class="fa fa-sitemap icon"></i>
+		  		Raw
+		  	</a>
+		  </li>
+		</ul>
+
+		<div class="tab-content">
+		  <div class="tab-pane active" id="grid">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+				<div class="panel-heading panel-heading-custom">
+				</div>
+				<!-- Gridded map area -->
+				<div class="panel-body grid-container">
+		            <!-- ko foreach:sprite_list -->
+		                <div class="map-item" data-bind="style: to_style(-1)"></div>
+		            <!-- /ko -->
+		            <img data-bind="grid:{grid:16, color:'#333'}">
+				</div>
+		  	</div>
+		  </div>
+		  <div class="tab-pane" id="sprites">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+		  		<div class="panel-heading panel-heading-custom">
+				</div>
+		  		<!-- List of sprites on map -->
+		  		<div class="panel-body">
+				</div>
+		  	</div>
+		  </div>
+		  <div class="tab-pane" id="raw">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+		  		<div class="panel-heading panel-heading-custom">
+				</div>
+				<!-- Raw JSON data -->
+				<div class="panel-body">
+					<textarea rows="20" class="form-control" data-bind="value:game_state"></textarea>
+				</div>
+				<div class="panel-footer panel-footer-custom">
+					<button class="btn btn-default btn-custom" data-bind="click:$.proxy(save_game, $data)">Save</button>
+				</div>
+		  	</div>
+		  </div>
 		</div>
-	  </div>
-	  <div class="tab-pane" id="layers">
-	  	<div class="panel panel-default tab-panel tab-panel-custom">
-	  		<div class="panel-heading panel-heading-custom">
+	</div>
+	<div class="col-md-5">
+		<ul class="nav nav-tabs nav-justified nav-tabs-custom">
+		  <li class="active">
+		  	<a href="#spritesheets" data-toggle="tab">
+		  		<i class="fa fa-picture-o icon"></i>
+		  		Sheets
+		  	</a>
+		  </li>
+		  <li>
+		  	<a href="#layers" data-toggle="tab">
+		  		<i class="fa fa-sort-amount-asc icon"></i>
+		  		Layers
+		  	</a>
+		  </li>
+		  <li>
+		  	<a href="#properties" data-toggle="tab">
+		  		<i class="fa fa-gears icon"></i>
+		  		Properties
+		  	</a>
+		  </li>
+		  <li>
+		  	<a href="#players" data-toggle="tab">
+		  		<i class="fa fa-users icon"></i>
+		  		Players
+		  	</a>
+		  </li>
+		</ul>
+
+		<div class="tab-content">
+		  <div class="tab-pane active" id="spritesheets">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+			  	<!-- ko template:{name:'spritesheet-editor', data:spritesheet_editor} -->
+				<!-- /ko -->
+			</div>
+		  </div>
+		  <div class="tab-pane" id="layers">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+		  		<!-- ko template:{name:'layers-editor', data:layers_editor} -->
+				<!-- /ko -->
 	  		</div>
-  			<div class="panel-body">
-  			</div>
-  		</div>
-	  </div>
+		  </div>
+		  <div class="tab-pane" id="properties">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+		  		<div class="panel-heading panel-heading-custom">
+				</div>
+				<div class="panel-body">
+				</div>
+				<div class="panel-footer panel-footer-custom">
+				</div>
+	  		</div>
+		  </div>
+		  <div class="tab-pane" id="players">
+		  	<div class="panel panel-default tab-panel tab-panel-custom">
+				<!-- ko template:{name:'players-editor', data:players_editor} -->
+				<!-- /ko -->
+		  	</div>
+		  </div>
+		</div>
 	</div>
 </div>
 

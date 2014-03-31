@@ -11,17 +11,21 @@ require.config({
         'knockout':         'lib/bower_components/knockout.js/knockout.debug',
         "crafty":           'lib/bower_components/crafty/dist/crafty',
         'domready':         'lib/bower_components/domready/ready',
-        'select2':          'lib/bower_components/select2/select2'
+        'select2':          'lib/bower_components/select2/select2',
+        'jquery-form':      'lib/bower_components/jquery-form/jquery.form'
     },
     shim: {
         "bootstrap": {
-          deps: ["jquery"]
+            deps: ["jquery"]
         },
         "bootstrap-notify": {
             deps: ["jquery","bootstrap"]
         },
         "select2": {
-          deps: ["jquery"]
+            deps: ["jquery"]
+        },
+        "jquery-form": {
+            deps: ["jquery"]
         },
     },
     packages: ["js/ludus"]

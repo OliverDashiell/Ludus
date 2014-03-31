@@ -5,11 +5,12 @@
 @import url("../lib/bower_components/font-awesome/css/font-awesome.css");
 @import url("../fonts/blanch-font/stylesheet.css");
 
+
 /* ================================= */
 /* == Custom Button CSS ============ */
 /* ================================= */
 .btn-custom { 
-	color: #F2F2F2; 
+	color: #F2F2F2;
 	background-image: none;
 	text-shadow: none;
 	background-color: #265497;
@@ -69,6 +70,79 @@
 	font-size: 14px;
 }
 
+.btn-left-set {
+	margin-right: 5px;	
+}
+
+.btn-right-set {
+	margin-left: 5px;
+}
+
+.btn-set {
+	margin: auto 5px;
+}
+
+
+/* ================================= */
+/* == Custom Dropdown CSS ========== */
+/* ================================= */
+
+.btn-group.open .btn-dropdown {
+	color: #F2F2F2;
+	background-color: #FB8C1F;
+	border: 2px solid #FFC154;
+}
+.btn-dropdown .btn-custom {
+	color: #F2F2F2;
+}
+
+.btn-dropdown-conatiner {
+	width: auto;
+	height: auto;
+	padding: 3px 20px;
+}
+
+.btn-dropdown-conatiner .btn-custom {
+	width: 100%;
+	height: 100%;
+}
+
+.btn-dropdown-conatiner .btn-custom:hover { 
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #FB8C1F;
+	border: 2px solid #FFC154;
+}
+
+
+/* ================================= */
+/* == Custom File Input CSS ======== */
+/* ================================= */
+.btn-file {
+	position: relative;
+	overflow: hidden;
+}
+
+.btn-file input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 999px;
+	text-align: right;
+	filter: alpha(opacity=0);
+	opacity: 0;
+	background: red;
+	cursor: inherit;
+	display: block;
+}
+
+input[readonly] {
+	background-color: white !important;
+	cursor: text !important;
+}
+
 
 /* ================================= */
 /* == Custom Input CSS  ============ */
@@ -113,6 +187,20 @@
 .panel-center-custom {
 	max-width: 500px;
 	padding: 15px;
+}
+
+.grid-container {
+	position: relative;
+	padding: 0px;
+	width: 100%;
+	height: 550px;
+	overflow: auto;
+}
+
+.grid-container img {
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 
@@ -171,7 +259,42 @@
 /* ================================= */
 /* == Custom Tab CSS =============== */
 /* ================================= */
-.nav-tabs-custom li a {
+@media (min-width: 768px) {
+	.nav-tabs-custom.nav-justified li.active a, 
+	.nav-tabs-custom.nav-justified li.active a:hover, 
+	.nav-tabs-custom.nav-justified li.active a:focus {
+		border-radius: 0px;
+		-webkit-border-top-left-radius:  3px;
+		-webkit-border-top-right-radius: 3px;
+		   -moz-border-radius-topleft: 	 3px;
+		   -moz-border-radius-topright:  3px;
+				border-top-left-radius:  3px;
+				border-top-right-radius: 3px;
+	}
+
+	.tab-panel-custom .panel-heading-custom {
+		-webkit-border-top-left-radius:  0px;
+		-webkit-border-top-right-radius: 0px;
+		   -moz-border-radius-topleft:   0px;
+		   -moz-border-radius-topright:  0px;
+				border-top-left-radius:  0px;
+				border-top-right-radius: 0px;
+
+		border-top: 0px;
+	}
+
+	.nav-tabs-custom.nav-justified li a {
+		border-radius: 0px;
+		-webkit-border-top-left-radius:  3px;
+		-webkit-border-top-right-radius: 3px;
+		   -moz-border-radius-topleft: 	 3px;
+		   -moz-border-radius-topright:  3px;
+				border-top-left-radius:  3px;
+				border-top-right-radius: 3px;
+	}
+}
+
+.nav-tabs-custom.nav-justified li a {
 	font-size: 13px;
 	padding: 6px 20px;
 
@@ -179,12 +302,13 @@
 	background-image: none;
 	background-color: #265497;
 
-	border: 1px solid #5099DC;
-	border-bottom: 1px solid #265497;
+	border: 2px solid #5099DC;
 }
 
 /* active tab color */
-.nav-tabs-custom li.active a, .nav-tabs-custom li.active a:hover, .nav-tabs-custom li.active a:focus {
+.nav-tabs-custom.nav-justified li.active a, 
+.nav-tabs-custom.nav-justified li.active a:hover, 
+.nav-tabs-custom.nav-justified li.active a:focus {
 	color: #F2F2F2;
 
 	background: -webkit-linear-gradient(#555, #333);
@@ -192,25 +316,16 @@
 	background:       o-linear-gradient(#555, #333);
 	background:         linear-gradient(#555, #333);
 
-	border-radius: 0px;
-	-webkit-border-top-left-radius:  3px;
-	-webkit-border-top-right-radius: 3px;
-	   -moz-border-radius-topleft: 	 3px;
-	   -moz-border-radius-topright:  3px;
-			border-top-left-radius:  3px;
-			border-top-right-radius: 3px;
-
-	border: 1px solid #333;
+	border: 2px solid #333;
 }
 
 /* hover tab color */
-.nav-tabs-custom li a:hover {
+.nav-tabs-custom.nav-justified li a:hover {
 	color: #F2F2F2;
 	background-image: none;
 	background-color: #FB8C1F;
 
-	border: 1px solid #FFC154;
-	border-bottom: 1px solid #FB8C1F;
+	border: 2px solid #FFC154;
 }
 
 /* tab content */
@@ -219,15 +334,6 @@
 	background:    -moz-linear-gradient(#333, #222);
 	background:       o-linear-gradient(#333, #222);
 	background:         linear-gradient(#333, #222);
-
-	-webkit-border-top-left-radius:  0px;
-	-webkit-border-top-right-radius: 3px;
-	   -moz-border-radius-topleft:   0px;
-	   -moz-border-radius-topright:  3px;
-			border-top-left-radius:  0px;
-			border-top-right-radius: 3px;
-
-	border-top: 0px;
 }
 
 .tab-panel-custom {
@@ -253,7 +359,7 @@
 /* == Editor Bar CSS =============== */
 /* ================================= */
 .editor-bar {
-	margin: -20px 5px 10px 5px;
+	margin: -20px 0px 10px 0px;
 	padding: 6px 10px;
 	color: #F2F2F2;
 
@@ -329,31 +435,35 @@ html,body {
 	margin-top: 30px;
 }
 
-.icon {
-	height: 100%;
+.navbar-brand .icon {
 	display: inline;
+	height: 100%;
 }
 
 .navbar-inverse .navbar-brand {
-  font-family: "blanchcaps", arial;
-  font-size: 45px;
-  color: #FB8C1F;
-  padding-top: 11px;
-}
-
-.navbar-inverse .navbar-brand:hover {
-  color: #FB8C1F;
+	padding: 5px;
+	height: 50px;
+  	font-family: "blanchcaps", arial;
+  	font-size: 45px;
+  	color: #FB8C1F;
 }
 
 .navbar {
-	padding: 0px 5px;
   	box-shadow: 0px 3px 5px #888888;
+}
+
+.container-fluid {
+	height: auto;
 }
 
 
 /* ================================= */
 /* == About Page =================== */
 /* ================================= */
+.about-panel {
+	height: auto;
+}
+
 .about-page-title {
 	max-width: 500px;
 	padding: 15px;
@@ -366,6 +476,7 @@ html,body {
 }
 
 .about-page-content {
+	height: 100%;
 	margin-top: 30px;
 	padding: 50px 0px;
 	position: relative;

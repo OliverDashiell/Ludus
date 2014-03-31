@@ -27,21 +27,25 @@
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-      <div class="container-fluid">
+    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container-fluid navbar-container">
         <div class="navbar-header">
-          <a class="navbar-brand inner_text_shadow" href="#">
-            <img src="{{ static_url('images/favicon_orange.png') }}" class="img-responsive icon">
-            LUDUS
+          <a class="navbar-brand" href="#">
+            <img src="{{ static_url('images/ludus_brand_inset.png') }}" class="img-responsive icon">
           </a>
         </div>
       </div>
-    </nav>
+    </div>
 
-    <div class="container-fluid">
+    <div class="signin-heading">
+      <img src="{{ static_url('images/ludus_banner.png') }}" class="img-responsive heading-image" />
+      <p class="signin-subtitle"> Sign in to continue making games. </p>
+      <p class="signin-subtitle-2"> If you haven't got an account, you only need an email and password to register. </p>
+    </div>
+
+    <div class="signin-content">
 
       <form class="form-signin" role="form" method="post">
-        <img src="{{ static_url('images/ludus_banner.png') }}" class="img-responsive form-signin-heading" />
         <input type="text" class="form-control" placeholder="Email address" 
         	name="email" value="{{ email if email else '' }}" required autofocus>
         <input type="password" class="form-control" placeholder="Password" 
@@ -57,7 +61,30 @@
         {% end %}
       </form>
 
-    </div> <!-- /container -->
+      <div class="signin-footer">
+        <div class="row about-cols">
+          <div class="col-md-4">
+            <div class="circle center-block">
+              <i class="fa fa-user icon"></i>
+            </div>
+            <p class="about-item">Join</p>
+          </div>
+          <div class="col-md-4">
+            <div class="circle center-block">
+              <i class="fa fa-wrench icon"></i>
+            </div>
+            <p class="about-item">Build</p>
+          </div>
+          <div class="col-md-4">
+            <div class="circle center-block">
+              <i class="fa fa-gamepad icon"></i>
+            </div>
+            <p class="about-item">Play</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
 
 
     <!-- Bootstrap core JavaScript

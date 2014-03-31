@@ -5,7 +5,7 @@ Created on 17 Nov 2013
 '''
 from pkg_resources import resource_filename  # @UnresolvedImport
 from ludus.web.index_handler import IndexHandler
-from tornado.web import Application, StaticFileHandler
+from tornado.web import Application
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_config_file, parse_command_line
 import os
@@ -14,12 +14,14 @@ from ludus.control import Control
 from ludus.web.websocket_handler import WebsocketHandler
 from ludus.web.login_handler import LoginHandler
 from ludus.web.logout_handler import LogoutHandler
+from ludus.web.upload_handler import UploadHandler
 
 define("port", 8080, int, help="server port")
 define("debug", False, bool, help="debug server")
 define("db_url","sqlite:///ludus.db", help="sqlalchemy connection url")
 define("cookie_secret", help="cookie is salted and hashed against this value")
 define("cookie_name", help="the session cookie name")
+define("upload_dir", "./uploads/", help="the directory for sheet uploads")
 
 
 def main(config_path = None):
@@ -42,7 +44,8 @@ def main(config_path = None):
         (r"/login", LoginHandler),
         (r"/logout", LogoutHandler),
         (r"/websocket", WebsocketHandler),
-        (r"/fonts/(.*)", StaticFileHandler, {"path": resource_filename('ludus.web',"www/static/fonts")}),
+#         (r"/fonts/(.*)", StaticFileHandler, {"path": resource_filename('ludus.web',"www/static/fonts")}),
+        (r"/uploads/(.*)", UploadHandler, {'directory':options.upload_dir}),
     ]
     
     settings = {

@@ -1,4 +1,5 @@
 @import url("../fonts/blanch-font/stylesheet.css");
+@import url("../lib/bower_components/font-awesome/css/font-awesome.css");
 
 /* ================================= */
 /* == Custom Button CSS ============ */
@@ -19,41 +20,44 @@
 /* ================================= */
 /* == Main CSS Stuff =============== */
 /* ================================= */
-
-body {
-  /*padding-top: 40px;*/
-  padding-bottom: 40px;
+html,body {
   background-color: #F2F2F2;
+  height: 100%;
 }
 
-.icon {
-  height: 100%;
+.navbar-brand .icon {
   display: inline;
+  height: 100%;
 }
 
 .navbar-inverse .navbar-brand {
+  padding: 5px;
+  height: 50px;
   font-family: "blanchcaps", arial;
   font-size: 45px;
-  color: #FB8C1F;
-  padding-top: 11px;
-}
-
-.navbar-inverse .navbar-brand:hover {
   color: #FB8C1F;
 }
 
 .navbar {
-  box-shadow: 0px 3px 5px #888888;
+    box-shadow: 0px 3px 5px #888888;
 }
 
+.container-fluid {
+  height: auto;
+}
+
+.alert{
+  margin-top: 1em;
+  border-radius: 3px;
+}
+
+/* ================================= */
+/* == Signin Form ================== */
+/* ================================= */
 .form-signin {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
-}
-
-.form-signin .form-signin-heading{
-  margin-bottom: 10px;
 }
 
 .form-signin .form-control {
@@ -73,7 +77,6 @@ body {
 .form-signin input[type="text"] {
   color: black;
   margin-bottom: -1px;
-  border-color: black;
   border-radius: 0px;
 
   -webkit-border-top-left-radius: 3px;
@@ -87,7 +90,6 @@ body {
 .form-signin input[type="password"] {
   color: black;
   margin-bottom: 10px;
-  border-color: black;
   border-radius: 0px;
 
   -webkit-border-bottom-right-radius: 3px;
@@ -122,7 +124,84 @@ body {
   border-bottom-right-radius: 3px;
 }
 
-.alert{
-  margin-top: 1em;
-  border-radius: 3px;
+
+/* ================================= */
+/* == Signin Header ================ */
+/* ================================= */
+.signin-heading{
+  max-width: 500px;
+  padding: 15px;
+  margin: 0 auto;
 }
+
+.heading-image {
+  position: relative;
+  left: -10px;
+}
+
+.signin-subtitle {
+  font-weight: bold;
+  text-align: center;
+  font-size: 21px;
+}
+
+.signin-subtitle-2 {
+  text-align: center;
+  font-size: 18px;
+}
+
+
+/* ================================= */
+/* == Signin Content =============== */
+/* ================================= */
+
+.signin-content {
+  padding-top: 30px;
+  color: #F2F2F2;
+
+  background: -webkit-linear-gradient(#333, #222);
+  background:    -moz-linear-gradient(#333, #222);
+  background:       o-linear-gradient(#333, #222);
+  background:         linear-gradient(#333, #222);
+}
+
+.signin-footer {
+  max-width: 400px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.about-cols {
+  text-align: center;
+  margin: 0px;
+  margin: 20px 0px;
+}
+
+.about-cols .icon {
+  font-size: 25px;
+
+  background-color: #FB8C1F;
+  color: transparent;
+  text-shadow: 0px 2px 3px rgba(255,255,255,0.2);
+  -webkit-background-clip: text;
+     -moz-background-clip: text;
+      background-clip: text;
+}
+
+.about-cols .circle {
+  padding-top: 12px;
+  background-color: #F2F2F2;
+  width: 50px;
+  height: 50px;
+
+  -webkit-border-radius: 25px;
+     -moz-border-radius: 25px;
+          border-radius: 25px;
+}
+
+.about-item {
+  padding-top: 10px;
+  font-weight: bold;
+  font-size: 15px;
+}
+

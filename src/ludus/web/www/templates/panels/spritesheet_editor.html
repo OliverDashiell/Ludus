@@ -1,8 +1,49 @@
 <div class="panel-heading panel-heading-custom">
 </div>
-<div class="panel-body">
+<div class="panel-body grid-container">
+	<!-- ko if: selected_sheet -->
+		<img data-bind="attr:{ src:sheet_url }">
+		<img data-bind="grid:{grid:editor.grid_size, color:'#333', width:sheet_width, height:sheet_height}">
+	<!-- /ko -->
 </div>
 <div class="panel-footer panel-footer-custom">
-	<button class="btn btn-default btn-custom">add</button>
-	<button class="btn btn-default btn-custom">remove</button>
+	<button class="btn btn-default pull-right btn-custom btn-custom-danger">
+		<i class="fa fa-trash-o icon"></i>
+		Remove
+	</button>
+	<button class="btn btn-default pull-right btn-custom btn-left-set">
+		<i class="fa fa-plus icon"></i>
+		Add
+	</button>
+
+	<div class="btn-group dropup">
+		<button class="btn btn-default dropdown-toggle btn-custom btn-dropdown" type="button" data-toggle="dropdown">
+			<i class="fa fa-archive icon"></i>
+			<span data-bind="text:selected_sheet"></span>
+			<span class="caret"></span>
+		</button>
+		
+		<ul class="dropdown-menu" role="menu">
+			<li class="btn-dropdown-conatiner">
+				<button class="btn btn-default btn-custom" data-bind="click:$.proxy(add_sheet, $data)">
+					<i class="fa fa-plus icon"></i>
+					Add Sheet
+				</button>
+			</li>
+
+			<li class="divider"></li>
+
+			<li class="dropdown-header">Sprites</li>
+			<!-- ko foreach: spritesheets -->
+				<li><a href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
+			<!-- /ko -->
+
+			<li class="dropdown-header">Tiles</li>
+			<!-- ko foreach: tiles -->
+				<li><a href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
+			<!-- /ko -->
+		</ul>
+	</div>
+
+	<div class="clearfix"></div>
 </div>
