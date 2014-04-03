@@ -13,7 +13,7 @@
 	<span class="label-custom">
 		Tools:
 	</span>
-	<button class="btn btn-default btn-custom">
+	<button class="btn btn-default btn-custom btn-custom-inactive">
 		<i class="fa fa-crosshairs icon"></i>
 		Select
 	</button>
@@ -32,11 +32,21 @@
 	<form class="form-inline" role="form">
 		<div class="form-group">
 			<label class="label-custom" for="map_width">W:</label>
-				<input type="number" class="form-control input-custom" id="map_width" placeholder="100" name="quantity" min="5" max="1000">
+				<input class="form-control input-custom" id="map_width" 
+					   type="number" placeholder="100" name="quantity" min="5" max="1000"
+					   data-bind="value:map_width">
 		</div>
 		<div class="form-group">
 			<label class="label-custom" for="map_height">H:</label>
-				<input type="number" class="form-control input-custom" id="map_height" placeholder="100" name="quantity" min="5" max="1000">
+				<input class="form-control input-custom" id="map_height" 
+					   type="number" placeholder="100" name="quantity" min="5" max="1000"
+					   data-bind="value:map_height">
+		</div>
+		<div class="form-group">
+			<label class="label-custom" for="grid_size">S:</label>
+				<input class="form-control input-custom" id="grid_size" 
+					   type="number" placeholder="16" name="quantity" min="5" max="100"
+					   data-bind="value:grid_size">
 		</div>
 	</form>
 </div>
@@ -58,7 +68,7 @@
 		  </li>
 		  <li>
 		  	<a href="#raw" data-toggle="tab">
-		  		<i class="fa fa-sitemap icon"></i>
+		  		<i class="fa fa-code icon"></i>
 		  		Raw
 		  	</a>
 		  </li>
@@ -70,11 +80,18 @@
 				<div class="panel-heading panel-heading-custom">
 				</div>
 				<!-- Gridded map area -->
-				<div class="panel-body grid-container">
+				<div class="panel-body panel-body-custom grid-container">
 		            <!-- ko foreach:sprite_list -->
 		                <div class="map-item" data-bind="style: to_style(-1)"></div>
 		            <!-- /ko -->
-		            <img data-bind="grid:{grid:16, color:'#333'}">
+		            <img data-bind="grid:{grid:grid_size, width:map_width, height:map_height}, visible:show_mapgrid()==true">
+				</div>
+				<div class="panel-footer panel-footer-custom">
+					<button class="btn btn-default pull-right btn-custom active" 
+							id="show_mapgrid_btn" data-bind="click:$.proxy(mapgrid_show_hide, $data)">
+						<i class="fa fa-th-large icon"></i>
+						Grid
+					</button>
 				</div>
 		  	</div>
 		  </div>
@@ -83,7 +100,15 @@
 		  		<div class="panel-heading panel-heading-custom">
 				</div>
 		  		<!-- List of sprites on map -->
-		  		<div class="panel-body">
+		  		<div class="panel-body-custom">
+		  			<div class="placeholder-center" data-bind="visible:sprite_list().length == 0">
+						<div class="circle">
+							<i class="fa fa-bug icon"></i>
+						</div>
+						<p class="note">You have no sprites in the game yet.</p>
+					</div>
+				</div>
+				<div class="panel-footer panel-footer-custom">
 				</div>
 		  	</div>
 		  </div>
@@ -92,7 +117,7 @@
 		  		<div class="panel-heading panel-heading-custom">
 				</div>
 				<!-- Raw JSON data -->
-				<div class="panel-body">
+				<div class="panel-body panel-body-custom">
 					<textarea rows="20" class="form-control" data-bind="value:game_state"></textarea>
 				</div>
 				<div class="panel-footer panel-footer-custom">
@@ -147,7 +172,13 @@
 		  	<div class="panel panel-default tab-panel tab-panel-custom">
 		  		<div class="panel-heading panel-heading-custom">
 				</div>
-				<div class="panel-body">
+				<div class="panel-body panel-body-custom">
+					<div class="placeholder-center">
+						<div class="circle">
+							<i class="fa fa-gears icon"></i>
+						</div>
+						<p class="note">No sprite has been selected.</p>
+					</div>
 				</div>
 				<div class="panel-footer panel-footer-custom">
 				</div>

@@ -1,15 +1,51 @@
 <div class="panel-heading panel-heading-custom">
 </div>
-<div class="panel-body">
+<div class="panel-body panel-body-custom">
+	<div class="list-group" data-bind="sortable:{data:layers, afterMove:$.proxy(layer_moved, $data)}">
+		<a href="#" class="list-group-item list-group-item-custom sortable-item" 
+					data-bind="css:{active:$parent.selected_layer() == $data}, 
+							   click:$.proxy($parent.selected_layer, $parent),
+							   event:{ dblclick:$.proxy($parent.show_edit, $parent) }, 
+							   clickBubble:false">
+			<span data-bind="text:$data, visible:$parent.edit_visible() != $data"></span>
+
+			<form class="form-inline form-inline-condensed form-overlay" role="form" 
+				  data-bind="submit:$.proxy($parent.update_layer, $parent), 
+				  			 visible:$parent.edit_visible() == $data">
+				<div class="form-group">
+					<label class="sr-only" for="update_name">Update Name</label>
+					<input class="form-control input-custom" 
+						   id="update_name" type="text" placeholder="Enter name"
+						   data-bind="value:$parent.edit_value, valueUpdate:'keyup', hasFocus:$parent.edit_visible() == $data">
+				</div>
+			</form>
+
+			<i class="fa fa-lock icon" data-bind="visible:$data == 'background'"></i>
+		</a>
+	</div>
 </div>
 <div class="panel-footer panel-footer-custom">
-	<button class="btn btn-default pull-right btn-custom">
-		<i class="fa fa-undo icon"></i>
-		Revert
+	<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
+			data-bind="click:$.proxy(remove_layer, $data), enable:selected_layer() && selected_layer() != 'background'">
+		<i class="fa fa-trash-o icon"></i>
+		Delete
 	</button>
-	<button class="btn btn-default pull-right btn-custom btn-left-set">
-		<i class="fa fa-check icon"></i>
-		Apply
-	</button>
+
+	<form class="form-inline form-inline-condensed" role="form" data-bind="submit:$.proxy(create_layer, $data)">
+		<div class="form-group input-grouped">
+			<label class="sr-only" for="name">Name</label>
+			<input class="form-control input-custom" 
+				   id="name" type="name" placeholder="Enter name" 
+				   data-bind="value:new_layer, valueUpdate:'keyup'">
+		</div>
+		<button type="submit" 
+				id="create_layer_btn" 
+				class="btn btn-default btn-custom btn-input-attached" 
+				data-bind="disable:!new_layer() || layers.indexOf( new_layer() ) != -1">
+			<i class="fa fa-plus icon"></i>
+			Create
+		</button>
+	</form>
+
 	<div class="clearfix"></div>
 </div>

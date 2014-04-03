@@ -1,0 +1,18 @@
+{
+  "name": "jquery-ui-touch-punch",
+  "version": "0.2.2",
+  "main": [
+    "jquery.ui.touch-punch.js"
+  ],
+  "homepage": "https://github.com/GeneralElectric/jquery-ui-touch-punch",
+  "_release": "0.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.2",
+    "commit": "f92571d438051e66efdf416e9306b06def0f1f3d"
+  },
+  "_source": "git://github.com/GeneralElectric/jquery-ui-touch-punch.git",
+  "_target": "~0.2.2",
+  "_originalSource": "jquery-ui-touch-punch-amd",
+  "_direct": true
+}

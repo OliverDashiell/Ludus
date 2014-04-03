@@ -131,19 +131,19 @@ define(
 			if(type==='warning'){
 				$('.bottom-right').notify({
 			    	type: "warning",
-			        message: { text: message },
+			        message: { html: "<strong>Warning</strong> " + message },
 			        fadeOut: { enabled: true, delay: duration || 2000 }
 			    }).show();
 			} else if (type==='error'){
 			    $('.top-right').notify({
 			    	type: "danger",
-			        message: { text: message },
+			        message: { html: "<strong>Error</strong> " + message },
 			        fadeOut: { enabled: true, delay: duration || 2000 }
 			    }).show();
 			} else if (type==='notify'){
 			    $('.top-left').notify({
 			    	type: "success",
-			        message: { text: message },
+			        message: { html: "<strong>Success</strong> " + message },
 			        fadeOut: { enabled: false }
 			    }).show();
 			}  else if (type==='debug'){
@@ -155,9 +155,13 @@ define(
 				    }).show();
 				}
 			} else {
+				if(type == null) {
+					type = 'info';
+				}
+
 			    $('.bottom-left').notify({
-			    	type: type || 'info',
-			        message: { text: message },
+			    	type: type,
+			        message: { html: "<strong>" + type + "</strong> " + message },
 			        fadeOut: { enabled: true, delay: duration || 2000 }
 			    }).show();
 			}

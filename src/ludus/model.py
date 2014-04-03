@@ -3,13 +3,28 @@ Created on 30 Dec 2013
 
 @author: dash
 '''
-from sqlalchemy.types import String, Integer, Numeric, DateTime, Date, Time, Enum, Text
-from sqlalchemy.schema import Table, Column, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.types import String, Integer, Enum, Text
+from sqlalchemy.schema import Column, ForeignKey, Index
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative.api import declared_attr, has_inherited_table, declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 import re  # @UnresolvedImport
 import json  # @UnresolvedImport
+
+DEFAULT_GAME = {
+    "map": {
+        "width":48,
+        "height":33,
+        "scale":16
+    },
+    "layers":[
+        "background"
+    ],
+    "sheets": {
+       "spritesheets":[],
+       "tiles":[]
+   }
+}
 
 
 #see: http://docs.sqlalchemy.org/en/rel_0_8/orm/extensions/declarative.html#augmenting-the-base
@@ -39,6 +54,10 @@ class Game(Base):
         primaryjoin='Player.game_id==Game.id', remote_side='Player.game_id',
         back_populates='game', cascade='all, delete, delete-orphan')
     
+    def __init__(self, name):
+        self.name = name
+        self.state = DEFAULT_GAME
+    
     @hybrid_property
     def state(self):
         if self._state is not None:
@@ -67,20 +86,35 @@ class Player(Base):
         back_populates='players')
     role = Column(Enum(*ROLE))
 
+player_index = Index('player_index', Player.user_id, Player.game_id, unique=True)
+
 
 class User(Base):
     
-    def __init__(self, email, password):
-        self.email = email
-        self._password = password
-        self.name = email.split("@")[0]
-        
-    
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True)
-    name = Column(String(255))
+    name = Column(String(255), unique=True)
     _password = Column(String(255))
+    image = Column(String(255))
     games = relationship('Player', uselist=True, 
         primaryjoin='Player.user_id==User.id', remote_side='Player.user_id',
         back_populates='user')
-
+    
+    
+    def __init__(self, email, password, name=None):
+        self.email = email
+        self._password = password
+        self.name = email.split("@")[0] if name is None else name
+        
+        
+    @classmethod
+    def get_unique_name(cls, session, username):
+        names = [r[0] for r in session.query(cls.name).filter(cls.name.like('{}%'.format(username)))]
+        
+        name = username
+        seed = 0
+        while name in names:
+            name = '{}{}'.format(username, seed)
+            seed = seed+1
+            
+        return name

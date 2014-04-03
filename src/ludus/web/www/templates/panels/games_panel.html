@@ -7,37 +7,46 @@
 			Under Construction
 		</h3>
 	</div>
-	<div class="list-group" data-bind="foreach:games">
-		<a href="#" class="list-group-item" data-bind="css:{active:$parent.selected_game() == $data}, 
-													   click:$.proxy($parent.selected_game, $parent), 
-													   clickBubble:false">
-			<span data-bind="text:name"></span>
-		</a>
+	<div class="panel-body panel-body-custom">
+		<div class="list-group" data-bind="foreach:games, visible:games().length>0">
+			<a href="#" class="list-group-item list-group-item-custom" data-bind="css:{active:$parent.selected_game() == $data}, 
+														   click:$.proxy($parent.selected_game, $parent), 
+														   clickBubble:false">
+				<span data-bind="text:name"></span>
+			</a>
+		</div>
+
+		<div class="placeholder-center" data-bind="visible:games().length==0">
+			<div class="circle">
+				<i class="fa fa-wrench icon"></i>
+			</div>
+			<p class="note">You have no games under construction.</p>
+		</div>
 	</div>
 	<div class="panel-footer panel-footer-custom">
-		<form class="form-inline" role="form" data-bind="submit:$.proxy(create_game,$data)">
-			<div class="form-group">
+		<form class="form-inline form-inline-condensed" role="form" data-bind="submit:$.proxy(create_game,$data)">
+			<div class="form-group input-grouped">
 				<label class="sr-only" for="name">Name</label>
 				<input type="name" class="form-control input-custom" id="name" placeholder="Enter name" data-bind="value:new_game, 
 																									  valueUpdate:'keyup'">
 			</div>
-			
-			<button type="submit" class="btn btn-default btn-custom" data-bind="enable:new_game">
+			<button type="submit" class="btn btn-default btn-custom btn-input-attached" data-bind="enable:new_game">
 				<i class="fa fa-plus icon"></i>
 				Create
 			</button>
-			<button class="btn btn-default pull-right btn-custom" 
-					style="margin-left: 5px;"
-					data-bind="visible:selected_game, enable:can_edit, click:$.proxy(edit_game, $data)">
-				<i class="fa fa-wrench icon"></i>
-				Edit
-			</button>
-			<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
-					data-bind="visible:can_delete, click:$.proxy(delete_game, $data)">
-				<i class="fa fa-trash-o icon"></i>
-				Delete
-			</button>
 		</form>
+
+		<button class="btn btn-default pull-right btn-custom" 
+				style="margin-left: 5px;"
+				data-bind="visible:selected_game, enable:can_edit, click:$.proxy(edit_game, $data)">
+			<i class="fa fa-wrench icon"></i>
+			Edit
+		</button>
+		<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
+				data-bind="visible:can_delete, click:$.proxy(delete_game, $data)">
+			<i class="fa fa-trash-o icon"></i>
+			Delete
+		</button>
 	</div>
 </div>
 </div>
@@ -49,8 +58,15 @@
 				In Play
 			</h3>
 		</div>
-		<div class="panel-body">
-			Feature in development...
+		<div class="panel-body panel-body-custom">
+			<div class="placeholder-center">
+				<div class="circle">
+					<i class="fa fa-gamepad icon"></i>
+				</div>
+				<p class="note">You have no games currently in play.</p>
+			</div>
+		</div>
+		<div class="panel-footer panel-footer-custom">
 		</div>
 	</div>
 </div>

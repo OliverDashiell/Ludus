@@ -1,10 +1,16 @@
 <div class="panel-heading panel-heading-custom">
 </div>
-<div class="panel-body grid-container">
+<div class="panel-body panel-body-custom grid-container">
 	<!-- ko if: selected_sheet -->
 		<img data-bind="attr:{ src:sheet_url }">
-		<img data-bind="grid:{grid:editor.grid_size, color:'#333', width:sheet_width, height:sheet_height}">
+		<img data-bind="grid:{grid:editor.grid_size, width:sheet_width, height:sheet_height}, visible:show_sheetgrid()==true">
 	<!-- /ko -->
+	<div class="placeholder-center" data-bind="visible:selected_sheet() == null">
+		<div class="circle">
+			<i class="fa fa-picture-o icon"></i>
+		</div>
+		<p class="note">You have no sheets added for this game.</p>
+	</div>
 </div>
 <div class="panel-footer panel-footer-custom">
 	<button class="btn btn-default pull-right btn-custom btn-custom-danger">
@@ -12,38 +18,38 @@
 		Remove
 	</button>
 	<button class="btn btn-default pull-right btn-custom btn-left-set">
-		<i class="fa fa-plus icon"></i>
+		<i class="fa fa-pencil-square-o icon"></i>
 		Add
+	</button>
+	<button class="btn btn-default pull-right btn-custom btn-left-set active" 
+			id="show_sheetgrid_btn" data-bind="click:$.proxy(sheetgrid_show_hide, $data)">
+		<i class="fa fa-th-large icon"></i>
+		Grid
 	</button>
 
 	<div class="btn-group dropup">
 		<button class="btn btn-default dropdown-toggle btn-custom btn-dropdown" type="button" data-toggle="dropdown">
 			<i class="fa fa-archive icon"></i>
-			<span data-bind="text:selected_sheet"></span>
+			<span class='sheetname' data-bind="text:selected_sheet()?selected_sheet():'sheets'"></span>
 			<span class="caret"></span>
 		</button>
 		
 		<ul class="dropdown-menu" role="menu">
-			<li class="btn-dropdown-conatiner">
-				<button class="btn btn-default btn-custom" data-bind="click:$.proxy(add_sheet, $data)">
-					<i class="fa fa-plus icon"></i>
-					Add Sheet
-				</button>
-			</li>
-
-			<li class="divider"></li>
-
 			<li class="dropdown-header">Sprites</li>
 			<!-- ko foreach: spritesheets -->
-				<li><a href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
+				<li><a class="sheetname" href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
 			<!-- /ko -->
-
+			<li data-bind="visible:spritesheets().length==0"><p class="note">No spritesheets</p></li>
 			<li class="dropdown-header">Tiles</li>
 			<!-- ko foreach: tiles -->
-				<li><a href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
+				<li><a class="sheetname" href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
 			<!-- /ko -->
+			<li data-bind="visible:tiles().length==0"><p class="note">No tiles</p></li>
 		</ul>
 	</div>
+	<button class="btn btn-default btn-custom btn-add-sheet" data-bind="click:$.proxy(add_sheet, $data)">
+		<i class="fa fa-plus icon"></i>
+	</button>
 
 	<div class="clearfix"></div>
 </div>

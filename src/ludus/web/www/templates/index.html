@@ -157,24 +157,32 @@
     				<form action="/uploads/" 
     					  method="post" enctype="multipart/form-data" class="form-horizontal" onsubmit="return false;" role="form">
     					<fieldset>
-    						<label class="radio-inline">
-								<input type="radio" name="upload_type" id="upload_sheet" value="spritesheet" checked="checked"> Sheet
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="upload_type" id="upload_tile" value="tile"> Tile
-							</label>
+    						<label>Image Type:</label><br>
+							<div class="btn-group upload-radio" data-toggle="buttons">
+								<label class="btn btn-default btn-custom active">
+									<input type="radio" name="upload_type" id="upload_sheet" value="spritesheet" checked="checked">
+									<i class="fa fa-bug icon"></i>
+									<br>Sprite
+								</label>
+								<label class="btn btn-default btn-custom">
+									<input type="radio"> 
+									<input type="radio" name="upload_type" id="upload_tile" value="tile">
+									<i class="fa fa-globe icon"></i>
+									<br>Tile
+								</label>
+							</div>
     					</fieldset>
-
+    					<hr>
 						<fieldset>
 							<div class="form-group">
-								<label for="areaImageFld">Image</label>
+								<label for="areaImageFld">Image File:</label>
 								<div class="input-group">
 									<span class="input-group-btn">
-										<span class="btn btn-default btn-file">
+										<span class="btn btn-default btn-file btn-custom">
 										Browse&hellip; <input name="image" type="file">
 										</span>
 									</span>
-									<input type="text" class="form-control" readonly>
+									<input type="text" class="form-control file-input" readonly>
 								</div>
 							</div>
 						</fieldset>

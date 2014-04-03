@@ -55,17 +55,19 @@ define(
 		function set_grid(grid, color, width, height){
 		    // will set the background image of selector to the
 		    // dataURL of a canvas grid using color for the lines
+		    grid = parseInt(grid);
+
 			if(!grid){
 				grid = 16;
 			}
 			if(!color){
-				color = "#ccc";
+				color = "#eee";
 			}
 			if(!width){
-				width = 100;
+				width = 48;
 			}
 			if(!height){
-				height = 100;
+				height = 33;
 			}
 
 			var w_size = grid*width;

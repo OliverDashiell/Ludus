@@ -3,7 +3,6 @@ Created on 1 Jul 2013
 
 @author: dash
 '''
-import datetime
 import logging  # @UnresolvedImport
 from sqlalchemy.engine import create_engine, reflection
 from sqlalchemy.orm.session import sessionmaker
@@ -34,12 +33,15 @@ class Control(object):
         
     def register(self, email, password):
         with self._session_ as session:
-            user = model.User(email=email, password=password)
+            name = model.User.get_unique_name(session, unicode(email.split("@")[0]))
+            user = model.User(email=email, password=password, name=name)
             session.add(user)
+            
             try:
                 session.commit()
             except IntegrityError:
-                raise Exception("email already exists")
+                raise Exception("Email already registered")
+            
             logging.info("user registered %s",user.id)
             return user.id
     
@@ -47,8 +49,10 @@ class Control(object):
     def login(self, email, password):
         with self._session_ as session:
             user = session.query(model.User).filter_by(email=email, _password=password).first()
+            
             if user is None:
-                raise Exception("No such email or password!")
+                raise Exception("No such email or password")
+            
             logging.info("user logged in %s",user.id)
             return user.id
         
@@ -93,7 +97,7 @@ class Control(object):
             def __enter__(self):
                 logging.debug("db session open")
                 return session
-            def __exit__(self, type, value, traceback):
+            def __exit__(self, type, value, traceback):  # @ReservedAssignment
                 logging.debug("db session closed")
                 session.close()
         return closing_session()
@@ -144,9 +148,49 @@ class Control(object):
         session.commit()
         
         
+    def update_username(self, user_id, name):
+        if not name or name is None:
+            raise Exception("Cannot update to empty name")
+        
+        with self._session_ as session:
+            user = session.query(model.User).get(user_id)
+                           
+            if user is None:
+                raise Exception("No such user")
+            
+            user.name = name
+            
+            try:
+                session.commit()
+            except IntegrityError:
+                raise Exception("Username has been taken")
+            
+            return {'user_id':user_id, 'name':name}
+        
+    
+    def update_password(self, user_id, password):
+        if not password or password is None:
+            raise Exception("Cannot update to empty password")
+        
+        with self._session_ as session:
+            user = session.query(model.User).get(user_id)
+                           
+            if user is None:
+                raise Exception("No such user")
+            
+            user._password = password
+            session.commit()
+            
+            return {'user_id':user_id, 'name':user.name, 'password':password}
+        
+        
     def add_game(self, name, owner_id):
         with self._session_ as session:
             owner = session.query(model.User).get(owner_id)
+            
+            if owner is None:
+                raise Exception("No such user")
+            
             game = model.Game(name=name)
             
             player = model.Player(role="owner", user=owner, game=game)
@@ -162,6 +206,10 @@ class Control(object):
     def delete_game(self, game_id):
         with self._session_ as session:
             game = session.query(model.Game).get(game_id)
+            
+            if game is None:
+                raise Exception("No such game")
+            
             players = [p.user_id for p in game.players]
             
             session.delete(game)
@@ -174,6 +222,10 @@ class Control(object):
     def save_game(self, game_id, name, state):
         with self._session_ as session:
             game = session.query(model.Game).get(game_id)
+            
+            if game is None:
+                raise Exception("No such game")
+            
             players = [p.user_id for p in game.players]
             
             game.name = name
@@ -190,12 +242,18 @@ class Control(object):
         with self._session_ as session:
             game = session.query(model.Game).get(game_id)
             
+            if game is None:
+                raise Exception("No such game")
+            
             return Protocol.full_game_protocol(game)
         
         
     def get_games(self, owner_id):
         with self._session_ as session:
             owner = session.query(model.User).get(owner_id)
+            
+            if owner is None:
+                raise Exception("No such user")
             
             return [Protocol.game_protocol(player.game) for player in owner.games]
             
@@ -208,10 +266,14 @@ class Control(object):
             user = session.query(model.User).filter(model.User.email==email).first()
             
             if user is None:
-                raise Exception("no such user")
+                raise Exception("No such user")
             
             player = model.Player(game=game, user=user, role=role)
-            session.commit()
+            
+            try:
+                session.commit()
+            except IntegrityError:
+                raise Exception("User already part of game")
             
             players = [p.user_id for p in game.players]
             
@@ -227,7 +289,10 @@ class Control(object):
                              first()
                              
             if player is None:
-                raise Exception("no such player")
+                raise Exception("No such player")
+            
+            if player.role is 'owner':
+                raise Exception("Game owner cannot be removed")
             
             game = player.game
             players = [p.user_id for p in game.players]
@@ -261,7 +326,10 @@ class Control(object):
                              first()
                              
             if player is None:
-                raise Exception("no such player")
+                raise Exception("No such player")
+            
+            if player.role is 'owner':
+                raise Exception("Owners role cannot be changed")
             
             game = player.game
             players = [p.user_id for p in game.players]

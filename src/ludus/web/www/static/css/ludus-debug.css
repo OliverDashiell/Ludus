@@ -45,6 +45,13 @@
 	border: 2px solid #FF2300;
 }
 
+.btn-custom.active {
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #FB8C1F;
+	border: 2px solid #FFC154;
+}
+
 .btn-custom-inactive { 
 	color: #999;
 	background-image: none;
@@ -82,18 +89,63 @@
 	margin: auto 5px;
 }
 
+.upload-radio {
+	width: 100%;
+}
+
+.upload-radio .btn-custom {
+	width: 50%;
+	height: 100%;
+
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.upload-radio .icon {
+	margin: 0px;
+	margin-left: 2px;
+	margin-bottom: 3px;
+	font-size: 30px;
+}
+
+.btn-input-attached {
+	margin-left: -4px;
+	border-radius: 0px;
+
+	-webkit-border-top-right-radius: 	3px;
+	-webkit-border-bottom-right-radius: 3px;
+	   -moz-border-radius-topright: 	3px;
+	   -moz-border-radius-bottomright: 	3px;
+			border-top-right-radius: 	3px;
+			border-bottom-right-radius: 3px;
+}
+
 
 /* ================================= */
 /* == Custom Dropdown CSS ========== */
 /* ================================= */
+.dropup .dropdown-menu {
+	max-width: 100px;
+}
 
-.btn-group.open .btn-dropdown {
+.dropup.open .btn-custom {
 	color: #F2F2F2;
 	background-color: #FB8C1F;
 	border: 2px solid #FFC154;
 }
-.btn-dropdown .btn-custom {
+.dropup .btn-custom {
+	max-height: 28px;
+	width: 135px;
 	color: #F2F2F2;
+	margin-right: 0px;
+	border-radius: 0px;
+
+	-webkit-border-top-left-radius: 	3px;
+	-webkit-border-bottom-left-radius: 	3px;
+	   -moz-border-radius-topleft: 		3px;
+	   -moz-border-radius-bottomleft: 	3px;
+			border-top-left-radius: 	3px;
+			border-bottom-left-radius: 	3px;
 }
 
 .btn-dropdown-conatiner {
@@ -107,11 +159,52 @@
 	height: 100%;
 }
 
-.btn-dropdown-conatiner .btn-custom:hover { 
+.btn-group .btn-custom:hover { 
 	color: #F2F2F2;
 	background-image: none;
 	background-color: #FB8C1F;
 	border: 2px solid #FFC154;
+}
+
+.btn-add-sheet {
+	margin-left: -4px;
+	padding-left: 6px;
+	padding-right: 6px;
+	border-left: 0px;
+	border-radius: 0px;
+
+	-webkit-border-top-right-radius: 	3px;
+	-webkit-border-bottom-right-radius: 3px;
+	   -moz-border-radius-topright: 	3px;
+	   -moz-border-radius-bottomright: 	3px;
+			border-top-right-radius: 	3px;
+			border-bottom-right-radius: 3px;
+}
+
+.btn-add-sheet:hover {
+	border-left: 0px;
+}
+
+.btn-add-sheet .icon {
+	margin: 0px;
+}
+
+.dropdown-menu li .note {
+	padding: 3px 25px 3px 30px;
+	color: #999;
+	font-size: 11px;
+}
+
+.btn-dropdown .sheetname {
+	max-width: 70%;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.dropdown-menu li a {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 
@@ -121,6 +214,11 @@
 .btn-file {
 	position: relative;
 	overflow: hidden;
+}
+
+.btn-file.btn-custom {
+	padding: 8px 15px;
+	height: 34px;
 }
 
 .btn-file input[type=file] {
@@ -143,26 +241,54 @@ input[readonly] {
 	cursor: text !important;
 }
 
+.input-group .file-input {
+	border-radius: 3px;
+}
+
+.form-horizontal .form-group {
+	margin: auto;
+}
+
 
 /* ================================= */
 /* == Custom Input CSS  ============ */
 /* ================================= */
 .form-group .input-custom {
 	color: black;
-    padding: 5px 15px;
+    padding: 4px 15px;
     height: 100%;
     line-height: normal;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+}
 
-    -webkit-border-radius: 3px;
-       -moz-border-radius: 3px;
-            border-radius: 3px;
+.form-inline.form-inline-condensed {
+	display: inline-block;
+}
+
+.input-grouped .input-custom {
+    margin-right: 0px;
+    border-right: 0px;
+	border-radius: 0px;
+
+	-webkit-border-top-left-radius: 	3px;
+	-webkit-border-bottom-left-radius: 	3px;
+	   -moz-border-radius-topleft: 		3px;
+	   -moz-border-radius-bottomleft: 	3px;
+			border-top-left-radius: 	3px;
+			border-bottom-left-radius: 	3px;
 }
 
 
 /* ================================= */
 /* == Custom Panel CSS ============= */
 /* ================================= */
+.panel.panel-default {
+	border: 0px;
+}
+
 .panel-default .panel-heading-custom {
+	border-bottom: 0px;
 	color: #F2F2F2;
 
 	background: -webkit-linear-gradient(#555, #222);
@@ -176,6 +302,8 @@ input[readonly] {
 }
 
 .panel-default .panel-footer-custom {
+	border-top: 0px;
+	height: 49px;
 	color: #F2F2F2;
 
 	background: -webkit-linear-gradient(#555, #222);
@@ -189,7 +317,17 @@ input[readonly] {
 	padding: 15px;
 }
 
+.panel-body-custom {
+	position: relative;
+	padding: 0px;
+	width: 100%;
+	height: 550px;
+	border: 1px solid #555;
+	background-color: #eee;
+}
+
 .grid-container {
+	background-color: transparent;
 	position: relative;
 	padding: 0px;
 	width: 100%;
@@ -201,6 +339,66 @@ input[readonly] {
 	position: absolute;
 	top: 0px;
 	left: 0px;
+}
+
+.panel-body-custom .list-group-item {
+	border-radius: 0px;
+}
+
+.panel-body-custom .list-group-item-custom:hover {
+	background-color: #def3ff;
+}
+
+.panel-body-custom textarea {
+	width: 100%;
+	height:100%;
+	border: 0px;
+	border-radius: 0px;
+}
+
+.placeholder-center {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.placeholder-center .circle {
+	display: block;
+	margin: auto;
+	margin-top: 25%;
+
+	width: 150px;
+	height: 150px;
+	background-color: #F2F2F2;
+
+  	box-shadow: 0px 0px 20px rgba(3,3,3,0.2);
+
+	-webkit-border-radius: 75px;
+	   -moz-border-radius: 75px;
+			border-radius: 75px;
+}
+
+.placeholder-center .icon {
+	margin-top: 35px;
+	font-size: 80px;
+
+	background-color: #C2C2C2;
+	color: transparent;
+	text-shadow: 0px 2px 3px rgba(255,255,255,0.2);
+	-webkit-background-clip: text;
+	   -moz-background-clip: text;
+			background-clip: text;
+}
+
+.placeholder-center .note {
+	display: block;
+	margin: auto;
+	width: 200px;
+	font-weight: bold;
+	color: #C2C2C2;
 }
 
 
@@ -337,7 +535,15 @@ input[readonly] {
 }
 
 .tab-panel-custom {
-	border: 0px;
+	border-color: #333;
+	border-top: 0px;
+
+	-webkit-border-top-left-radius:  0px;
+	-webkit-border-top-right-radius: 0px;
+	   -moz-border-radius-topleft:   0px;
+	   -moz-border-radius-topright:  0px;
+			border-top-left-radius:  0px;
+			border-top-right-radius: 0px;
 }
 
 .tab-panel-custom .item-name {
@@ -394,6 +600,7 @@ input[readonly] {
 
 .editor-bar .label-custom {
 	margin-right: 5px;
+	margin-left: 10px;
 	font-weight: normal;
 }
 
@@ -404,7 +611,7 @@ input[readonly] {
 
 .editor-bar .editor-bar-title {
 	font-family: "blanchcaps", arial;
-	vertical-align: baseline;
+	vertical-align: bottom;
 	font-size: 25px;
 	display: inline;
 	font-weight: bold;
@@ -419,7 +626,7 @@ input[readonly] {
 .editor-bar .align-right {
 	float: right;
 	position: relative;
-	top: 4px;
+	top: 2px;
 }
 
 
@@ -454,6 +661,14 @@ html,body {
 
 .container-fluid {
 	height: auto;
+}
+
+.note {
+	padding: 15px;
+}
+
+.list-group .sortable-item {
+	cursor: move;
 }
 
 

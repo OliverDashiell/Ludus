@@ -12,6 +12,7 @@ define(
 			this.sheet_width = ko.observable();
 			this.sheet_height = ko.observable();
 			this.sheet_url = ko.observable();
+			this.show_sheetgrid = ko.observable(true);
 
 			this.selected_sheet.subscribe(function(value){
 				if(value){
@@ -29,6 +30,23 @@ define(
 				}
 			},this);
 		}
+
+		SpritesheetEditor.prototype.sheetgrid_show_hide = function() {
+			var btn = $('#show_sheetgrid_btn');
+
+			if(btn.hasClass('active')) {
+				this.show_sheetgrid(false);
+				btn.removeClass('active');
+				btn.addClass('btn-custom-inactive');
+			}
+			else {
+				this.show_sheetgrid(true);
+				btn.removeClass('btn-custom-inactive');
+				btn.addClass('active');
+			}
+
+			return true;
+		};
 
 		SpritesheetEditor.prototype.add_sheet = function() {
 			var that = this;

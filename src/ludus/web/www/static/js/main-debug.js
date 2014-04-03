@@ -5,14 +5,18 @@ require.config({
         // the right side is the path relative to baseUrl.
         // Also, the path should NOT include the '.js' file extension.
 
-        'jquery' :          'lib/bower_components/jquery/jquery',
-        'bootstrap':        'lib/bower_components/bootstrap/dist/js/bootstrap',
-        'bootstrap-notify': 'lib/bower_components/bootstrap-notify/js/bootstrap-notify',
-        'knockout':         'lib/bower_components/knockout.js/knockout.debug',
-        "crafty":           'lib/bower_components/crafty/dist/crafty',
-        'domready':         'lib/bower_components/domready/ready',
-        'select2':          'lib/bower_components/select2/select2',
-        'jquery-form':      'lib/bower_components/jquery-form/jquery.form'
+        'jquery':               'lib/bower_components/jquery/dist/jquery',
+        'jquery-ui':            'lib/bower_components/jquery-ui/ui/jquery-ui',
+        'jquery.ui.sortable':   'lib/bower_components/jquery-ui/ui/jquery.ui.sortable',
+        'touch-punch':          'lib/bower_components/jquery-ui-touch-punch-amd/jquery.ui.touch-punch',
+        'bootstrap':            'lib/bower_components/bootstrap/dist/js/bootstrap',
+        'bootstrap-notify':     'lib/bower_components/bootstrap-notify/js/bootstrap-notify',
+        'knockout':             'lib/bower_components/knockout.js/knockout.debug',
+        'knockout-sortable':    'lib/bower_components/knockout-sortable/build/knockout-sortable',
+        'crafty':               'lib/bower_components/crafty/dist/crafty',
+        'domready':             'lib/bower_components/domready/ready',
+        'select2':              'lib/bower_components/select2/select2',
+        'jquery-form':          'lib/bower_components/jquery-form/jquery.form'
     },
     shim: {
         "bootstrap": {
@@ -27,6 +31,18 @@ require.config({
         "jquery-form": {
             deps: ["jquery"]
         },
+        "jquery-ui": {
+            deps: ["jquery"]
+        },
+        "touch-punch": {
+            deps: ["jquery-ui"]
+        },
+        "jquery.ui.sortable": {
+            deps: ["jquery-ui"]
+        },
+        "knockout-sortable": {
+            deps: ["jquery.ui.sortable", "knockout"]
+        },
     },
     packages: ["js/ludus"]
 });
@@ -34,7 +50,7 @@ require.config({
 define(
     "main",
     
-    ["jquery", "knockout", "js/ludus", "bootstrap", "domready"],
+    ["jquery", "knockout", "js/ludus", "bootstrap", "knockout-sortable", "domready"],
 
     function($, knockout, Appl){
         var appl = window.appl = new Appl();

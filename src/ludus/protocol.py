@@ -13,8 +13,17 @@ class Protocol(object):
         return {
                 "email": user.email,
                 "name": user.name,
+                "user_image": user.image,
                 "type_": user.__class__.__name__,
                 "id": user.id
+                }
+        
+    @classmethod
+    def player_protocol(cls, player):
+        return {
+                "id": player.user.id,
+                "name": player.user.name,
+                "role": player.role
                 }
 
     @classmethod
@@ -23,14 +32,6 @@ class Protocol(object):
                 "id": game.id,
                 "name": game.name,
                 "players": [cls.player_protocol(p) for p in game.players]
-                }
-    
-    @classmethod
-    def player_protocol(cls, player):
-        return {
-                "id": player.user.id,
-                "name": player.user.name,
-                "role": player.role
                 }
     
     @classmethod
@@ -49,9 +50,9 @@ class Protocol(object):
                 }
         
     @classmethod
-    def lookup_user(cls, u):
+    def lookup_user(cls, user):
         return {
-                "id":u.email,
-                "text":u.name
+                "id":user.email,
+                "text":user.name
                 }
     
