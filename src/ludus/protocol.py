@@ -13,7 +13,7 @@ class Protocol(object):
         return {
                 "email": user.email,
                 "name": user.name,
-                "user_image": user.image,
+                "image": user.image,
                 "type_": user.__class__.__name__,
                 "id": user.id
                 }
@@ -23,6 +23,7 @@ class Protocol(object):
         return {
                 "id": player.user.id,
                 "name": player.user.name,
+                "image": player.user.image,
                 "role": player.role
                 }
 

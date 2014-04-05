@@ -168,7 +168,7 @@ class Control(object):
             return {'user_id':user_id, 'name':name}
         
     
-    def update_password(self, user_id, password):
+    def update_password(self, user_id, old_password, password):
         if not password or password is None:
             raise Exception("Cannot update to empty password")
         
@@ -178,10 +178,37 @@ class Control(object):
             if user is None:
                 raise Exception("No such user")
             
+            if user._password is not old_password:
+                raise Exception("Old password does not match.")
+            
             user._password = password
             session.commit()
             
-            return {'user_id':user_id, 'name':user.name, 'password':password}
+            return {'user_id':user_id, 'password':'changed'}
+        
+    def update_image(self, user_id, image):
+        with self._session_ as session:
+            user = session.query(model.User).get(user_id)
+                           
+            if user is None:
+                raise Exception("No such user")
+            
+            user.image = image
+            session.commit()
+            
+            return {'user_id':user_id, 'image':image}
+        
+    def get_player_image(self, player_id):
+        with self._session_ as session:
+            user = session.query(model.User).get(player_id)
+                           
+            if user is None:
+                raise Exception("No such user")
+            
+            image = user.image
+            session.commit()
+            
+            return {'user_id':player_id, 'image':image}
         
         
     def add_game(self, name, owner_id):

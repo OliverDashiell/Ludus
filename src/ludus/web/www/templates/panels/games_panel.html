@@ -37,12 +37,11 @@
 		</form>
 
 		<button class="btn btn-default pull-right btn-custom" 
-				style="margin-left: 5px;"
 				data-bind="visible:selected_game, enable:can_edit, click:$.proxy(edit_game, $data)">
 			<i class="fa fa-wrench icon"></i>
 			Edit
 		</button>
-		<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
+		<button class="btn btn-default pull-right btn-custom btn-custom-danger btn-left-set" 
 				data-bind="visible:can_delete, click:$.proxy(delete_game, $data)">
 			<i class="fa fa-trash-o icon"></i>
 			Delete

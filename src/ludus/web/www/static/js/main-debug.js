@@ -20,10 +20,10 @@ require.config({
     },
     shim: {
         "bootstrap": {
-            deps: ["jquery"]
+            deps: ["jquery-ui"]
         },
         "bootstrap-notify": {
-            deps: ["jquery","bootstrap"]
+            deps: ["bootstrap"]
         },
         "select2": {
             deps: ["jquery"]

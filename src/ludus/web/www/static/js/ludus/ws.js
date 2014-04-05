@@ -26,7 +26,7 @@ define(
 				this.callbacks[this.next_request_id] = [callback, target];
 			}
 			this.ws.send(ko.toJSON(msg));
-			console.log(msg);
+			//console.log(msg);
 		};
 
 		Ws.prototype.connect = function(ws_url, callback, target){
@@ -52,7 +52,7 @@ define(
 			};
 			
 			ws.onmessage = function(evt) {
-				console.log(evt.data);
+				// console.log(evt.data);
 				var msg = $.parseJSON(evt.data);
 				if(msg.request_id){
 					var callback = that.callbacks[msg.request_id];

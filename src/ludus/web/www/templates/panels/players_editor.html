@@ -4,7 +4,11 @@
 <div class="panel-body-custom">
 	<ul class="list-group" data-bind="foreach:players">
 		<li class="list-group-item">
+			
 			<i class="fa fa-user icon"></i>
+			<!-- <img src="" class="img-responsive player-image pull-right" alt="Responsive image"
+				 data-bind="visible:image_url(), attr:{ src:image_url }"> -->
+
 			<span class="item-name" data-bind="text:name"></span>
 			<i class="fa fa-lock icon" data-bind="visible:role == 'owner'"></i>
 

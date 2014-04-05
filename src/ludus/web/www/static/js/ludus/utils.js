@@ -124,7 +124,125 @@ define(
     							   ko.unwrap(value.width),
     							   ko.unwrap(value.height));
 
-		        $(element).attr({"src":url});;
+		        $(element).attr({"src":url});
+		    }
+		};
+
+		ko.bindingHandlers.drag_rect = {
+			init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				var $container = $(element);
+				var $selection = $('<div>').addClass('selection-box');
+				var selection_border_width = 1;
+				var appl = valueAccessor();
+
+				$selection.attr('draggable', false);
+
+				$container.parent().on('mousedown', function(e) {
+					if(e.target !== $container[0]) {
+						appl.sheet_drag_rect(null);
+						$selection.remove();
+						return;
+					}
+					
+					var click_y = e.pageY,
+						click_x = e.pageX,
+						move_x = 0,
+						move_y = 0,
+						width = 0,
+						height = 0,
+						offset_x = click_x - $container.offset().left,
+						offset_y = click_y - $container.offset().top;
+
+					$selection.css({
+						'top':	appl.snap_to_grid_floor(offset_y),
+						'left':	appl.snap_to_grid_floor(offset_x),
+						'width': appl.grid_size() + selection_border_width,
+						'height': appl.grid_size() + selection_border_width
+					});
+
+					$selection.appendTo($container.parent());
+
+					$container.parent().on('mousemove', function(e) {
+						move_x = e.pageX;
+						move_y = e.pageY;
+						var new_x, new_y;
+
+						width = appl.snap_to_grid_width(Math.abs(move_x - click_x), offset_x);
+						height = appl.snap_to_grid_height(Math.abs(move_y - click_y), offset_y);
+
+						if( width < appl.grid_size() ) {
+							width = appl.grid_size();
+						}
+
+						if( height < appl.grid_size() ){
+							height = appl.grid_size();
+						}
+						
+						new_x = (move_x < click_x) ? (click_x - width) : click_x;
+						new_y = (move_y < click_y) ? (click_y - height) : click_y;
+						
+						$selection.css({
+							'top': appl.snap_to_grid(new_y - $container.offset().top),
+							'left': appl.snap_to_grid(new_x - $container.offset().left),
+							'width': width + selection_border_width,
+							'height': height + selection_border_width
+						});
+					});
+
+					$container.parent().on('mouseup', function(e) {
+						$container.parent().off('mousemove');
+						$container.parent().off('mouseup');
+
+						var origin_x = click_x, 
+							origin_y = click_y;
+
+						// determine origin from click or move
+						if(move_x != 0 && move_x < click_x) {
+							origin_x = move_x;
+						}
+						if(move_x != 0 && move_y < click_y) {
+							origin_y = move_y;
+						}
+
+						var final_x, final_y, 
+							final_w, 
+							final_h;
+						
+
+						final_w = width;
+						final_h = height;
+
+						if( width < appl.grid_size() ) {
+							final_w = appl.grid_size();
+						}
+
+						if( height < appl.grid_size() ){
+							final_h = appl.grid_size();
+						}
+
+						if(move_x == 0){
+							final_x = appl.snap_to_grid_floor(origin_x - $container.offset().left);
+							final_y = appl.snap_to_grid_floor(origin_y - $container.offset().top);
+						} else {
+							final_x = appl.snap_to_grid(origin_x - $container.offset().left);
+							final_y = appl.snap_to_grid(origin_y - $container.offset().top);
+						}
+
+						var dragged_rect = [ final_x, final_y, final_w, final_h ]
+
+						$selection.css({
+							'top': final_y,
+							'left':	final_x,
+							'width': final_w + selection_border_width,
+							'height': final_h + selection_border_width
+						});
+					
+						appl.sheet_drag_rect(dragged_rect);
+					});
+				});
+		    },
+		    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+		    	// do nothing...
 		    }
 		};
 

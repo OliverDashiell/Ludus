@@ -87,10 +87,15 @@
     </div>
 
 
-    <!-- Bootstrap core JavaScript
+    <!-- Requirejs
     ================================================== -->
-    <script type="text/javascript" src="{{ static_url('lib/bower_components/requirejs/require.js') }}"></script>
-    <script type="text/javascript" src="{{ static_url('js/main.js') }}"></script>
+    {% if debug == True %}
+      <script type="text/javascript" src="{{ static_url('lib/bower_components/requirejs/require.js') }}"></script>
+      <script type="text/javascript" src="{{ static_url('js/main-debug.js') }}"></script>
+    {% else %}
+      <script type="text/javascript" src="{{ static_url('lib/bower_components/requirejs/require.js') }}"></script>
+      <script type="text/javascript" src="{{ static_url('js/main.js') }}"></script>
+    {% end %}
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script type="text/javascript">

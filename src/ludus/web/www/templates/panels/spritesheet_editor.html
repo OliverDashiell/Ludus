@@ -2,8 +2,12 @@
 </div>
 <div class="panel-body panel-body-custom grid-container">
 	<!-- ko if: selected_sheet -->
-		<img data-bind="attr:{ src:sheet_url }">
-		<img data-bind="grid:{grid:editor.grid_size, width:sheet_width, height:sheet_height}, visible:show_sheetgrid()==true">
+		<img draggable="false"
+			 data-bind="attr:{ src:sheet_url }">
+		<img draggable="false"
+			 data-bind="grid:{grid:editor.grid_size, width:sheet_width, height:sheet_height}, 
+						visible:show_sheetgrid()==true,
+						drag_rect:$data">
 	<!-- /ko -->
 	<div class="placeholder-center" data-bind="visible:selected_sheet() == null">
 		<div class="circle">

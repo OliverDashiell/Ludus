@@ -15,9 +15,11 @@ class LoginHandler(UserMixin, RequestHandler):
     
     
     def get(self, error=None):
+        debug = self.application.settings.get("debug",False)
         email = self.get_argument("email",default=None)
         next_ = self.get_argument("next", "/")
         self.render("login.html", 
+                    debug=debug, 
                     email=email, 
                     error=error,
                     next=next_)

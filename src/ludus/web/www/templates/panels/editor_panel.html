@@ -84,7 +84,8 @@
 		            <!-- ko foreach:sprite_list -->
 		                <div class="map-item" data-bind="style: to_style(-1)"></div>
 		            <!-- /ko -->
-		            <img data-bind="grid:{grid:grid_size, width:map_width, height:map_height}, visible:show_mapgrid()==true">
+		            <img draggable="false" 
+		            	 data-bind="grid:{grid:grid_size, width:map_width, height:map_height}, visible:show_mapgrid()==true">
 				</div>
 				<div class="panel-footer panel-footer-custom">
 					<button class="btn btn-default pull-right btn-custom active" 

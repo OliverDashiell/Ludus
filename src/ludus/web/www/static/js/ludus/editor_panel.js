@@ -102,11 +102,11 @@ define(
 
 					// default to first available sheet
 					if(this.spritesheet_editor.selected_sheet() == null) {
-						if(this.spritesheet_editor.spritesheets()[0]) {
-							this.spritesheet_editor.selected_sheet(this.spritesheet_editor.spritesheets()[0]);
-						}
-						else if(this.spritesheet_editor.tiles()[0]) {
+						if(this.spritesheet_editor.tiles()[0]) {
 							this.spritesheet_editor.selected_sheet(this.spritesheet_editor.tiles()[0]);
+						}
+						else if(this.spritesheet_editor.spritesheets()[0]) {
+							this.spritesheet_editor.selected_sheet(this.spritesheet_editor.spritesheets()[0]);
 						}
 					}
 
@@ -143,6 +143,10 @@ define(
 
 		EditorPanel.prototype.update_game = function(game) {
 			this.game(game);
+
+			this.grid_size( game.state.map.scale );
+			this.map_width( game.state.map.width );
+			this.map_height( game.state.map.height );
 
 			// if(game.state == null) {
 			// 	game.state = {}; // init with empty obj
