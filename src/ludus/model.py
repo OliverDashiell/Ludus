@@ -13,7 +13,7 @@ import json  # @UnresolvedImport
 
 DEFAULT_GAME = {
     "map": {
-        "width":48,
+        "width":49,
         "height":33,
         "scale":16
     },

@@ -52,7 +52,7 @@
 	border: 2px solid #FFC154;
 }
 
-.btn-custom-inactive { 
+.btn-custom.inactive { 
 	color: #999;
 	background-image: none;
 	text-shadow: none;
@@ -66,10 +66,25 @@
 	border: 2px solid #FFC154;
 }
 
-.btn-group .btn-custom { /* inactive */
+.btn-group .btn-custom {
 	color: #F2F2F2;
 	background-color: #265497;
 	border: 2px solid #5099DC;
+}
+
+.btn-group .btn-custom:disabled {
+	color: #999;
+	background-color: #fff;
+	border: 2px solid #ccc;
+	background-image: none;
+	text-shadow: none;
+}
+
+.btn-group .btn-custom:hover {
+	color: #F2F2F2;
+	background-image: none;
+	background-color: #FB8C1F;
+	border: 2px solid #FFC154;
 }
 
 .btn-custom .icon {
@@ -159,18 +174,10 @@
 	height: 100%;
 }
 
-.btn-group .btn-custom:hover { 
-	color: #F2F2F2;
-	background-image: none;
-	background-color: #FB8C1F;
-	border: 2px solid #FFC154;
-}
-
 .btn-add-sheet {
 	margin-left: -4px;
 	padding-left: 6px;
 	padding-right: 6px;
-	border-left: 0px;
 	border-radius: 0px;
 
 	-webkit-border-top-right-radius: 	3px;
@@ -179,10 +186,6 @@
 	   -moz-border-radius-bottomright: 	3px;
 			border-top-right-radius: 	3px;
 			border-bottom-right-radius: 3px;
-}
-
-.btn-add-sheet:hover {
-	border-left: 0px;
 }
 
 .btn-add-sheet .icon {
@@ -318,6 +321,7 @@ input[readonly] {
 }
 
 .panel-body-custom {
+	overflow: auto;
 	position: relative;
 	padding: 0px;
 	width: 100%;
@@ -327,6 +331,7 @@ input[readonly] {
 }
 
 .grid-container {
+	cursor: pointer;
 	background-color: transparent;
 	position: relative;
 	padding: 0px;
@@ -334,7 +339,6 @@ input[readonly] {
 	height: 550px;
 	overflow: auto;
 }
-
 
 .grid-container img {
 	position: absolute;
@@ -353,7 +357,7 @@ input[readonly] {
 }
 
 .panel-body-custom .list-group-item-custom:hover {
-	background-color: #def3ff;
+	background-color: #DEF3FF;
 }
 
 .panel-body-custom textarea {
@@ -406,6 +410,10 @@ input[readonly] {
 	width: 200px;
 	font-weight: bold;
 	color: #C2C2C2;
+}
+
+.grid-container .placeholder-center {
+	background-color: #F2F2F2;
 }
 
 
@@ -569,11 +577,88 @@ input[readonly] {
 
 
 /* ================================= */
+/* == Custom Table CSS ============= */
+/* ================================= */
+/* clear data element formatting */
+.table tbody tr td {
+	background-color: transparent;
+} 
+
+.table tbody tr:hover td {
+	background-color: transparent;
+} 
+
+.table tbody tr.active td {
+	background-color: transparent;
+}
+
+.table tbody tr.active:hover td {
+	background-color: transparent;
+} 
+
+/* custom formatting */
+.table tbody .t-row {
+	background-color: #fff;
+}
+
+.table tbody .t-row:hover {
+	background-color: #DEF3FF;
+}
+
+.table tbody .t-row.active {
+	color: #fff;
+	background-color: #428BCA;
+}
+
+.table tbody .t-row.active:hover {
+	background-color: #428BCA;
+}
+
+.table .titles {
+	background-color: #C2C2C2;
+	color: #F2F2F2;
+}
+
+.table .spacer {
+	padding: 8px 1px;
+}
+
+.table .titles .icon {
+	margin-right: 10px;
+}
+
+
+/* ================================= */
+/* == Map Editor Bar CSS =========== */
+/* ================================= */
+.map-edit-bar {
+
+}
+
+.map-edit-bar .input-custom {
+	width: 70px;
+}
+
+.map-edit-bar .label-custom {
+	margin: 0px 5px;
+}
+
+.map-edit-bar form {
+	margin-right: 20px;
+}
+
+.map-edit-bar .btn-group .btn-custom {
+	border-width: 2px;
+}
+
+
+/* ================================= */
 /* == Editor Bar CSS =============== */
 /* ================================= */
 .editor-bar {
 	margin: -20px 0px 10px 0px;
-	padding: 6px 10px;
+	padding: 10px 10px;
+	vertical-align: middle;
 	color: #F2F2F2;
 
 	background: -webkit-linear-gradient(#555, #222);
@@ -590,50 +675,19 @@ input[readonly] {
     		border-bottom-left-radius:  3px;
 }
 
-.editor-bar .icon {
-	font-size: 13px;
-}
-
-.editor-bar .btn-custom {
-	vertical-align: baseline;
-	margin: 0px 3px 0px 3px;
-	padding: 3px 15px;
-}
-
-.editor-bar .input-custom {
-	width: 70px;
-	padding: 3px 15px 3px 5px;
-}
-
-.editor-bar .label-custom {
-	margin-right: 5px;
-	margin-left: 10px;
-	font-weight: normal;
-}
-
-.editor-bar form {
-	padding-left: 30px;
-	display: inline;
-}
-
 .editor-bar .editor-bar-title {
 	font-family: "blanchcaps", arial;
-	vertical-align: bottom;
+	vertical-align: baseline;
 	font-size: 25px;
 	display: inline;
 	font-weight: bold;
 	color: #FB8C1F;
-	margin-right: 20px;
-}
-
-.pull-right .btn-custom {
-	vertical-align: baseline;
+	margin: 0px 20px;
 }
 
 .editor-bar .align-right {
 	float: right;
 	position: relative;
-	top: 2px;
 }
 
 
@@ -641,7 +695,8 @@ input[readonly] {
 /* == Selection Box CSS ============ */
 /* ================================= */
 .selection-box {
-	z-index: 1000;
+	cursor: crosshair;
+	z-index: 900;
 	position: absolute;
 	background: transparent;
 	border: 1px dotted #222;
@@ -651,6 +706,21 @@ input[readonly] {
 			border-image:url(../images/selection.gif) 1 round;
 
 	border-image-width: 1px;
+}
+
+.spritesheet-item {
+	position: absolute;
+	z-index: 1000;
+	background-color: transparent;
+	border: 1px solid #FB8C1F; /*#FB8C1F;*/
+} 
+
+.spritesheet-item.selected {
+	box-shadow: 0px 0px 10px rgba(251,140,31,1);
+}
+
+.grid-container .image-grid {
+	cursor: crosshair;
 }
 
 
@@ -687,6 +757,14 @@ html,body {
 	height: auto;
 }
 
+.map-col {
+	padding-right: 7px
+}
+
+.game-col {
+	padding-left: 7px
+}
+
 .note {
 	padding: 15px;
 }
@@ -695,9 +773,27 @@ html,body {
 	cursor: move;
 }
 
+.list-group {
+	vertical-align: middle;
+}
+
+.list-group .icon {
+	width: 20px;
+	text-align: center;
+}
+
 .list-group .player-image {
+	display: inline-block;
 	width: 20px;
 	height: 20px;
+}
+
+.sudo-cursor {
+	position: absolute;
+}
+
+.map-item {
+	position: absolute;
 }
 
 

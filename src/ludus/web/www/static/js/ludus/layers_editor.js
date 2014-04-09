@@ -24,6 +24,7 @@ define(
 			this.layers.push( this.new_layer() );
 			
 			this.editor.save_game();
+			this.selected_layer( this.layers()[this.layers().length-1] );
 			this.new_layer(null);
 		};
 
@@ -52,18 +53,23 @@ define(
 		};
 
 		LayersEditor.prototype.update_layer = function(form) {
-			if(this.edit_value() && this.edit_visible() != 'background') {
-				var index = this.layers.indexOf( this.edit_value() );
+			if(this.edit_value()) {
 
-				if(index == -1) {
-					index = this.layers.indexOf( this.edit_visible() );
+				if(this.edit_value() != this.selected_layer() && this.edit_visible() != 'background') {
+					var index = this.layers.indexOf( this.edit_value() );
 
-					this.layers()[index] = this.edit_value();
-					this.editor.save_game();
+					if(index == -1) {
+						index = this.layers.indexOf( this.edit_visible() );
+
+						this.layers()[index] = this.edit_value();
+						this.editor.save_game();
+						this.selected_layer( this.layers()[index] );
+					}
+					else {
+						this.appl.notify("A layer with that name already exists", "warning", 4000);
+					}
 				}
-				else {
-					this.appl.notify("A layer with that name already exists", "warning", 4000);
-				}
+
 			}
 			else {
 				this.appl.notify("Cannot change layer name to nothing", "warning", 4000);

@@ -1,7 +1,6 @@
 define(
 	["jquery", "knockout", "select2", "domready"], 
 	function($, ko){
-		var utils = {};
 
 		// select2 support
 		ko.bindingHandlers.select2 = {
@@ -52,26 +51,33 @@ define(
 		}); 
 		// file selector support
 
-		function set_grid(grid, color, width, height){
+		function set_grid(grid_size, color, width, height, scale) {
 		    // will set the background image of selector to the
 		    // dataURL of a canvas grid using color for the lines
-		    grid = parseInt(grid);
+		    grid_size = parseInt(grid_size);
 
-			if(!grid){
-				grid = 16;
+		    // defaults
+			if(!grid_size){
+				grid_size = 16;
 			}
 			if(!color){
 				color = "#eee";
 			}
 			if(!width){
-				width = 48;
+				width = 30;
 			}
 			if(!height){
-				height = 33;
+				height = 30;
 			}
 
-			var w_size = grid*width;
-			var h_size = grid*height;
+			// scale width and height
+			var w_size = width, 
+				h_size = height;
+
+			if(scale === true) {
+				w_size = grid_size*width;
+				h_size = grid_size*height;
+			}
 
 			// setup canvas
 			var canvas = $('<canvas width="' + w_size + '" height="' + h_size + '">');
@@ -86,14 +92,14 @@ define(
 		    for (var i = 0; i < h_size;) {
 		    	context.moveTo(0,i);
 		    	context.lineTo(w_size,i);
-		    	i = i+grid;
+		    	i = i+grid_size;
 		    };
 
 		    // define verticals
 		    for (var i = 0; i < w_size;) {
 		    	context.moveTo(i,0);
 		    	context.lineTo(i,h_size);
-		    	i = i+grid;
+		    	i = i+grid_size;
 		    };
 
 		    // close the grid
@@ -119,10 +125,26 @@ define(
 		        // and again whenever the associated observable changes value.
 		        // Update the DOM element based on the supplied values here.
 		        var value = valueAccessor();
-		        var url = set_grid(ko.unwrap(value.grid),
+		        var width, height;
+
+		        if(value.width) {
+		        	width = ko.unwrap(value.width);
+		        }
+
+		        if(value.height) {
+		        	height = ko.unwrap(value.height);
+		        }
+
+		        if(value.dimensions) {
+		        	width = ko.unwrap(value.dimensions).width();
+		        	height = ko.unwrap(value.dimensions).height();
+		        }
+
+		        var url = set_grid(ko.unwrap(value.grid_size),
     							   ko.unwrap(value.color),
-    							   ko.unwrap(value.width),
-    							   ko.unwrap(value.height));
+    							   width,
+    							   height,
+    							   ko.unwrap(value.scale));
 
 		        $(element).attr({"src":url});
 		    }
@@ -139,7 +161,7 @@ define(
 
 				$container.parent().on('mousedown', function(e) {
 					if(e.target !== $container[0]) {
-						appl.sheet_drag_rect(null);
+						appl.selected_sprite(null);
 						$selection.remove();
 						return;
 					}
@@ -228,7 +250,12 @@ define(
 							final_y = appl.snap_to_grid(origin_y - $container.offset().top);
 						}
 
-						var dragged_rect = [ final_x, final_y, final_w, final_h ]
+						var dragged_rect = { 
+							offset_x: final_x, 
+							offset_y: final_y, 
+							width: final_w, 
+							height: final_h 
+						}
 
 						$selection.css({
 							'top': final_y,
@@ -237,7 +264,7 @@ define(
 							'height': final_h + selection_border_width
 						});
 					
-						appl.sheet_drag_rect(dragged_rect);
+						appl.selected_sprite(dragged_rect);
 					});
 				});
 		    },
@@ -245,6 +272,174 @@ define(
 		    	// do nothing...
 		    }
 		};
+
+		function cursor_to_canvas(element, url, x, y, width, height) {
+			// setup canvas
+			var canvas = $('<canvas width="' + width + '" height="' + height + '">');
+			var context = canvas[0].getContext('2d');
+
+			if(element != null) {
+				var img = new Image();
+
+				img.onload = function() {
+					context.save();
+					context.globalAlpha = 0.4;
+					context.drawImage(img,x,y,width,height,0,0,width,height);
+					context.restore();
+
+				    var cursor = canvas[0].toDataURL();
+				    element.attr('src', cursor);
+				}
+
+				// start load
+				img.src = url;
+			}
+		};
+
+		ko.bindingHandlers.sudo_cursor = {
+			init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				var $cursor = $(element);
+				var $container = $cursor.parent();
+				var value = valueAccessor();
+
+				$container.bind('mouseenter', function(e) {
+					$cursor.show();
+				});
+
+				$container.bind('mouseleave', function(e) {
+					$cursor.hide();
+				});
+
+				$container.bind('mousemove', function(e) {
+					var mouse_x = e.pageX,
+						mouse_y = e.pageY;
+
+					var final_x = value.snap_func(mouse_x - $container.offset().left),
+						final_y = value.snap_func(mouse_y - $container.offset().top);
+
+					$cursor.css({
+						'top': final_y,
+						'left':	final_x
+					});
+				});
+			},
+			update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				var $cursor = $(element);
+				var value = valueAccessor();
+
+				if(value.visible){
+
+					if(value.sprite && value.sheet) {
+						// hide real cursor
+						$cursor.parent().css({
+							cursor: 'none'
+						});
+
+						// create sudo cursor
+						var url = value.sheet.to_url(),
+						x = value.sprite.offset_x(), 
+						y = value.sprite.offset_y(),
+						width = value.sprite.width(),
+						height = value.sprite.height();
+
+						cursor_to_canvas(
+							$cursor,
+							ko.unwrap(url),
+							ko.unwrap(x),
+							ko.unwrap(y),
+							ko.unwrap(width),
+							ko.unwrap(height)
+						);
+					}
+					else {
+						// show real cursor
+						$cursor.parent().css({
+							cursor: 'pointer'
+						});
+
+						// clear sudo-cursor
+						$cursor.attr('src', null);
+					}
+
+				}
+				else {
+					// show real cursor
+					$cursor.parent().css({
+						cursor: 'pointer'
+					});
+
+					// clear sudo-cursor
+					$cursor.attr('src', null);
+				}
+		    }
+		}
+
+		ko.bindingHandlers.sprite = {
+			init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				var value = valueAccessor();
+
+				if(value.obj.name()) {
+					value.obj.to_canvas( ko.unwrap(value.obj.name) );
+				}
+			},
+			update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				// do nothing...
+			}
+		}
+
+		ko.bindingHandlers.click_drag = {
+			init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				var $map = $(element);
+				var value = valueAccessor();
+
+				var move_func = function(move_evt) {
+					// perform action on drag
+					value.action(value.data, move_evt);
+				};
+
+				var release_func = function(release_evt) {
+					// remove bindings
+					$map.unbind('mousemove', move_func);
+					$map.unbind('mouseup', release_func);
+
+					// final call to commit changes
+					value.action(value.data, release_evt);
+				};
+
+				// add mouse move and mouse up bindings on click
+				$map.bind('mousedown', function(click_evt) { 
+					// perform action once initially
+					value.action(value.data, click_evt);
+
+					$map.bind('mousemove', move_func);
+
+					$map.bind('mouseup', release_func);
+
+				});		
+
+				// if mouse leaves map unbind functions
+				$map.bind('mouseleave', function(leave_evt) {
+					// remove bindings
+					$map.unbind('mousemove', move_func);
+					$map.unbind('mouseup', release_func);
+				});
+			},
+			update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+				// do nothing...
+			}
+		}
+
+
+		function intersectRect(r1, r2) {
+			return !(r2.left > r1.right || 
+					 r2.right < r1.left || 
+					 r2.top > r1.bottom || 
+					 r2.bottom < r1.top);
+		};
+
+		var utils = {};
+
+		utils.intersectRect = intersectRect;
 
 		return utils;
 	}

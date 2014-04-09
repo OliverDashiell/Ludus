@@ -6,53 +6,13 @@
 		Play
 	</button>
 
-	<span class="label-custom">
-		Editing:
-	</span>
 	<h1 class="editor-bar-title" data-bind="text:game_name"></h1>
-	<span class="label-custom">
-		Tools:
-	</span>
-	<button class="btn btn-default btn-custom btn-custom-inactive">
-		<i class="fa fa-crosshairs icon"></i>
-		Select
-	</button>
-	<button class="btn btn-default btn-custom btn-custom-inactive">
-		<i class="fa fa-pencil icon"></i>
-		Draw
-	</button>
-	<button class="btn btn-default btn-custom btn-custom-inactive">
-		<i class="fa fa-tint icon"></i>
-		Fill
-	</button>
-	<button class="btn btn-default btn-custom btn-custom-inactive">
-		<i class="fa fa-eraser icon"></i>
-		Erase
-	</button>
-	<form class="form-inline" role="form">
-		<div class="form-group">
-			<label class="label-custom" for="map_width">W:</label>
-				<input class="form-control input-custom" id="map_width" 
-					   type="number" placeholder="100" name="quantity" min="5" max="1000"
-					   data-bind="value:map_width">
-		</div>
-		<div class="form-group">
-			<label class="label-custom" for="map_height">H:</label>
-				<input class="form-control input-custom" id="map_height" 
-					   type="number" placeholder="100" name="quantity" min="5" max="1000"
-					   data-bind="value:map_height">
-		</div>
-		<div class="form-group">
-			<label class="label-custom" for="grid_size">S:</label>
-				<input class="form-control input-custom" id="grid_size" 
-					   type="number" placeholder="16" name="quantity" min="5" max="100"
-					   data-bind="value:grid_size">
-		</div>
-	</form>
+
+	<div class="clearfix"></div>
 </div>
 
 <div class="row">
-	<div class="col-md-7">
+	<div class="col-md-7 map-col">
 		<ul class="nav nav-tabs nav-justified nav-tabs-custom">
 		  <li class="active">
 		  	<a href="#grid" data-toggle="tab">
@@ -80,19 +40,85 @@
 				<div class="panel-heading panel-heading-custom">
 				</div>
 				<!-- Gridded map area -->
-				<div class="panel-body panel-body-custom grid-container">
+				<div id="map" class="panel-body panel-body-custom grid-container"
+					 data-bind="click_drag:{data:$data, action:$.proxy(do_action, $data)}">
 		            <!-- ko foreach:sprite_list -->
-		                <div class="map-item" data-bind="style: to_style(-1)"></div>
+		                <img class="map-item" 
+		                	 draggable="false"
+		                	 data-bind="style:$data.to_style(),
+		                	 			attr:{id:$data.name}, 
+		                	 			sprite:{obj:$data}">
 		            <!-- /ko -->
-		            <img draggable="false" 
-		            	 data-bind="grid:{grid:grid_size, width:map_width, height:map_height}, visible:show_mapgrid()==true">
+		            
+					<img class="sudo-cursor"
+						 draggable="false"
+						 data-bind="sudo_cursor:{sprite: spritesheet_editor.active_sprite(), 
+						 						 sheet: spritesheet_editor.selected_sheet(), 
+						 						 snap_func: $.proxy(spritesheet_editor.snap_to_grid_floor, spritesheet_editor),
+						 						 visible: tool()=='Draw'||tool()=='Fill'}">
+
+					<img id="map_grid"
+		            	 draggable="false" 
+		            	 data-bind="grid:{grid_size:grid_size, width:map_width, height:map_height, scale:true}, 
+		            	 			visible:show_mapgrid()==true">
 				</div>
-				<div class="panel-footer panel-footer-custom">
+				<div class="panel-footer panel-footer-custom map-edit-bar">
 					<button class="btn btn-default pull-right btn-custom active" 
 							id="show_mapgrid_btn" data-bind="click:$.proxy(mapgrid_show_hide, $data)">
 						<i class="fa fa-th-large icon"></i>
 						Grid
 					</button>
+
+					<form class="form-inline pull-right" role="form">
+						<div class="form-group">
+							<label class="label-custom" for="map_width">W:</label>
+								<input class="form-control input-custom" id="map_width" 
+									   type="text" placeholder="100" name="quantity"
+									   data-bind="value:map_width">
+						</div>
+						<div class="form-group">
+							<label class="label-custom" for="map_height">H:</label>
+								<input class="form-control input-custom" id="map_height" 
+									   type="text" placeholder="100" name="quantity"
+									   data-bind="value:map_height">
+						</div>
+						<div class="form-group">
+							<label class="label-custom" for="grid_size">S:</label>
+								<input class="form-control input-custom" id="grid_size" 
+									   type="text" placeholder="16" name="quantity"
+									   data-bind="value:grid_size">
+						</div>
+					</form>
+
+					<div class="btn-group">
+						<button class="btn btn-default btn-custom"
+								data-bind="click:$.proxy(tool, $data, 'Select'),
+										   css:{ active:tool()=='Select' }">
+							<i class="fa fa-crosshairs icon"></i>
+							Select
+						</button>
+						<button class="btn btn-default btn-custom"
+								data-bind="click:$.proxy(tool, $data, 'Draw'),
+										   css:{ active:tool()=='Draw' },
+										   enable:spritesheet_editor.active_sprite()">
+							<i class="fa fa-pencil icon"></i>
+							Draw
+						</button>
+						<button class="btn btn-default btn-custom"
+								data-bind="click:$.proxy(tool, $data, 'Fill'),
+										   css:{ active:tool()=='Fill' },
+										   enable:spritesheet_editor.active_sprite()">
+							<i class="fa fa-tint icon"></i>
+							Fill
+						</button>
+						<button class="btn btn-default btn-custom"
+								data-bind="click:$.proxy(tool, $data, 'Erase'),
+										   css:{ active:tool()=='Erase' },
+										   enable:sprite_list().length > 0">
+							<i class="fa fa-eraser icon"></i>
+							Erase
+						</button>
+					</div>
 				</div>
 		  	</div>
 		  </div>
@@ -100,8 +126,41 @@
 		  	<div class="panel panel-default tab-panel tab-panel-custom">
 		  		<div class="panel-heading panel-heading-custom">
 				</div>
-		  		<!-- List of sprites on map -->
-		  		<div class="panel-body-custom">
+		  		<div class="panel-body panel-body-custom">
+		  			<!-- List of sprites on map -->
+		  			<table class="table table-hover">
+		  				<thead>
+		  					<tr class="titles">
+		  						<th class="spacer"></th> <!-- spacer -->
+								<th>
+									<i class="fa fa-asterisk icon"></i>
+									Name
+								</th>
+								<th>
+									<i class="fa fa-sort-amount-asc icon"></i>
+									Layer
+								</th>
+								<th>
+									<i class="fa fa-picture-o icon"></i>
+									Sheet
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach:sprite_list -->
+							<tr class="t-row"
+								data-bind="css:{active:$parent.editing_sprite() == $data}, 
+											   click:$parent.editing_sprite, 
+											   clickBubble:false">
+								<td class="spacer"></td> <!-- spacer -->
+								<td data-bind="text:$data.name()"></td>
+								<td data-bind="text:$data.layer()"></td> 
+								<td data-bind="text:$data.sheet()"></td>
+							</tr>
+							<!-- /ko -->
+						</tbody>
+					</table>
+
 		  			<div class="placeholder-center" data-bind="visible:sprite_list().length == 0">
 						<div class="circle">
 							<i class="fa fa-bug icon"></i>
@@ -128,7 +187,7 @@
 		  </div>
 		</div>
 	</div>
-	<div class="col-md-5">
+	<div class="col-md-5 game-col">
 		<ul class="nav nav-tabs nav-justified nav-tabs-custom">
 		  <li class="active">
 		  	<a href="#spritesheets" data-toggle="tab">

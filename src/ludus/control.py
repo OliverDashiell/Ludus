@@ -165,6 +165,8 @@ class Control(object):
             except IntegrityError:
                 raise Exception("Username has been taken")
             
+            # broadcast username changes to relevant games
+            
             return {'user_id':user_id, 'name':name}
         
     
@@ -196,19 +198,9 @@ class Control(object):
             user.image = image
             session.commit()
             
+            # broadcast user image changes to relevant games
+            
             return {'user_id':user_id, 'image':image}
-        
-    def get_player_image(self, player_id):
-        with self._session_ as session:
-            user = session.query(model.User).get(player_id)
-                           
-            if user is None:
-                raise Exception("No such user")
-            
-            image = user.image
-            session.commit()
-            
-            return {'user_id':player_id, 'image':image}
         
         
     def add_game(self, name, owner_id):

@@ -2,12 +2,24 @@
 </div>
 <div class="panel-body panel-body-custom grid-container">
 	<!-- ko if: selected_sheet -->
-		<img draggable="false"
-			 data-bind="attr:{ src:sheet_url }">
-		<img draggable="false"
-			 data-bind="grid:{grid:editor.grid_size, width:sheet_width, height:sheet_height}, 
+		<img id="sheet_image"
+			 draggable="false"
+			 data-bind="attr:{ src:selected_sheet().to_url() }">
+		<img class="image-grid"
+			 draggable="false"
+			 data-bind="grid:{grid_size:editor.grid_size, 
+			 				  dimensions:selected_sheet, 
+			 				  scale:false}, 
 						visible:show_sheetgrid()==true,
 						drag_rect:$data">
+
+		<!-- ko with: selected_sheet -->
+			<!-- ko foreach: sprite_items -->
+				<div class="spritesheet-item" data-bind="style:$data.to_style(),
+														 click:$parents[1].active_sprite, 
+														 css:{'selected':$parents[1].active_sprite() == $data}"></div>
+			<!-- /ko -->
+		<!-- /ko -->
 	<!-- /ko -->
 	<div class="placeholder-center" data-bind="visible:selected_sheet() == null">
 		<div class="circle">
@@ -17,11 +29,13 @@
 	</div>
 </div>
 <div class="panel-footer panel-footer-custom">
-	<button class="btn btn-default pull-right btn-custom btn-custom-danger">
+	<button class="btn btn-default pull-right btn-custom btn-custom-danger"
+			data-bind="click:remove_sheet_item, enable:active_sprite">
 		<i class="fa fa-trash-o icon"></i>
 		Remove
 	</button>
-	<button class="btn btn-default pull-right btn-custom btn-left-set">
+	<button class="btn btn-default pull-right btn-custom btn-left-set"
+			data-bind="click:add_sheet_item, enable:selected_sprite">
 		<i class="fa fa-pencil-square-o icon"></i>
 		Add
 	</button>
@@ -34,19 +48,19 @@
 	<div class="btn-group dropup">
 		<button class="btn btn-default dropdown-toggle btn-custom btn-dropdown" type="button" data-toggle="dropdown">
 			<i class="fa fa-archive icon"></i>
-			<span class='sheetname' data-bind="text:selected_sheet()?selected_sheet():'sheets'"></span>
+			<span class="sheetname" data-bind="text:selected_sheet()?selected_sheet().sheet:'sheets'"></span>
 			<span class="caret"></span>
 		</button>
 		
 		<ul class="dropdown-menu" role="menu">
 			<li class="dropdown-header">Sprites</li>
 			<!-- ko foreach: spritesheets -->
-				<li><a class="sheetname" href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
+				<li><a class="sheetname" href="#" data-bind="text:$data.sheet, click:$.proxy($parent.set_sheet, $parent)"></a></li>
 			<!-- /ko -->
 			<li data-bind="visible:spritesheets().length==0"><p class="note">No spritesheets</p></li>
 			<li class="dropdown-header">Tiles</li>
 			<!-- ko foreach: tiles -->
-				<li><a class="sheetname" href="#" data-bind="text:$data, click:$parent.selected_sheet"></a></li>
+				<li><a class="sheetname" href="#" data-bind="text:$data.sheet, click:$.proxy($parent.set_sheet, $parent)"></a></li>
 			<!-- /ko -->
 			<li data-bind="visible:tiles().length==0"><p class="note">No tiles</p></li>
 		</ul>
