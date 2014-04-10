@@ -113,8 +113,7 @@
 						</button>
 						<button class="btn btn-default btn-custom"
 								data-bind="click:$.proxy(tool, $data, 'Erase'),
-										   css:{ active:tool()=='Erase' },
-										   enable:sprite_list().length > 0">
+										   css:{ active:tool()=='Erase' }">
 							<i class="fa fa-eraser icon"></i>
 							Erase
 						</button>
@@ -150,10 +149,27 @@
 							<!-- ko foreach:sprite_list -->
 							<tr class="t-row"
 								data-bind="css:{active:$parent.editing_sprite() == $data}, 
-											   click:$parent.editing_sprite, 
+											   click:$parent.editing_sprite,
+											   event:{ dblclick:$.proxy($parent.show_name_edit, $parent) }, 
 											   clickBubble:false">
 								<td class="spacer"></td> <!-- spacer -->
-								<td data-bind="text:$data.name()"></td>
+								<td>
+									<span data-bind="text:$data.name(),
+													 visible:$parent.edit_name_visible() != $data"></span>
+
+									<form class="form-inline form-inline-condensed form-overlay" role="form" 
+										  data-bind="submit:$.proxy($parent.update_sprite_name, $parent), 
+										  			 visible:$parent.edit_name_visible() == $data">
+										<div class="form-group">
+											<label class="sr-only" for="update_name">Update Sprite Name</label>
+											<input class="form-control input-custom" id="update_sprite_name" 
+												   type="text" placeholder="Enter name"
+												   data-bind="value:$parent.edit_name_value, 
+												   			  valueUpdate:'keyup', 
+												   			  hasFocus:$parent.edit_name_visible() == $data">
+										</div>
+									</form>
+								</td>
 								<td data-bind="text:$data.layer()"></td> 
 								<td data-bind="text:$data.sheet()"></td>
 							</tr>
@@ -169,6 +185,17 @@
 					</div>
 				</div>
 				<div class="panel-footer panel-footer-custom">
+					<button class="btn btn-default pull-right btn-custom btn-custom-danger"
+							data-bind="click:$.proxy(remove_selected_sprite, $data),
+									   enable:$data.editing_sprite()">
+						<i class="fa fa-trash-o icon"></i>
+						Delete
+					</button>
+					<button class="btn btn-default pull-right btn-custom btn-left-set"
+							data-bind="enable:$data.editing_sprite()">
+						<i class="fa fa-gear icon"></i>
+						Edit
+					</button>
 				</div>
 		  	</div>
 		  </div>

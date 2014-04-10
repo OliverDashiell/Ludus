@@ -30,6 +30,11 @@
 		<i class="fa fa-trash-o icon"></i>
 		Delete
 	</button>
+	<button class="btn btn-default pull-right btn-custom btn-left-set"
+			data-bind="enable:selected_layer()">
+		<i class="fa fa-gears icon"></i>
+		Edit
+	</button>
 
 	<form class="form-inline form-inline-condensed" role="form" data-bind="submit:$.proxy(create_layer, $data)">
 		<div class="form-group input-grouped">

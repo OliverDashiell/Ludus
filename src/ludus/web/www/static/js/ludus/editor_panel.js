@@ -12,6 +12,10 @@ define(
 			// selected sprite
 			this.editing_sprite = ko.observable();
 
+			// sprite name editing
+			this.edit_name_visible = ko.observable(null);
+			this.edit_name_value = ko.observable(null);
+
 			// game state
 			this.game = ko.observable();
 			this.game_id = ko.observable();
@@ -61,20 +65,25 @@ define(
 		        owner: this
 		    });
 
+		    this.editing_sprite.subscribe(function() {
+				if(this.editing_sprite() != this.edit_name_visible()){
+					this.edit_name_value(null);
+					this.edit_name_visible(null);
+				}
+			}, this);
+
+			this.sprite_list.subscribe(function() {
+				if(this.editing_sprite() && this.get_sprite_index( this.editing_sprite().name() ) == -1){
+					this.editing_sprite(null);
+				}
+			}, this);
+
 			// if active sprite is null default to select tool
 		    this.spritesheet_editor.active_sprite.subscribe(function(value){
 		    	if(!value){
-		    		this.tool('Select');
-		    	}
-		    	else {
-		    		this.tool('Draw');
-		    	}
-		    }, this);
-
-		    // if sprite list is empty default to select tool
-		    this.sprite_list.subscribe(function(value){
-		    	if(value.length == 0){
-		    		this.tool('Select');
+		    		if(this.tool() == 'Draw' || this.tool() == 'Fill'){
+		    			this.tool('Select');
+		    		}
 		    	}
 		    }, this);
 
@@ -167,7 +176,7 @@ define(
 
 			if(this.game_sync() == false) {
 				// alert user - game desyncronised updating with other user changes
-				this.appl.notify("Another user has saved over your changes, try again.", "warning", 4000);
+				this.appl.notify("Another user has saved over your changes, try again.", "error", 4000);
 			}
 
 			this.game_sync(true);
@@ -181,7 +190,13 @@ define(
 				for (i = 0; i < items.length; i++) {
 					item = items[i];
 
-					this.sprite_list.push( new SpriteListItem(item) );
+					var sprite = new SpriteListItem(item);
+
+					this.sprite_list.push(sprite);
+
+					if(this.editing_sprite() && sprite.name() == this.editing_sprite().name()) {
+						this.editing_sprite(sprite);
+					}
 				};
 			}
 
@@ -192,6 +207,54 @@ define(
 			this.spritesheet_editor.set_game(game);
 
 			this.layers_editor.layers(game.state.layers);
+		};
+
+		EditorPanel.prototype.update_sprite_name = function(form) {
+			if(this.edit_name_value()) {
+
+				if(this.edit_name_value() != this.editing_sprite().name()) {
+					var index = this.get_sprite_index( this.edit_name_value() );
+
+					if(index == -1) {
+						index = this.get_sprite_index( this.edit_name_visible().name() );
+
+						this.game().state.objects[index].name = this.edit_name_value();
+						this.save_game();
+
+						this.sprite_list()[index].name( this.edit_name_value() );
+						this.editing_sprite( this.sprite_list()[index] );
+					}
+					else {
+						this.appl.notify("A object with that name already exists", "warning", 4000);
+					}
+				}
+
+			}
+			else {
+				this.appl.notify("Cannot change object name to nothing", "warning", 4000);
+			}
+			
+			this.edit_name_value(null);
+			this.edit_name_visible(null);
+		};
+
+		EditorPanel.prototype.remove_selected_sprite = function() {
+			if(this.editing_sprite()) {
+				var index = this.get_sprite_index( this.editing_sprite().name() );
+
+				var deleted = this.remove_sprite_by_index( index );
+
+				if(deleted) {
+					this.save_game();
+					this.editing_sprite(null);
+				}
+			}
+		};
+
+		EditorPanel.prototype.show_name_edit = function(obj) {
+			this.editing_sprite(obj);
+			this.edit_name_visible(obj);
+			this.edit_name_value(obj.name());
 		};
 
 		EditorPanel.prototype.mapgrid_show_hide = function() {
@@ -240,6 +303,17 @@ define(
 		    }
 		};
 
+		EditorPanel.prototype.sort_by_layer = function(list){
+			var layers_list = this.layers_editor.layers();
+
+			list.sort(function(l,r) {
+				var l_index = layers_list.indexOf(ko.unwrap(l.layer));
+		        var r_index = layers_list.indexOf(ko.unwrap(r.layer));
+		        
+		        return l_index - r_index;
+			});
+		};
+
 		EditorPanel.prototype.get_sheet_by_name = function(name) { 
 			var i,item,items = this.game().state.sheets.spritesheets;
 
@@ -264,7 +338,7 @@ define(
 
 		EditorPanel.prototype.get_sprite_index = function(name) {
 			if(!this.game().state.objects) {
-				return;
+				return -1;
 			}
 
 			var i,item,items = this.game().state.objects;
@@ -276,6 +350,39 @@ define(
 					return i; 
 				}
 			};
+
+			return -1;
+		};
+
+		EditorPanel.prototype.remove_sprite_by_index = function(index) {
+			if(index != -1 && index < this.game().state.objects.length) {
+				this.game().state.objects.splice(index, 1);
+				this.sprite_list.splice(index, 1);
+
+				return true;
+			}
+			return false;
+		};
+
+		EditorPanel.prototype.remove_sprites_by_layer = function(layer) {
+			var deleted = true;
+			var i,item,items = this.game().state.objects;
+
+			for (i = items.length-1; i > -1; i--) {
+				item = items[i];
+
+				if(item.layer == layer) {
+					deleted = this.remove_sprite_by_index(i);
+
+					if(!deleted) {
+						// roll back
+						this.game().state.objects = items;
+						return deleted;
+					}
+				}
+			};
+
+			return deleted;
 		};
 
 		EditorPanel.prototype.get_overlapping_sprite = function(x,y,width,height,layer) {
@@ -330,7 +437,7 @@ define(
 			var item = this.get_overlapping_sprite(x,y,width,height,this.layers_editor.selected_layer());
 
 			if(!item){
-				var name = 'object_'+ (new Date()).getTime();
+				var name = 'object_'+ x + y + this.layers_editor.selected_layer();
 
 				// create item
 				item = new SpriteListItem({
@@ -347,10 +454,12 @@ define(
 				});
 
 				this.sprite_list.push(item);
+				this.sort_by_layer(this.sprite_list);
 
 				// if default objects list is null on game state create the list
 				if(this.game().state.objects) {
 					this.game().state.objects.push(item);
+					this.sort_by_layer(this.game().state.objects);
 				}
 				else {
 					this.game().state.objects = new Array();
@@ -366,10 +475,12 @@ define(
 
 			if(item) {
 				var index = this.get_sprite_index(item.name());
-				this.game().state.objects.splice(index, 1);
-				this.sprite_list.splice(index, 1);
 
-				this.game_sync(false);
+				var deleted = this.remove_sprite_by_index(index);
+
+				if(deleted) {
+					this.game_sync(false);
+				}
 			}
 		};
 

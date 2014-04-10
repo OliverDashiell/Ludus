@@ -30,16 +30,40 @@ define(
 
 		LayersEditor.prototype.remove_layer = function() {
 			if(this.selected_layer() != 'background') {
-				var index = this.layers.indexOf( this.selected_layer() );
+				var that = this;
+				var modal = $('#delete_layer_dlog').modal();
 
-				this.layers.splice(index, 1);
+				var delete_btn = $('#delete_layer_button').click(function() {
+					// delete all sprites for this layer
+					var deleted = that.editor.remove_sprites_by_layer(that.selected_layer());
 
-				this.editor.save_game();
-				this.selected_layer( this.layers()[0] );
+					if(deleted) {
+						var index = that.layers.indexOf( that.selected_layer() );
+
+						that.layers.splice(index, 1);
+
+						that.editor.save_game();
+						that.selected_layer( that.layers()[0] );
+					}
+					else {
+						that.appl.notify("One or more of the sprites on this layer could not be deleted, try again.", "error", 4000);
+					}
+
+					modal.modal('hide');
+				});
+
+				modal.modal('show');
+
+				// must remove event handlers so that closures can be garbage collected
+				modal.on('hidden.bs.modal', function(e) {
+					modal.off('hidden.bs.modal');
+					delete_btn.off('click');
+				});
 			}
 		};
 
 		LayersEditor.prototype.layer_moved = function(data) {
+			this.editor.sort_by_layer(this.editor.game().state.objects);
 			this.editor.save_game();
 		};
 

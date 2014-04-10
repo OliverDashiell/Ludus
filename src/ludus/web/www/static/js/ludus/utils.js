@@ -407,14 +407,13 @@ define(
 				};
 
 				// add mouse move and mouse up bindings on click
-				$map.bind('mousedown', function(click_evt) { 
-					// perform action once initially
-					value.action(value.data, click_evt);
-
+				$map.bind('mousedown', function(click_evt) {
+					// apply bindings
 					$map.bind('mousemove', move_func);
-
 					$map.bind('mouseup', release_func);
 
+					// perform action once initially
+					value.action(value.data, click_evt);
 				});		
 
 				// if mouse leaves map unbind functions

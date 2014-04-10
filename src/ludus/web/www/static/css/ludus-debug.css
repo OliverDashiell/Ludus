@@ -80,6 +80,24 @@
 	text-shadow: none;
 }
 
+.btn-group .btn-custom:first-child:not(:last-child) {
+	margin-right: 0px;
+}
+
+.btn-group .btn-custom:not(:first-child):not(:last-child) {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.btn-group .btn-custom:not(:first-child):not(:last-child):disabled {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.btn-group .btn-custom:last-child:not(:first-child) {
+	margin-left: 0px;
+}
+
 .btn-group .btn-custom:hover {
 	color: #F2F2F2;
 	background-image: none;
@@ -696,7 +714,7 @@ input[readonly] {
 /* ================================= */
 .selection-box {
 	cursor: crosshair;
-	z-index: 900;
+	z-index: 1001;
 	position: absolute;
 	background: transparent;
 	border: 1px dotted #222;
@@ -789,6 +807,7 @@ html,body {
 }
 
 .sudo-cursor {
+	z-index: 2000;
 	position: absolute;
 }
 
