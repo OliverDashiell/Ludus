@@ -1,0 +1,73 @@
+<div class="panel-heading panel-heading-custom">
+</div>
+<div class="panel-body panel-body-custom">	
+	<!-- ko if:$parent.editing_sprite() -->
+	<div class="row properties">
+		<div class="col-md-7 property-col property-col-primary">
+			<!-- ko with:$parent.editing_sprite() -->
+			<div class="property-title obj-name">
+				<i class="fa fa-asterisk icon"></i>
+				<span class="title-item" data-bind="text:$data.name()"></span>
+			</div>
+			<div class="list-group obj-body" data-bind="sortable:{ data:$data.properties, dragged:$.proxy($parent.add_property, $parent) }">
+				<a href="#" class="list-group-item list-group-item-custom sortable-item"
+							data-bind="css:{active:$parents[1].selected_property() == $data}, 
+									   click:$.proxy($parents[1].selected_property, $parents[1]), 
+									   clickBubble:false">
+
+					<span data-bind="text:$data.name"></span>
+				</a>
+			</div>
+
+			<div class="property-title layer-name">
+				<i class="fa fa-sort-amount-asc icon"></i>
+				<span class="title-item" data-bind="text:$data.layer().name"></span>
+			</div>
+			<div class="layer-body">
+				
+			</div>
+			<!-- /ko -->
+		</div>
+		<div class="col-md-5 property-col">
+			<div class="property-title">
+				<i class="fa fa-flash icon"></i>
+				Action
+			</div>
+			<!-- Actions -->
+			<div class="list-group property-body" data-bind="foreach:actions">
+				<a href="#" class="list-group-item list-group-item-custom sortable-item"
+							data-bind="draggable:{data:$data}">
+					<span data-bind="text:$data.name"></span>
+				</a>
+			</div>
+
+			<div class="property-title property-body">
+				<i class="fa fa-puzzle-piece icon"></i>
+				Component
+			</div>
+			<!-- Components -->
+			<div class="list-group" data-bind="foreach:components">
+				<a href="#" class="list-group-item list-group-item-custom sortable-item"
+							data-bind="draggable:{data:$data}">
+					<span data-bind="text:$data.name"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<!-- /ko -->
+
+	<div class="placeholder-center" data-bind="visible:!$parent.editing_sprite()">
+		<div class="circle">
+			<i class="fa fa-gears icon"></i>
+		</div>
+		<p class="note">No sprite has been selected.</p>
+	</div>
+</div>
+<div class="panel-footer panel-footer-custom">
+	<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
+			data-bind="click:$.proxy(remove_property, $data),
+					   enable:selected_property()">
+		<i class="fa fa-trash-o icon"></i>
+		Remove
+	</button>
+</div>

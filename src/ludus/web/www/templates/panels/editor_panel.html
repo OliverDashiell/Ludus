@@ -46,6 +46,7 @@
 		                <img class="map-item" 
 		                	 draggable="false"
 		                	 data-bind="style:$data.to_style(),
+		                	 			css:{active:$parent.editing_sprite() == $data},
 		                	 			attr:{id:$data.name}, 
 		                	 			sprite:{obj:$data}">
 		            <!-- /ko -->
@@ -131,15 +132,15 @@
 		  				<thead>
 		  					<tr class="titles">
 		  						<th class="spacer"></th> <!-- spacer -->
-								<th>
+								<th class="primary">
 									<i class="fa fa-asterisk icon"></i>
 									Name
 								</th>
-								<th>
+								<th class="secondary">
 									<i class="fa fa-sort-amount-asc icon"></i>
 									Layer
 								</th>
-								<th>
+								<th class="secondary">
 									<i class="fa fa-picture-o icon"></i>
 									Sheet
 								</th>
@@ -153,7 +154,7 @@
 											   event:{ dblclick:$.proxy($parent.show_name_edit, $parent) }, 
 											   clickBubble:false">
 								<td class="spacer"></td> <!-- spacer -->
-								<td>
+								<td class="primary">
 									<span data-bind="text:$data.name(),
 													 visible:$parent.edit_name_visible() != $data"></span>
 
@@ -170,8 +171,8 @@
 										</div>
 									</form>
 								</td>
-								<td data-bind="text:$data.layer()"></td> 
-								<td data-bind="text:$data.sheet()"></td>
+								<td class="secondary" data-bind="text:$data.layer().name"></td> 
+								<td class="secondary" data-bind="text:$data.sheet()"></td>
 							</tr>
 							<!-- /ko -->
 						</tbody>
@@ -257,18 +258,8 @@
 		  </div>
 		  <div class="tab-pane" id="properties">
 		  	<div class="panel panel-default tab-panel tab-panel-custom">
-		  		<div class="panel-heading panel-heading-custom">
-				</div>
-				<div class="panel-body panel-body-custom">
-					<div class="placeholder-center">
-						<div class="circle">
-							<i class="fa fa-gears icon"></i>
-						</div>
-						<p class="note">No sprite has been selected.</p>
-					</div>
-				</div>
-				<div class="panel-footer panel-footer-custom">
-				</div>
+		  		<!-- ko template:{name:'properties-editor', data:properties_editor} -->
+				<!-- /ko -->
 	  		</div>
 		  </div>
 		  <div class="tab-pane" id="players">

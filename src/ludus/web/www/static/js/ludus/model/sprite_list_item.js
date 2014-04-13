@@ -1,10 +1,9 @@
 define(
-	["jquery", "knockout", "../utils"],
-	function($, ko, utils){
+	["jquery", "knockout", "../utils", "../model/layer"],
+	function($, ko, utils, Layer){
 
 		function SpriteListItem(options){
 			this.name = ko.observable('object');
-			this.layer = ko.observable('background');
 			this.map_x = ko.observable(0);
 			this.map_y = ko.observable(0);
 
@@ -14,12 +13,15 @@ define(
 			this.width = ko.observable(0);
 			this.height = ko.observable(0);
 
+			this.layer = ko.observable( null );
+
+			this.properties = ko.observableArray();
+
 			this.update(options);
 		}
 
 		SpriteListItem.prototype.update = function(options) {
 			this.name(options.name || 'object');
-			this.layer(options.layer || 'background');
 			this.map_x(options.map_x || 0);
 			this.map_y(options.map_y || 0);
 
@@ -28,6 +30,20 @@ define(
 			this.offset_y(options.offset_y || 0);
 			this.width(options.width || 0);
 			this.height(options.height || 0);
+
+
+			this.layer(new Layer(options.layer) || new Layer());
+
+			this.properties.removeAll();
+			if(options.properties) {
+				var i,item,items = options.properties;
+
+				for (var i = 0; i < items.length; i++) {
+					item = items[i];
+
+					this.properties().push(item);
+				};
+			}
 		};
 
 		SpriteListItem.prototype.r = function() {
@@ -41,7 +57,10 @@ define(
 
 		SpriteListItem.prototype.overlaps = function(r) {
 			if(utils.intersectRect(this.r(), r)) {
-				return this;
+				return true;
+			}
+			else {
+				return false;
 			}
 		};
 

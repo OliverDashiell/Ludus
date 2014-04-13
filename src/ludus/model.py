@@ -18,7 +18,10 @@ DEFAULT_GAME = {
         "scale":16
     },
     "layers":[
-        "background"
+        {
+         "name":"background",
+         "properties":[]
+        }
     ],
     "sheets": {
        "spritesheets":[],

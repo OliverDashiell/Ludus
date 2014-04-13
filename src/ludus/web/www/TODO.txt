@@ -4,7 +4,11 @@ ToDo:
 
 - group tool that consolidates sprite in group into one object and one image?
 
+- change image loading to sprite sheet object so sheets load only once
 - add user icon broadcast changes
+
+- move game state changes from js layer to server
+- implement locks on key areas of game state
 
 - if locking objects on selected, must resolve layers deleting cascade
 - must also resolve point deletes from sprite list view and erase tool

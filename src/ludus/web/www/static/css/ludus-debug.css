@@ -632,6 +632,22 @@ input[readonly] {
 	background-color: #428BCA;
 }
 
+.table tr .primary span {
+	width: 190px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: text-bottom;
+}
+
+.table tr .secondary span {
+	max-width: 100px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: text-bottom;
+}
+
 .table .titles {
 	background-color: #C2C2C2;
 	color: #F2F2F2;
@@ -730,7 +746,7 @@ input[readonly] {
 	position: absolute;
 	z-index: 1000;
 	background-color: transparent;
-	border: 1px solid #FB8C1F; /*#FB8C1F;*/
+	border: 1px solid #FB8C1F;
 } 
 
 .spritesheet-item.selected {
@@ -739,6 +755,61 @@ input[readonly] {
 
 .grid-container .image-grid {
 	cursor: crosshair;
+}
+
+
+/* ================================= */
+/* == Properties Editor CSS ======== */
+/* ================================= */
+.panel-body-custom .properties {
+	height: 100%;
+	width: 100%;
+
+	padding: 0px;
+	margin: 0px;
+}
+
+.properties .property-col {
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+}
+
+.properties .property-col-primary {
+	border-right: 1px solid black;
+}
+
+.properties .property-title {
+	height: 6%;
+	width: 100%;
+	padding: 5px 20px;
+	font-weight: bold;
+	background-color: #C2C2C2;
+	color: #F2F2F2;
+	border: 1px solid #F2F2F2;
+}
+
+.properties .property-title span {
+	display: inline-block;
+	vertical-align: middle;
+	max-width: 70%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+}
+
+.properties .property-title .icon {
+	margin-right: 10px;
+}
+
+.properties .property-body {
+	max-height: 42%;
+	overflow: auto;
+}
+
+.properties .obj-body, .properties .layer-body {
+	height: 42%;
+	overflow: auto;
 }
 
 
@@ -793,6 +864,7 @@ html,body {
 
 .list-group {
 	vertical-align: middle;
+	border-radius: 0px;
 }
 
 .list-group .icon {
@@ -813,6 +885,11 @@ html,body {
 
 .map-item {
 	position: absolute;
+}
+
+.map-item.active {
+	border: 1px solid #FB8C1F;
+	box-shadow: 0px 0px 10px rgba(251,140,31,1);
 }
 
 
@@ -1061,5 +1138,6 @@ html,body {
 
 #cr-stage {
 	text-align: center;
+	border: 1px solid black;
 }
 

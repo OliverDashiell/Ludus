@@ -28,7 +28,10 @@ define(
 
 		SpriteSheetItem.prototype.overlaps = function(r) {
 			if(utils.intersectRect(this.r(), r)) {
-				return this;
+				return true;
+			}
+			else {
+				return false;
 			}
 		};
 

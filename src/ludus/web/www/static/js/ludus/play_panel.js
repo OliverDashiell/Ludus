@@ -1,5 +1,5 @@
 define(
-	["jquery", "knockout", "./my_game/main"], 
+	["jquery", "knockout", "./model/game/main"], 
 	function($, ko, Game){
 
 		function PlayPanel(appl){
@@ -16,7 +16,7 @@ define(
 		};
 
 		PlayPanel.prototype.hide = function() {
-			if(this.is_running === true){
+			if(this.is_running === true) {
 				this.preview.stop(false);
 			}
 		};
@@ -34,10 +34,10 @@ define(
 		};
 
 		PlayPanel.prototype.restart = function() {
-			if(this.is_running === true){
+			if(this.is_running === true) {
 				this.preview.stop(false);
 				$("#cr-stage").remove();
-				$("#game-panel").append('<div id="cr-stage"></div>');
+				$("#game-panel").append('<div id="cr-stage" class="center-block"></div>');
 				this.start();
 			}
 		};

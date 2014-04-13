@@ -7,7 +7,7 @@
 							   click:$.proxy($parent.selected_layer, $parent),
 							   event:{ dblclick:$.proxy($parent.show_edit, $parent) }, 
 							   clickBubble:false">
-			<span data-bind="text:$data, visible:$parent.edit_visible() != $data"></span>
+			<span data-bind="text:$data.name(), visible:$parent.edit_visible() != $data"></span>
 
 			<form class="form-inline form-inline-condensed form-overlay" role="form" 
 				  data-bind="submit:$.proxy($parent.update_layer, $parent), 
@@ -20,21 +20,21 @@
 				</div>
 			</form>
 
-			<i class="fa fa-lock icon" data-bind="visible:$data == 'background'"></i>
+			<i class="fa fa-lock icon" data-bind="visible:$data.name() == 'background'"></i>
 		</a>
 	</div>
 </div>
 <div class="panel-footer panel-footer-custom">
 	<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
-			data-bind="click:$.proxy(remove_layer, $data), enable:selected_layer() && selected_layer() != 'background'">
+			data-bind="click:$.proxy(remove_layer, $data), enable:selected_layer() && selected_layer().name() != 'background'">
 		<i class="fa fa-trash-o icon"></i>
 		Delete
 	</button>
-	<button class="btn btn-default pull-right btn-custom btn-left-set"
+	<!-- <button class="btn btn-default pull-right btn-custom btn-left-set"
 			data-bind="enable:selected_layer()">
 		<i class="fa fa-gears icon"></i>
 		Edit
-	</button>
+	</button> -->
 
 	<form class="form-inline form-inline-condensed" role="form" data-bind="submit:$.proxy(create_layer, $data)">
 		<div class="form-group input-grouped">
@@ -46,7 +46,7 @@
 		<button type="submit" 
 				id="create_layer_btn" 
 				class="btn btn-default btn-custom btn-input-attached" 
-				data-bind="disable:!new_layer() || layers.indexOf( new_layer() ) != -1">
+				data-bind="disable:!new_layer() || get_layer_index( new_layer() ) != -1">
 			<i class="fa fa-plus icon"></i>
 			Create
 		</button>

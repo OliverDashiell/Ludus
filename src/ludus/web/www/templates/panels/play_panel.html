@@ -6,19 +6,16 @@
 		Reset
 	</button>
 
-	<button class="btn btn-default align-right btn-custom" data-bind="click: edit_game">
+	<button class="btn btn-default align-right btn-custom btn-left-set" data-bind="click: edit_game">
 		<i class="fa fa-wrench icon"></i>
 		Edit
 	</button>
 
-	<span class="label-custom">
-		Playing:
-	</span>
 	<h1 class="editor-bar-title" data-bind="text:game().name"></h1>
 </div>
 
-<div id="game-panel" class="panel-center-custom center-block">
-	<div id="cr-stage"></div>
+<div id="game-panel">
+	<div id="cr-stage" class="center-block"></div>
 </div>
 
 </div>

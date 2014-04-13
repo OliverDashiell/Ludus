@@ -1,6 +1,6 @@
 define(
-	["jquery", "knockout", "./players_editor", "./spritesheet_editor", "./layers_editor", "./model/sprite_list_item"], 
-	function($, ko, PlayersEditor, SpritesheetEditor, LayersEditor, SpriteListItem){
+	["jquery", "knockout", "./players_editor", "./spritesheet_editor", "./layers_editor", "./properties_editor", "./model/sprite_list_item"], 
+	function($, ko, PlayersEditor, SpritesheetEditor, LayersEditor, PropertiesEditor, SpriteListItem){
 
 		function EditorPanel(appl){
 			this.appl = appl;
@@ -10,7 +10,7 @@ define(
 			this.tool = ko.observable('Select');
 
 			// selected sprite
-			this.editing_sprite = ko.observable();
+			this.editing_sprite = ko.observable(null);
 
 			// sprite name editing
 			this.edit_name_visible = ko.observable(null);
@@ -34,6 +34,7 @@ define(
 			this.players_editor = new PlayersEditor(appl, this.game_id);
 			this.spritesheet_editor = new SpritesheetEditor(appl, this);
 			this.layers_editor = new LayersEditor(appl, this);
+			this.properties_editor = new PropertiesEditor(appl, this);
 
 			this.game_name = ko.computed({
 		        read: function () {
@@ -122,6 +123,7 @@ define(
 			this.game_sync(true);
 
 			this.sprite_list.removeAll();
+			this.editing_sprite(null);
 
 			this.players_editor.selected_player(null);
 			this.players_editor.user_lookup(null);
@@ -137,11 +139,6 @@ define(
 				else {
 					this.update_game(response.result);
 					this.players_editor.players(response.result.players);
-
-					// default to background layer
-					if(this.layers_editor.selected_layer() == null) {
-						this.layers_editor.selected_layer(this.layers_editor.layers()[0]);
-					}
 				}
 			}, this);
 		};
@@ -206,7 +203,7 @@ define(
 
 			this.spritesheet_editor.set_game(game);
 
-			this.layers_editor.layers(game.state.layers);
+			this.layers_editor.set_game(game.state.layers);
 		};
 
 		EditorPanel.prototype.update_sprite_name = function(form) {
@@ -304,14 +301,16 @@ define(
 		};
 
 		EditorPanel.prototype.sort_by_layer = function(list){
-			var layers_list = this.layers_editor.layers();
+			if(list) {
+				var layers_list = this.layers_editor.sorted_layers();
 
-			list.sort(function(l,r) {
-				var l_index = layers_list.indexOf(ko.unwrap(l.layer));
-		        var r_index = layers_list.indexOf(ko.unwrap(r.layer));
-		        
-		        return l_index - r_index;
-			});
+				list.sort(function(l,r) {
+					var l_index = layers_list.indexOf(ko.unwrap(l.layer.name));
+			        var r_index = layers_list.indexOf(ko.unwrap(r.layer.name));
+			        
+			        return l_index - r_index;
+				});
+			}
 		};
 
 		EditorPanel.prototype.get_sheet_by_name = function(name) { 
@@ -337,7 +336,7 @@ define(
 		};
 
 		EditorPanel.prototype.get_sprite_index = function(name) {
-			if(!this.game().state.objects) {
+			if(!this.game() || !this.game().state.objects) {
 				return -1;
 			}
 
@@ -366,26 +365,29 @@ define(
 
 		EditorPanel.prototype.remove_sprites_by_layer = function(layer) {
 			var deleted = true;
-			var i,item,items = this.game().state.objects;
 
-			for (i = items.length-1; i > -1; i--) {
-				item = items[i];
+			if(this.game().state.objects) {
+				var i,item,items = this.game().state.objects;
 
-				if(item.layer == layer) {
-					deleted = this.remove_sprite_by_index(i);
+				for (i = items.length-1; i > -1; i--) {
+					item = items[i];
 
-					if(!deleted) {
-						// roll back
-						this.game().state.objects = items;
-						return deleted;
+					if(item.layer.name() == layer) {
+						deleted = this.remove_sprite_by_index(i);
+
+						if(!deleted) {
+							// roll back
+							this.game().state.objects = items;
+							return deleted;
+						}
 					}
-				}
-			};
+				};
+			}
 
 			return deleted;
 		};
 
-		EditorPanel.prototype.get_overlapping_sprite = function(x,y,width,height,layer) {
+		EditorPanel.prototype.get_overlapping_sprite = function(x,y,width,height,layer,name) {
 			var i,item,items = this.sprite_list();
 
 			for (i = 0; i < items.length; i++) {
@@ -399,8 +401,13 @@ define(
 					right: x+width-1
 				};
 
-				if(item.overlaps(r) && item.layer() == layer) {
-					return item; 
+				if(item.overlaps(r) && item.layer().name() == layer) {
+					// ignore yourself in list
+					if(name && item.name() == name) {
+						continue;
+					}
+					
+					return item;
 				}
 			};
 		};
@@ -411,7 +418,7 @@ define(
 			for (i = 0; i < items.length; i++) {
 				item = items[i];
 
-				if(item.contains(x,y) && item.layer() == layer) {
+				if(item.contains(x,y) && item.layer().name() == layer) {
 					return item; 
 				}
 			};
@@ -434,15 +441,20 @@ define(
 				y = this.grid_size()*this.map_height() - height;
 			}
 
-			var item = this.get_overlapping_sprite(x,y,width,height,this.layers_editor.selected_layer());
+			var item = this.get_overlapping_sprite(x,y,width,height,this.layers_editor.selected_layer().name());
 
 			if(!item){
-				var name = 'object_'+ x + y + this.layers_editor.selected_layer();
+				var name = 'object_'+ x + y + this.layers_editor.selected_layer().name();
+
+				var item_layer = {
+					name: this.layers_editor.selected_layer().name(),
+					properties: this.layers_editor.selected_layer().properties()
+				}
 
 				// create item
 				item = new SpriteListItem({
 					name: name,
-					layer: this.layers_editor.selected_layer(),
+					layer: item_layer,
 					map_x: x,
 					map_y: y,
 
@@ -470,8 +482,57 @@ define(
 			}
 		};
 
+		EditorPanel.prototype.move_sprite_list_item = function(x,y) {
+			if(this.editing_sprite()) {
+				//check for item already on this layer
+				var width = this.editing_sprite().width(),
+					height = this.editing_sprite().height(),
+					layer = this.editing_sprite().layer(),
+					name = this.editing_sprite().name();
+
+				// snap x and y to grid
+				x = this.snap_to_grid_width(x);
+				y = this.snap_to_grid_height(y);
+
+				// x and y adjustments to snap within grid bounds
+				if(x+width > this.grid_size()*this.map_width()) {
+					x = this.grid_size()*this.map_width() - width;
+				}
+				if(y+height > this.grid_size()*this.map_height()) {
+					y = this.grid_size()*this.map_height() - height;
+				}
+
+				var item = this.get_overlapping_sprite(x,y,width,height,layer.name(), name);
+
+				if(!item){
+					var index = this.get_sprite_index(name);
+
+					if(index != -1) {
+						// update name if user has not changed it to keep it unique
+						var name_check = new RegExp('^object_');
+
+						if(name_check.test(name)) {
+							name = 'object_'+ x + y + layer.name();
+
+							this.game().state.objects[index].name = name;
+							this.sprite_list()[index].name(name);
+						}
+
+						// update x and y coords of object
+						this.game().state.objects[index].map_x = x;
+						this.game().state.objects[index].map_y = y;
+
+						this.sprite_list()[index].map_x(x);
+						this.sprite_list()[index].map_y(y);
+
+						this.game_sync(false);
+					}
+				}
+			}
+		};
+
 		EditorPanel.prototype.remove_sprite_list_item = function(x,y) {
-			var item = this.get_sprite_clicked(x,y,this.layers_editor.selected_layer());
+			var item = this.get_sprite_clicked(x,y,this.layers_editor.selected_layer().name());
 
 			if(item) {
 				var index = this.get_sprite_index(item.name());
@@ -511,7 +572,17 @@ define(
 				}
 			}
 			else if(this.tool() == 'Select') {
-				this.editing_sprite( this.get_sprite_clicked(x,y,this.layers_editor.selected_layer()) );
+				if(evt.type == 'mousedown'){
+					this.editing_sprite( this.get_sprite_clicked(x,y,this.layers_editor.selected_layer().name()) );
+				}
+				else if(evt.type == 'mousemove') {
+					this.move_sprite_list_item(x,y);
+				}
+				else {
+					if(this.game_sync() === false) {
+						this.save_game();
+					}
+				}
 			}
 		};
 
