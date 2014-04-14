@@ -803,12 +803,12 @@ input[readonly] {
 }
 
 .properties .property-body {
-	max-height: 42%;
+	max-height: 40%;
 	overflow: auto;
 }
 
 .properties .obj-body, .properties .layer-body {
-	height: 42%;
+	height: 40%;
 	overflow: auto;
 }
 

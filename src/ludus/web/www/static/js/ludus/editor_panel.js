@@ -305,8 +305,8 @@ define(
 				var layers_list = this.layers_editor.sorted_layers();
 
 				list.sort(function(l,r) {
-					var l_index = layers_list.indexOf(ko.unwrap(l.layer.name));
-			        var r_index = layers_list.indexOf(ko.unwrap(r.layer.name));
+					var l_index = layers_list.indexOf( ko.unwrap( ko.unwrap(l.layer).name) );
+			        var r_index = layers_list.indexOf( ko.unwrap( ko.unwrap(r.layer).name) );
 			        
 			        return l_index - r_index;
 				});
@@ -365,6 +365,7 @@ define(
 
 		EditorPanel.prototype.remove_sprites_by_layer = function(layer) {
 			var deleted = true;
+			var removed = [];
 
 			if(this.game().state.objects) {
 				var i,item,items = this.game().state.objects;
@@ -372,19 +373,64 @@ define(
 				for (i = items.length-1; i > -1; i--) {
 					item = items[i];
 
-					if(item.layer.name() == layer) {
+					if(item.layer.name == layer) {
 						deleted = this.remove_sprite_by_index(i);
 
 						if(!deleted) {
 							// roll back
-							this.game().state.objects = items;
+							var j,rollback_item,rollback_items = removed;
+
+							for (j = rollback_items.length-1; j > -1; j--) { 
+								rollback_item = rollback_items[i];
+
+								this.game().state.objects.push(rollback_item);
+								this.sort_by_layer( this.game().state.objects );
+							}
+
 							return deleted;
+						}
+						else {
+							removed.push(item);
 						}
 					}
 				};
 			}
 
 			return deleted;
+		};
+
+		EditorPanel.prototype.update_sprites_by_layer = function(orig_layer, new_layer) {
+			if(this.game().state.objects) {
+				var i,item,items = this.game().state.objects;
+
+				for (i = items.length-1; i > -1; i--) {
+					item = items[i];
+
+					if(item.layer.name == orig_layer.name()) {
+						item.layer.name = new_layer.name();
+						item.layer.properties = new_layer.properties();
+
+						// update name if user has not changed it to keep it unique
+						var name_check = new RegExp('^object_');
+
+						if(name_check.test(item.name)) {
+							var name = 'object_'+ item.map_x + item.map_y + new_layer.name();
+
+							item.name = name;
+						}
+					}
+				};
+			}
+		};
+
+		EditorPanel.prototype.add_layer_property = function(layer, item) {
+			// pass through to funtion on layers editor
+			this.layers_editor.add_layer_property(layer, item);
+		};
+
+		EditorPanel.prototype.remove_layer_property = function(layer, item) {
+			// pass through to funtion on layers editor
+			this.layers_editor.remove_layer_property(layer, item);
 		};
 
 		EditorPanel.prototype.get_overlapping_sprite = function(x,y,width,height,layer,name) {
@@ -466,7 +512,7 @@ define(
 				});
 
 				this.sprite_list.push(item);
-				this.sort_by_layer(this.sprite_list);
+				this.sort_by_layer(this.sprite_list());
 
 				// if default objects list is null on game state create the list
 				if(this.game().state.objects) {

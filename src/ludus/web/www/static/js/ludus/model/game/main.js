@@ -7,26 +7,62 @@ define(
 			this.data = data;
 			this.map = this.data.map
 
+			// set up global crafty settings
 			Crafty.init((this.map.width*this.map.scale) || (16*49),
 						(this.map.height*this.map.scale) || (16*33), 
 						elem);
 			
 			Crafty.background(this.data.background || '#F2F2F2');
 
-			if(this.data.objects) {
-				this.objects = [];
-				var i, item, items = this.data.objects;
+			// Define In Play Scene
+			Crafty.scene('Game', function() {
 
-				for (i = 0; i < items.length; i++) {
-					item = items[i];
+				if(that.data.objects) {
+					that.objects = [];
+					var i, item, items = that.data.objects;
 
-					this.objects.push(new Obj(item));
+					for (i = 0; i < items.length; i++) {
+						item = items[i];
+
+						that.objects.push(new Obj(item));
+					}
 				}
-			}
 
-	        // this.player = new Player(this.data.player);
+				this.end_game = this.bind('End Game', function(data){
+		        	Crafty.scene('Game Over');
+		        });
 
-	        Crafty.trigger('start');
+			}, 
+			function() {
+				this.unbind('End Game', this.end_game);
+			});
+
+			// Define End Game Scene
+			Crafty.scene('Game Over', function() {
+
+				var y = (that.map.height*that.map.scale)/2,
+					w = that.map.width*that.map.scale
+
+				Crafty.e('2D, DOM, Text')
+					  .attr({ x: 0, y: y - 24, w: w })
+					  .text('GAME OVER');
+
+				Crafty.e('2D, DOM, Text')
+					  .attr({ x: 0, y: y, w: w })
+					  .text('- press any key to restart -');
+
+				this.restart_game = this.bind('KeyDown', function() {
+					Crafty.scene('Game');
+				});
+
+			}, 
+			function() {
+				this.unbind('KeyDown', this.restart_game);
+			});
+
+			// start the game
+			Crafty.scene('Game');
+	        Crafty.trigger('Start');
 		}
 
 		Game.prototype.stop = function(clear_state) {

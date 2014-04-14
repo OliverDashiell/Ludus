@@ -23,8 +23,15 @@
 				<i class="fa fa-sort-amount-asc icon"></i>
 				<span class="title-item" data-bind="text:$data.layer().name"></span>
 			</div>
-			<div class="layer-body">
-				
+			<div class="list-group layer-body" data-bind="sortable:{ data:$data.layer().properties, 
+																	 dragged:$.proxy($parent.add_layer_property, $parent) }">
+				<a href="#" class="list-group-item list-group-item-custom sortable-item"
+							data-bind="css:{active:$parents[1].selected_layer_property() == $data}, 
+									   click:$.proxy($parents[1].selected_layer_property, $parents[1]), 
+									   clickBubble:false">
+
+					<span data-bind="text:$data.name"></span>
+				</a>
 			</div>
 			<!-- /ko -->
 		</div>
@@ -66,7 +73,7 @@
 <div class="panel-footer panel-footer-custom">
 	<button class="btn btn-default pull-right btn-custom btn-custom-danger" 
 			data-bind="click:$.proxy(remove_property, $data),
-					   enable:selected_property()">
+					   enable:selected_property() || selected_layer_property()">
 		<i class="fa fa-trash-o icon"></i>
 		Remove
 	</button>

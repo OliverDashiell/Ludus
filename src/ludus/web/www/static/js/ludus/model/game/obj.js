@@ -18,37 +18,10 @@ define(
 				h: data.height
 			});
 
+			this.add_properties(this.data.layer.properties);
+
 	        if(this.data.properties){
-	        	var i, item, items = this.data.properties;
-
-				for (i = 0; i < items.length; i++) {
-					item = items[i];
-
-					this.e.addComponent(item.name);
-
-					if(item.name == 'Gravity') {
-						this.e.gravity('Solid');
-					}
-
-					if(item.name == 'Twoway') {
-						this.e.twoway(item.move_speed || 3, 
-									  item.jump_speed || 3);
-					}
-
-					if(item.name == 'Fourway') {
-						this.e.fourway(item.move_speed || 3);
-					}
-
-					if(item.name == 'Move To'){
-			        	this.e.addComponent('Tween');
-			        	Crafty.bind(item.trigger, $.proxy(this.move_to, this, item));
-			        }
-
-					if(item.name == 'Oscillate') {
-						this.e.addComponent('Tween');
-	        			Crafty.bind(item.trigger, $.proxy(this.oscillate, this, item));
-					}
-		    	}
+	        	this.add_properties(this.data.properties);
 	    	}
 
 	        this.e._doTween = function(props, v){
@@ -75,6 +48,80 @@ define(
 			};
 		}
 
+		Obj.prototype.add_properties = function(list) {
+			var i, item, items = list;
+
+			for (i = 0; i < items.length; i++) {
+				item = items[i];
+
+				this.e.addComponent(item.name);
+
+				if(item.name == 'Gravity') {
+					this.e.gravity('Solid');
+				}
+
+				if(item.name == 'Twoway') {
+					this.e.twoway(item.move_speed || 3, 
+								  item.jump_speed || 3);
+				}
+
+				if(item.name == 'Fourway') {
+					this.e.fourway(item.move_speed || 3);
+				}
+
+				if(item.name == 'Collector') {
+					var that = this;
+					this.collectables = [];
+
+					Crafty.bind('item_collected', function(collectable){
+						that.collectables.push(collectable);
+
+						if(that.collectables.length >= item.to_collect){
+							that.collectables = [];
+							Crafty.trigger(item.on_finish, that);
+						}
+					});
+				}
+
+				if(item.name == 'Stop On') {
+		        	this.stop_on(item.what);
+		        }
+
+				if(item.name == 'Move To') {
+		        	this.e.addComponent('Tween');
+		        	Crafty.bind(item.trigger, $.proxy(this.move_to, this, item));
+		        }
+
+				if(item.name == 'Oscillate') {
+					this.e.addComponent('Tween');
+        			Crafty.bind(item.trigger, $.proxy(this.oscillate, this, item));
+				}
+
+				if(item.name == 'Collectable') {
+					this.collectable_by(item.who);
+				}
+	    	}
+		};
+
+		Obj.prototype.stop_on = function(what) {
+			this.e.addComponent('Collision');
+
+			var i, item, items = what;
+
+			for (i = 0; i < items.length; i++) {
+				item = items[i];
+
+				this.e.onHit(item, function(hit_list){
+					this._speed = 0;
+
+			        if (this._movement) {
+			            this.x -= this._movement.x;
+			            this.y -= this._movement.y;
+			        }
+				});
+			};
+		};
+
 		Obj.prototype.move_to = function(item) {
 			this.e.tween({x:item.x, y:item.y}, item.duration);
 		};
@@ -91,6 +138,21 @@ define(
 			}
 
 			setTimeout($.proxy(this.oscillate, this, item), item.duration + item.timeout);
+		};
+
+		Obj.prototype.collectable_by = function(who) {
+			this.e.addComponent('Collision');
+
+			var i, item, items = who;
+
+			for (i = 0; i < items.length; i++) {
+				item = items[i];
+			
+				this.e.onHit(item, function(hit_list) {
+					Crafty.trigger('item_collected', this);
+					this.destroy();
+				});
+			};
 		};
 		
 		return Obj;

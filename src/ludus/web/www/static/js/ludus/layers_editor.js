@@ -60,6 +60,20 @@ define(
 			return -1;		
 		};
 
+		LayersEditor.prototype.get_property_index = function(layer, name) {
+			var i,item,items = layer.properties();
+
+			for (i = 0; i < items.length; i++) {
+				item = items[i];
+
+				if(item.name == name) {
+					return i; 
+				}
+			};
+
+			return -1;
+		};
+
 		LayersEditor.prototype.sorted_layers = function() {
 			var sorted = [];
 
@@ -151,6 +165,14 @@ define(
 					if(index == -1) {
 						index = this.get_layer_index( this.edit_visible().name() );
 
+						// create object for update
+						var new_layer = new Layer({
+							name: this.edit_value(),
+							properties: this.layers()[index].properties()
+						});
+
+						this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
+
 						this.layers()[index].name(this.edit_value());
 						this.editor.game().state.layers[index].name = this.edit_value();
 
@@ -169,6 +191,53 @@ define(
 			
 			this.edit_value(null);
 			this.edit_visible(null);
+		};
+
+		LayersEditor.prototype.add_layer_property = function(layer, item) {
+			var index = this.get_layer_index(layer.name());
+
+			if(index != -1) {
+				var properties = layer.properties();
+
+				properties.push(item);
+
+				// create object to update sprite of layer change
+				var new_layer = new Layer({
+					name: layer.name(),
+					properties: properties
+				});
+
+				this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
+
+				this.layers()[index].properties(properties);
+				this.editor.game().state.layers[index].properties = properties;
+
+				this.editor.save_game();
+			}
+		};
+
+		LayersEditor.prototype.remove_layer_property = function(layer, item) {
+			var index = this.get_layer_index(layer.name());
+
+			if(index != -1) {
+				var properties = layer.properties(),
+					p_index = this.get_property_index(layer, item.name);
+
+				properties.splice(p_index, 1);
+
+				// create object to update sprite of layer change
+				var new_layer = new Layer({
+					name: layer.name(),
+					properties: properties
+				});
+
+				this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
+
+				this.layers()[index].properties(properties);
+				this.editor.game().state.layers[index].properties = properties;
+
+				this.editor.save_game();
+			}
 		};
 
 		return LayersEditor;
