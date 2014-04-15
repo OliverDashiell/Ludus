@@ -32,7 +32,7 @@ define(
 				{
 					name:"Oscillate",
 					y: 0,
-	                x: 8*16,
+	                x: 5*16,
 	                trigger: "Start",
 	                timeout: 100,
 	                duration: 1000
@@ -105,18 +105,22 @@ define(
 				var objects = this.editor.game().state.objects;
 
 				if(objects[index].properties){
+
 					if(!this.property_exists( objects[index].properties, item)){
-						objects[index].properties.push(item);
-						this.editor.save_game();
-						return item;
+
+						var layer_properties = this.editor.editing_sprite().layer().properties();
+
+						if(!this.property_exists( layer_properties, item)) {
+							objects[index].properties.push(item);
+							this.editor.save_game();
+							return item;
+						}
+						else {
+							this.appl.notify("This property already exsists on the layer.", "warning", 4000);
+						}
 					}
 					else {
 						this.appl.notify("Cannot add the same property more than once.", "warning", 4000);
-
-						// remove item just added
-						var p = this.editor.editing_sprite().properties();
-						var p_index = this.get_property_index(p, item);
-						p.splice(p_index, 1);
 					}
 				}
 				else {
@@ -140,10 +144,6 @@ define(
 				}
 				else {
 					this.appl.notify("Cannot add the same property more than once.", "warning", 4000);
-
-					// remove item just added
-					var index = this.get_property_index(properties, item);
-					properties.splice(index, 1);
 				}
 			}
 		};
@@ -186,6 +186,56 @@ define(
 					var p_index = this.get_property_index(objects[index].properties, form.name);
 
 					// update at p_index
+				}
+			}
+		};
+
+		PropertiesEditor.prototype.before_obj_move = function(arg) {
+			var obj_properties = this.editor.editing_sprite().properties();
+			var layer_properties = this.editor.editing_sprite().layer().properties();
+
+			if(arg.sourceParent == obj_properties) {
+				if(arg.targetParent != obj_properties) {
+					// remove from this list
+					this.selected_property(arg.item);
+					this.remove_property();
+				}
+			}
+			else {
+				if(arg.sourceParent == layer_properties) {
+					// remove from layer list
+					this.selected_layer_property(arg.item);
+					this.remove_property();
+				}
+
+				if(arg.targetParent == obj_properties) {
+					// add item to this list
+					this.add_property(arg.item);
+				}
+			}
+		};
+
+		PropertiesEditor.prototype.before_layer_move = function(arg) {
+			var obj_properties = this.editor.editing_sprite().properties();
+			var layer_properties = this.editor.editing_sprite().layer().properties();
+
+			if(arg.sourceParent == layer_properties) {
+				if(arg.targetParent != layer_properties) {
+					// remove from this list
+					this.selected_layer_property(arg.item);
+					this.remove_property();
+				}
+			}
+			else {
+				if(arg.sourceParent != layer_properties) {
+					// remove from obj list
+					this.selected_property(arg.item);
+					this.remove_property();
+				}
+
+				if(arg.targetParent == layer_properties) {
+					// add item to this list
+					this.add_layer_property(arg.item);
 				}
 			}
 		};

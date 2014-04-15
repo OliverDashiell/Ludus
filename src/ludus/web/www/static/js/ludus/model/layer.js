@@ -24,6 +24,13 @@ define(
 			}
 		};
 
+		Layer.prototype.serialise = function() {
+			return {
+				name: this.name(),
+				properties: this.properties()
+			};
+		};
+
 		return Layer;
 	}
 );

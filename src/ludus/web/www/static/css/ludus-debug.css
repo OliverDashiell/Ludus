@@ -1116,7 +1116,7 @@ html,body {
 /* == Bootstrap Notify ============= */
 /* ================================= */
 .notifications {
-	z-index: 1040;
+	z-index: 2000;
 }
 
 .notifications .alert{

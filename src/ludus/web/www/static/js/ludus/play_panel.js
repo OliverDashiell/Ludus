@@ -17,32 +17,41 @@ define(
 
 		PlayPanel.prototype.hide = function() {
 			if(this.is_running === true) {
-				this.preview.stop(false);
+				this.stop();
 			}
 		};
 
 		PlayPanel.prototype.show = function() {
-			var game = this.game();
-			if(game){
-				this.start();
-			}
+			if(this.is_running === true) {
+				this.stop();
+			}	
+
+			this.start();
 		};
 
 		PlayPanel.prototype.start = function() {
-			this.preview = new Game(this.game().state, $('#cr-stage')[0]);
-			this.is_running = true;
+			var game = this.game();
+			if(game){
+				this.preview = new Game(this.game().state, $('#cr-stage')[0]);
+				this.is_running = true;
+			}
 		};
 
-		PlayPanel.prototype.restart = function() {
+		PlayPanel.prototype.stop = function() {
 			if(this.is_running === true) {
 				this.preview.stop(false);
 				$("#cr-stage").remove();
 				$("#game-panel").append('<div id="cr-stage" class="center-block"></div>');
-				this.start();
 			}
 		};
 
+		PlayPanel.prototype.restart = function() {
+			this.stop();
+			this.start();
+		};
+
 		PlayPanel.prototype.edit_game = function() {
+			this.stop();
 			this.appl.edit_game(this.game().id);
 		};
 

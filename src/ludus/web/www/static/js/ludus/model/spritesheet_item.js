@@ -45,6 +45,15 @@ define(
 					 height: (this.height()+padding) + "px" }
 		};
 
+		SpriteSheetItem.prototype.serialise = function() {
+			return {
+				offset_x: this.offset_x(),
+				offset_y: this.offset_y(),
+				width: this.width(),
+				height: this.height()
+			};
+		};
+
 		return SpriteSheetItem;
 	}
 );

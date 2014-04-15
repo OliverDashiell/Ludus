@@ -108,6 +108,21 @@ define(
 			return '/uploads/' + this.sheet();
 		};
 
+		SpriteListItem.prototype.serialise = function() {
+			return {
+				name: this.name(),
+				map_x: this.map_x(),
+				map_y: this.map_y(),
+				sheet: this.sheet(),
+				offset_x: this.offset_x(),
+				offset_y: this.offset_y(),
+				width: this.width(),
+				height: this.height(),
+				layer: this.layer().serialise(),
+				properties: this.properties()
+			};
+		};
+
 		return SpriteListItem;
 	}
 );

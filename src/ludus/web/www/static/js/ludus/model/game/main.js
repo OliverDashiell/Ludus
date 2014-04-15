@@ -32,6 +32,7 @@ define(
 		        	Crafty.scene('Game Over');
 		        });
 
+	        	Crafty.trigger('Start');
 			}, 
 			function() {
 				this.unbind('End Game', this.end_game);
@@ -62,10 +63,10 @@ define(
 
 			// start the game
 			Crafty.scene('Game');
-	        Crafty.trigger('Start');
 		}
 
 		Game.prototype.stop = function(clear_state) {
+			Crafty("DOM").destroy();
 			Crafty.stop(clear_state);
 		};
 

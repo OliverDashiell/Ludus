@@ -191,11 +191,12 @@ define(
 				sheet.update({
 					sheet:name,
 					width:imageObj.width,
-					height:imageObj.height
+					height:imageObj.height,
+					image:imageObj
 				});
 
 				// save new sheet
-				that.editor.game().state.sheets.spritesheets.push(sheet);
+				that.editor.game().state.sheets.spritesheets.push(sheet.serialise());
 				that.editor.save_game();
 				that.selected_sheet(sheet);
 			};
@@ -216,11 +217,12 @@ define(
 				sheet.update({
 					sheet:name,
 					width:imageObj.width,
-					height:imageObj.height
+					height:imageObj.height,
+					image:imageObj
 				});
 
 				// save new sheet
-				that.editor.game().state.sheets.tiles.push(sheet);
+				that.editor.game().state.sheets.tiles.push(sheet.serialise());
 				that.editor.save_game();
 				that.selected_sheet(sheet);
 			};
@@ -241,17 +243,22 @@ define(
 					success: function(response){
 						// console.log(upload_type,response);
 
-						var spritesheet = null;
+						if(response.result[0]) {
+							var spritesheet = null;
 
-						// get result[0].actual and put it into the game_state
-						if(upload_type == 'spritesheet'){
-							spritesheet = that.add_spritesheet(response.result[0].actual);
+							// get result[0].actual and put it into the game_state
+							if(upload_type == 'spritesheet'){
+								spritesheet = that.add_spritesheet(response.result[0].actual);
+							}
+							else {
+								spritesheet = that.add_tile(response.result[0].actual);
+							}
+
+							modal.modal('hide');
 						}
 						else {
-							spritesheet = that.add_tile(response.result[0].actual);
+							that.appl.notify("Could not upload that image, try again.", "error", 4000);
 						}
-
-						modal.modal('hide');
 					}
 				});
 			});

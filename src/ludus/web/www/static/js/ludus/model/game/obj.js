@@ -5,6 +5,7 @@ define(
 		function Obj(data){
 			var that = this;
 			this.data = data;
+			this.name = this.data.name;
 
 			var loc = {};
 			loc[data.name] = [data.offset_x, data.offset_y, data.width, data.height];
@@ -49,6 +50,7 @@ define(
 		}
 
 		Obj.prototype.add_properties = function(list) {
+			var that = this;
 			var i, item, items = list;
 
 			for (i = 0; i < items.length; i++) {
@@ -70,16 +72,21 @@ define(
 				}
 
 				if(item.name == 'Collector') {
-					var that = this;
 					this.collectables = [];
+					var trigger = item.on_finish;
 
-					Crafty.bind('item_collected', function(collectable){
-						that.collectables.push(collectable);
+					this.collect_binding = Crafty.bind('item_collected', function(collectable){
+						that.collectables.push(collectable.name);
 
 						if(that.collectables.length >= item.to_collect){
 							that.collectables = [];
-							Crafty.trigger(item.on_finish, that);
+							Crafty.unbind('item_collected', that.collect_binding);
+							Crafty.trigger(trigger, that);
 						}
+					});
+
+					Crafty.bind('Start', function(){
+						that.collectables = [];
 					});
 				}
 
@@ -141,6 +148,7 @@ define(
 		};
 
 		Obj.prototype.collectable_by = function(who) {
+			var that = this;
 			this.e.addComponent('Collision');
 
 			var i, item, items = who;
@@ -149,7 +157,7 @@ define(
 				item = items[i];
 			
 				this.e.onHit(item, function(hit_list) {
-					Crafty.trigger('item_collected', this);
+					Crafty.trigger('item_collected', that);
 					this.destroy();
 				});
 			};
