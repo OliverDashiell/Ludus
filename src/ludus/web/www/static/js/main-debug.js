@@ -12,6 +12,7 @@ require.config({
         'bootstrap':            'lib/bower_components/bootstrap/dist/js/bootstrap',
         'bootstrap-notify':     'lib/bower_components/bootstrap-notify/js/bootstrap-notify',
         'knockout':             'lib/bower_components/knockout.js/knockout.debug',
+        'knockout-mapping':     'lib/bower_components/knockout-mapping/knockout.mapping',
         'knockout-sortable':    'lib/bower_components/knockout-sortable/build/knockout-sortable',
         'crafty':               'lib/bower_components/crafty/dist/crafty',
         'domready':             'lib/bower_components/domready/ready',
@@ -40,6 +41,12 @@ require.config({
         "jquery.ui.sortable": {
             deps: ["jquery-ui"]
         },
+        "knockout": {
+            exports: "ko"
+        },
+        "knockout-mapping": {
+            deps: ["knockout"]
+        },
         "knockout-sortable": {
             deps: ["jquery.ui.sortable", "knockout"]
         },
@@ -52,7 +59,7 @@ define(
     
     ["jquery", "knockout", "js/ludus", "bootstrap", "knockout-sortable", "domready"],
 
-    function($, knockout, Appl){
+    function($, ko, Appl){
         var appl = window.appl = new Appl();
 
         return appl;

@@ -1,8 +1,9 @@
 define(
-	["knockout"], 
-	function(ko){
+	["knockout", "knockout-mapping"], 
+	function(ko, mapping){
 
 		function Layer(options){
+			this.id = ko.observable();
 			this.name = ko.observable();
 			this.properties = ko.observableArray();
 
@@ -10,17 +11,11 @@ define(
 		}
 
 		Layer.prototype.update = function(options) {
+			this.id(options.id || -1);
 			this.name(options.name || 'default');
 
-			this.properties.removeAll();
-			if(options.properties) {
-				var i,item,items = options.properties;
-
-				for (i = 0; i < items.length; i++) {
-					item = items[i];
-
-					this.properties.push(item);
-				}
+			if(options.properties && options.properties.length > 0){
+				mapping.fromJS(options.properties, {}, this.properties);
 			}
 		};
 

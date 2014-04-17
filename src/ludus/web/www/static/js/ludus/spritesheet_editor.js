@@ -5,19 +5,77 @@ define(
 		function SpritesheetEditor(appl, editor){
 			this.appl = appl;
 			this.editor = editor;
-			this.show_sheetgrid = ko.observable(true);
 
-			this.selected_sheet = ko.observable(null);
-			this.selected_sprite = ko.observable(null);
-			this.active_sprite = ko.observable(null);
 
-			this.spritesheets = ko.observableArray();
-			this.tiles = ko.observableArray();
+			//---- Sheet Variables ----//
+			this.id_seed = ko.observable(-1);			// current document sheet id seed
+			this.sprite_id_seed = ko.observable(-1);	// current document sprite item id seed
+			this.spritesheets = ko.observableArray();	// list of sprite sheets
+			this.tiles = ko.observableArray();			// list of tile sheets
+
+			this.show_sheetgrid = ko.observable(true);	// flag for showing/hiding the grid overlay
+			this.selected_sheet = ko.observable(null);	// the current user selected sheet
+			this.selected_sprite = ko.observable(null);	// the current user selected sprite/tile (to be added)
+			this.active_sprite = ko.observable(null);	// the current user selected sprite/tile (in sprite item list)
 		}
 
-		SpritesheetEditor.prototype.set_game = function(game) {
-			this.spritesheets(game.state.sheets.spritesheets);
-			this.tiles(game.state.sheets.tiles);
+		SpritesheetEditor.prototype._init_ = function() {
+			this.id_seed(-1);
+			this.sprite_id_seed(-1);
+			this.spritesheets.removeAll();
+			this.tiles.removeAll();
+
+			this.show_sheetgrid(true);
+			this.selected_sheet(null);
+			this.selected_sprite(null);
+			this.active_sprite(null);
+		};
+
+		SpritesheetEditor.prototype.get_sheet_mapping_options = function() {
+			return {
+				key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        create: function(options) {
+		        	return new SpriteSheet(options.data);
+		        }
+		    };
+		};
+
+		SpritesheetEditor.prototype.get_sprite_mapping_options = function() {
+			return {
+		        key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        create: function(options) {
+		        	return new SpriteSheetItem(options.data);
+		        }
+		    };
+		};
+
+		SpritesheetEditor.prototype.get_seed_id = function() {
+			var seed = this.id_seed();
+
+			// increment the seed
+			this.id_seed( seed+1 );
+
+			return seed;
+		};
+
+		SpritesheetEditor.prototype.get_sprite_seed_id = function() {
+			var seed = this.sprite_id_seed();
+
+			// increment the seed
+			this.sprite_id_seed( seed+1 );
+
+			return seed;
+		};
+
+		SpritesheetEditor.prototype.update = function(sheets, seed) {
+			this.id_seed = seed;
+			this.sprite_id_seed = sheets.sprite_seed;
+			this.spritesheets( sheets.spritesheets() );
+			this.tiles( sheets.tiles() );
 
 			// set selected sheet
 			if(this.selected_sheet() && this.get_sheet_by_name( this.selected_sheet().sheet() )) {
@@ -53,24 +111,55 @@ define(
 			}
 		};
 
+		SpritesheetEditor.prototype.clear_selection = function() {
+			// clear selection
+			this.selected_sprite(null);
+			$('.selection-box').remove();
+		};
+
+		SpritesheetEditor.prototype.set_sheet = function(sheet) {
+			this.clear_selection();
+			// set sheet
+			this.selected_sheet(sheet);
+		};
+
+		SpritesheetEditor.prototype.grid_size = function() {
+			return this.editor.grid_size();
+		};
+
+
+		SpritesheetEditor.prototype.sheetgrid_show_hide = function() {
+			var btn = $('#show_sheetgrid_btn');
+
+			if(btn.hasClass('active')) {
+				this.show_sheetgrid(false);
+				btn.removeClass('active');
+				btn.addClass('btn-custom-inactive');
+			}
+			else {
+				this.show_sheetgrid(true);
+				btn.removeClass('btn-custom-inactive');
+				btn.addClass('active');
+			}
+
+			// remove focus
+			btn.blur();
+
+			return true;
+		};
+
 		SpritesheetEditor.prototype.get_sheet_by_name = function(name) {
 			for (var i = 0; i < this.spritesheets().length; i++) {
-				if(this.spritesheets()[i].sheet == name) {
+				if(this.spritesheets()[i].sheet() == name) {
 					return this.spritesheets()[i];
 				}
 			};
 
 			for (var i = 0; i < this.tiles().length; i++) {
-				if(this.tiles()[i].sheet == name) {
+				if(this.tiles()[i].sheet() == name) {
 					return this.tiles()[i];
 				}
 			};
-		};
-
-		SpritesheetEditor.prototype.clear_selection = function() {
-			// clear selection
-			this.selected_sprite(null);
-			$('.selection-box').remove();
 		};
 
 		SpritesheetEditor.prototype.add_sheet_item = function() {
@@ -87,9 +176,12 @@ define(
 					this.active_sprite(item);
 				}
 				else {
+					var seed = this.get_sprite_seed_id();
+
+					this.selected_sprite().id = seed;
 					item = new SpriteSheetItem(this.selected_sprite());
 
-					this.editor.get_sheet_by_name(this.selected_sheet().sheet()).sprite_items.push(item);
+					this.selected_sheet().sprite_items.push(item);
 					this.editor.save_game();
 					this.active_sprite(item);
 				}
@@ -103,24 +195,11 @@ define(
 			var index = this.selected_sheet().index_of( this.active_sprite() );
 
 			if(index > -1){
-				this.editor.get_sheet_by_name(this.selected_sheet().sheet()).sprite_items.splice(index, 1);
+				this.selected_sheet().sprite_items.splice(index, 1);
 				this.editor.save_game();
 			}
 
 			this.active_sprite(null);
-		};
-
-		SpritesheetEditor.prototype.set_sheet = function(obj) {
-			var sheet = new SpriteSheet(obj);
-
-			this.clear_selection();
-
-			// set sheet
-			this.selected_sheet(sheet);
-		};
-
-		SpritesheetEditor.prototype.grid_size = function() {
-			return parseInt( this.editor.grid_size() );
 		};
 
 		SpritesheetEditor.prototype.snap_to_grid = function(val){
@@ -159,29 +238,10 @@ define(
 		    }
 		};
 
-		SpritesheetEditor.prototype.sheetgrid_show_hide = function() {
-			var btn = $('#show_sheetgrid_btn');
-
-			if(btn.hasClass('active')) {
-				this.show_sheetgrid(false);
-				btn.removeClass('active');
-				btn.addClass('btn-custom-inactive');
-			}
-			else {
-				this.show_sheetgrid(true);
-				btn.removeClass('btn-custom-inactive');
-				btn.addClass('active');
-			}
-
-			// remove focus
-			btn.blur();
-
-			return true;
-		};
-
-		SpritesheetEditor.prototype.add_spritesheet = function(name) {
+		SpritesheetEditor.prototype.add_sheet = function(name, list) {
 			//construct spritesheet object
 			var that = this;
+			var seed = this.get_seed_id();
 			var sheet = new SpriteSheet({sheet:name});
 			var url = sheet.to_url();
 			var imageObj = new Image();
@@ -189,6 +249,7 @@ define(
 			imageObj.onload = function() {
 				// set width and height
 				sheet.update({
+					id:seed,
 					sheet:name,
 					width:imageObj.width,
 					height:imageObj.height,
@@ -196,7 +257,7 @@ define(
 				});
 
 				// save new sheet
-				that.editor.game().state.sheets.spritesheets.push(sheet.serialise());
+				list.push(sheet);
 				that.editor.save_game();
 				that.selected_sheet(sheet);
 			};
@@ -205,33 +266,7 @@ define(
 			imageObj.src = url;
 		};
 
-		SpritesheetEditor.prototype.add_tile = function(name) {
-			//construct spritesheet object
-			var that = this;
-			var sheet = new SpriteSheet({sheet:name});
-			var url = sheet.to_url();
-			var imageObj = new Image();
-
-			imageObj.onload = function() {
-				// apply scale to width and height
-				sheet.update({
-					sheet:name,
-					width:imageObj.width,
-					height:imageObj.height,
-					image:imageObj
-				});
-
-				// save new sheet
-				that.editor.game().state.sheets.tiles.push(sheet.serialise());
-				that.editor.save_game();
-				that.selected_sheet(sheet);
-			};
-
-			// start load
-			imageObj.src = url;
-		};
-
-		SpritesheetEditor.prototype.add_sheet = function() {
+		SpritesheetEditor.prototype.upload_sheet = function() {
 			var that = this;
 			var modal = $('#upload_dlog').modal();
 
@@ -244,14 +279,12 @@ define(
 						// console.log(upload_type,response);
 
 						if(response.result[0]) {
-							var spritesheet = null;
-
 							// get result[0].actual and put it into the game_state
-							if(upload_type == 'spritesheet'){
-								spritesheet = that.add_spritesheet(response.result[0].actual);
+							if(upload_type == 'spritesheet') {
+								that.add_sheet(response.result[0].actual, that.spritesheets);
 							}
 							else {
-								spritesheet = that.add_tile(response.result[0].actual);
+								that.add_sheet(response.result[0].actual, that.tiles);
 							}
 
 							modal.modal('hide');

@@ -5,11 +5,12 @@
 	<div class="row properties">
 		<div class="col-md-7 property-col property-col-primary">
 			<!-- ko with:$parent.editing_sprite() -->
+			<!-- Object Properties -->
 			<div class="property-title obj-name">
 				<i class="fa fa-asterisk icon"></i>
 				<span class="title-item" data-bind="text:$data.name()"></span>
 			</div>
-			<div class="list-group obj-body" data-bind="sortable:{ data:$data.properties(), 
+			<div class="list-group obj-body" data-bind="sortable:{ data:$data.properties, 
 																   beforeMove:$.proxy($parent.before_obj_move, $parent) }">
 				<a href="#" class="list-group-item list-group-item-custom sortable-item"
 							data-bind="css:{active:$parents[1].selected_property() == $data}, 
@@ -20,11 +21,12 @@
 				</a>
 			</div>
 
+			<!-- Layer Properties -->
 			<div class="property-title layer-name">
 				<i class="fa fa-sort-amount-asc icon"></i>
 				<span class="title-item" data-bind="text:$data.layer().name"></span>
 			</div>
-			<div class="list-group layer-body" data-bind="sortable:{ data:$data.layer().properties(), 
+			<div class="list-group layer-body" data-bind="sortable:{ data:$data.layer().properties, 
 																	 beforeMove:$.proxy($parent.before_layer_move, $parent) }">
 				<a href="#" class="list-group-item list-group-item-custom sortable-item"
 							data-bind="css:{active:$parents[1].selected_layer_property() == $data}, 

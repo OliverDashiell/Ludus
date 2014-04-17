@@ -2,6 +2,7 @@ define(
 	["knockout", "../utils"],
 	function(ko, utils){
 		function SpriteSheetItem(options){
+			this.id = ko.observable(-1);
 			this.offset_x = ko.observable(0);
 			this.offset_y = ko.observable(0);
 			this.width = ko.observable(0);
@@ -11,6 +12,7 @@ define(
 		}
 
 		SpriteSheetItem.prototype.update = function(options) {
+			this.id(options.id || -1);
 			this.offset_x(options.offset_x || 0);
 			this.offset_y(options.offset_y || 0);
 			this.width(options.width || 0);

@@ -6,10 +6,14 @@ define(
 			this.appl = appl;
 			this.editor = editor;
 
+
+			//---- Property Variables ----//
 			this.selected_property = ko.observable(null);
 			this.selected_layer_property = ko.observable(null);
 			this.show_property_edit = ko.observable(null);
 
+
+			//---- Prototype Component Objects ----//
 			this.components = ko.observableArray([
 				{
 					name:"Gravity"
@@ -28,6 +32,8 @@ define(
 				}
 			]);
 
+
+			//---- Prototype Action Objects ----//
 			this.actions = ko.observableArray([
 				{
 					name:"Oscillate",
@@ -52,6 +58,8 @@ define(
 				}
 			]);
 
+
+			//---- Subscriptions ----//
 			this.editor.editing_sprite.subscribe(function(value) {
 				this.selected_property(null);
 				this.selected_layer_property(null);
@@ -69,6 +77,12 @@ define(
 				}
 			}, this);
 		}
+
+		PropertiesEditor.prototype._init_ = function() {
+			this.selected_property(null);
+			this.selected_layer_property(null);
+			this.show_property_edit(null);
+		};
 
 		PropertiesEditor.prototype.property_exists = function(list, property) {
 			var i,item,items = list;
@@ -102,33 +116,23 @@ define(
 			var index = this.editor.get_sprite_index( this.editor.editing_sprite().name() );
 
 			if(index != -1) {
-				var objects = this.editor.game().state.objects;
+				var objects = this.editor.game().state.objects();
 
-				if(objects[index].properties){
+				if(!this.property_exists( objects[index].properties(), item)){
 
-					if(!this.property_exists( objects[index].properties, item)){
+					var layer_properties = this.editor.editing_sprite().layer().properties();
 
-						var layer_properties = this.editor.editing_sprite().layer().properties();
-
-						if(!this.property_exists( layer_properties, item)) {
-							objects[index].properties.push(item);
-							this.editor.save_game();
-							return item;
-						}
-						else {
-							this.appl.notify("This property already exsists on the layer.", "warning", 4000);
-						}
+					if(!this.property_exists( layer_properties, item)) {
+						objects[index].properties.push(item);
+						this.editor.save_game();
+						return item;
 					}
 					else {
-						this.appl.notify("Cannot add the same property more than once.", "warning", 4000);
+						this.appl.notify("This property already exsists on the layer.", "warning", 4000);
 					}
 				}
 				else {
-					// if obj has no properties create list and add
-					objects[index].properties = new Array();
-					objects[index].properties.push(item);
-					this.editor.save_game();
-					return item;
+					this.appl.notify("Cannot add the same property more than once.", "warning", 4000);
 				}
 			}
 		};
@@ -155,9 +159,9 @@ define(
 				var index = this.editor.get_sprite_index( this.editor.editing_sprite().name() );
 
 				if(index != -1) {
-					var objects = this.editor.game().state.objects;
+					var objects = this.editor.game().state.objects();
 
-					if(objects[index].properties && this.property_exists( objects[index].properties, item)){ 
+					if(objects[index].properties && this.property_exists( objects[index].properties(), item)){ 
 						var p_index = this.get_property_index(objects[index].properties, item);
 
 						objects[index].properties.splice(p_index, 1);
@@ -170,7 +174,7 @@ define(
 
 				if(item) {
 					var layer = this.editor.editing_sprite().layer();
-
+					// pass off update to function on layers editor
 					this.editor.remove_layer_property(layer, item);
 				}
 			}			
@@ -180,9 +184,9 @@ define(
 			var index = this.editor.get_sprite_index( this.editor.editing_sprite().name() );
 
 			if(index != -1) {
-				var objects = this.editor.game().state.objects;
+				var objects = this.editor.game().state.objects();
 
-				if(objects[index].properties && this.property_exists( objects[index].properties, form.name)){ 
+				if(objects[index].properties && this.property_exists( objects[index].properties(), form.name)){ 
 					var p_index = this.get_property_index(objects[index].properties, form.name);
 
 					// update at p_index
@@ -191,8 +195,8 @@ define(
 		};
 
 		PropertiesEditor.prototype.before_obj_move = function(arg) {
-			var obj_properties = this.editor.editing_sprite().properties();
-			var layer_properties = this.editor.editing_sprite().layer().properties();
+			var obj_properties = this.editor.editing_sprite().properties;
+			var layer_properties = this.editor.editing_sprite().layer().properties;
 
 			if(arg.sourceParent == obj_properties) {
 				if(arg.targetParent != obj_properties) {
@@ -216,8 +220,8 @@ define(
 		};
 
 		PropertiesEditor.prototype.before_layer_move = function(arg) {
-			var obj_properties = this.editor.editing_sprite().properties();
-			var layer_properties = this.editor.editing_sprite().layer().properties();
+			var obj_properties = this.editor.editing_sprite().properties;
+			var layer_properties = this.editor.editing_sprite().layer().properties;
 
 			if(arg.sourceParent == layer_properties) {
 				if(arg.targetParent != layer_properties) {

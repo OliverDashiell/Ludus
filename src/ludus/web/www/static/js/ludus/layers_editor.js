@@ -5,13 +5,20 @@ define(
 		function LayersEditor(appl, editor){
 			this.appl = appl;
 			this.editor = editor;
-			this.layers = ko.observableArray();
-			this.selected_layer = ko.observable();
-			this.new_layer = ko.observable(null);
 
-			this.edit_visible = ko.observable(null);
-			this.edit_value = ko.observable(null);
 
+			//---- Game Layer Variables ----//
+			this.id_seed = ko.observable(-1);			// current document id seed
+			this.layers = ko.observableArray();			// list holding all current layers
+
+			this.selected_layer = ko.observable(null);	// the current user selected layer
+
+			this.new_layer = ko.observable(null);		// the value of the new layer input
+			this.edit_visible = ko.observable(null);	// the layer being edited
+			this.edit_value = ko.observable(null);		// the user edit name input value
+
+
+			//---- Subscriptions ----//
 			this.selected_layer.subscribe(function() {
 				if(this.selected_layer() != this.edit_visible()){
 					this.edit_value(null);
@@ -20,15 +27,38 @@ define(
 			}, this);
 		}
 
-		LayersEditor.prototype.set_game = function(data) {
-			var i,item,items = data;
-
+		LayersEditor.prototype._init_ = function() {
+			this.id_seed(-1);
 			this.layers.removeAll();
-			for (i = 0; i < items.length; i++) {
-				item = items[i];
+			this.selected_layer(null);
+			this.new_layer(null);
+			this.edit_visible(null);
+			this.edit_value(null);
+		};
 
-				this.layers.push( new Layer(item) );
+		LayersEditor.prototype.get_mapping_options = function() {
+			return {
+				key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        create: function(options){
+		        	return new Layer(options.data);
+		        }
 			};
+		};
+
+		LayersEditor.prototype.get_seed_id = function() {
+			var seed = this.id_seed();
+
+			// increment the seed
+			this.id_seed( seed+1 );
+
+			return seed;
+		};
+
+		LayersEditor.prototype.update = function(data, seed) {
+			this.layers(data);
+			this.id_seed = seed;
 
 			// default to background layer
 			if(this.selected_layer() == null) {
@@ -90,14 +120,16 @@ define(
 
 		LayersEditor.prototype.create_layer = function() {
 			if(this.get_layer_index( this.new_layer() ) == -1) {
+				var seed = this.get_seed_id();
+
 				var layer = new Layer({
+					id:seed,
 					name:this.new_layer()
 				});
 
 				this.layers.push( layer );
-				this.editor.game().state.layers.push( layer );
-				
 				this.editor.save_game();
+
 				this.selected_layer( this.layers()[this.layers().length-1] );
 				this.new_layer(null);
 			}
@@ -119,7 +151,6 @@ define(
 						var index = that.get_layer_index( that.selected_layer().name() );
 
 						that.layers.splice(index, 1);
-						that.editor.game().state.layers.splice(index, 1);
 
 						that.editor.save_game();
 						that.selected_layer( that.layers()[0] );
@@ -142,8 +173,7 @@ define(
 		};
 
 		LayersEditor.prototype.layer_moved = function(data) {
-			this.editor.sort_by_layer(this.editor.game().state.objects);
-			this.editor.game().state.layers = this.layers();
+			this.editor.sort_by_layer(this.editor.game().state.objects());
 			this.editor.save_game();
 		};
 
@@ -167,16 +197,17 @@ define(
 
 						// create object for update
 						var new_layer = new Layer({
+							id:this.layers()[index].id(),
 							name: this.edit_value(),
 							properties: this.layers()[index].properties()
 						});
 
+						// update sprite list layers
 						this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
 
 						this.layers()[index].name(this.edit_value());
-						this.editor.game().state.layers[index].name = this.edit_value();
-
 						this.editor.save_game();
+
 						this.selected_layer( this.layers()[index] );
 					}
 					else {
@@ -197,20 +228,17 @@ define(
 			var index = this.get_layer_index(layer.name());
 
 			if(index != -1) {
-				var properties = layer.properties();
-
-				properties.push(item);
+				this.layers()[index].properties.push(item);
 
 				// create object to update sprite of layer change
 				var new_layer = new Layer({
+					id: layer.id(),
 					name: layer.name(),
-					properties: properties
+					properties: this.layers()[index].properties()
 				});
 
+				// update sprite list layers
 				this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
-
-				this.layers()[index].properties(properties);
-				this.editor.game().state.layers[index].properties = properties;
 
 				this.editor.save_game();
 			}
@@ -220,21 +248,19 @@ define(
 			var index = this.get_layer_index(layer.name());
 
 			if(index != -1) {
-				var properties = layer.properties(),
-					p_index = this.get_property_index(layer, item.name);
+				var p_index = this.get_property_index(layer, item.name);
 
-				properties.splice(p_index, 1);
+				this.layers()[index].properties.splice(p_index, 1);
 
 				// create object to update sprite of layer change
 				var new_layer = new Layer({
+					id: layer.id(),
 					name: layer.name(),
 					properties: properties
 				});
 
+				// update sprite list layers
 				this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
-
-				this.layers()[index].properties(properties);
-				this.editor.game().state.layers[index].properties = properties;
 
 				this.editor.save_game();
 			}

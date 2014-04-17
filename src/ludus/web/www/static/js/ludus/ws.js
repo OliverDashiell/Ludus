@@ -36,7 +36,7 @@ define(
 			}
 			
 			var that = this;
-			var protocol = document.location.protocol == "https:"? "wss://" : "ws://";
+			var protocol = document.location.protocol == "https:" ? "wss://" : "ws://";
 			var ws = new WebSocket(protocol + document.domain + ":" + document.location.port + this.ws_url);
 			
 			ws.onopen = function() {

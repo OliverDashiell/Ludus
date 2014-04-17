@@ -1,8 +1,9 @@
 define(
-	["jquery", "knockout", "../utils", "../model/layer"],
-	function($, ko, utils, Layer){
+	["jquery", "knockout", "knockout-mapping", "../utils", "../model/layer"],
+	function($, ko, mapping, utils, Layer){
 
 		function SpriteListItem(options){
+			this.id = ko.observable(-1);
 			this.name = ko.observable('object');
 			this.map_x = ko.observable(0);
 			this.map_y = ko.observable(0);
@@ -21,6 +22,7 @@ define(
 		}
 
 		SpriteListItem.prototype.update = function(options) {
+			this.id(options.id || -1);
 			this.name(options.name || 'object');
 			this.map_x(options.map_x || 0);
 			this.map_y(options.map_y || 0);
@@ -34,15 +36,8 @@ define(
 
 			this.layer(new Layer(options.layer) || new Layer());
 
-			this.properties.removeAll();
-			if(options.properties) {
-				var i,item,items = options.properties;
-
-				for (var i = 0; i < items.length; i++) {
-					item = items[i];
-
-					this.properties().push(item);
-				};
+			if(options.properties && options.properties.length > 0){
+				mapping.fromJS(options.properties, {}, this.properties);
 			}
 		};
 

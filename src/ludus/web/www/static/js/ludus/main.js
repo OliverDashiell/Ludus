@@ -1,5 +1,5 @@
 define(
-	["jquery", "knockout", "./ws", "./games_panel", "./editor_panel", "./account_panel", "./play_panel", "bootstrap-notify", "./utils"], 
+	["jquery", "knockout", "./ws", "./games_panel", "./editor_panel", "./account_panel", "./play_panel", "bootstrap-notify"], 
 	function($, ko, Ws, GamesPanel, EditorPanel, AccountPanel, PlayPanel){
 
 		function Ludus(){

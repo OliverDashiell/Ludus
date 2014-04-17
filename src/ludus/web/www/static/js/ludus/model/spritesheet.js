@@ -1,39 +1,45 @@
 define(
-	["knockout", "./spritesheet_item"],
-	function(ko, SpriteSheetItem){
+	["knockout", "knockout-mapping", "./spritesheet_item"],
+	function(ko, mapping, SpriteSheetItem){
 		function SpriteSheet(options){
+			this.id = ko.observable(-1);
 			this.sheet = ko.observable(null);
 		    this.width = ko.observable(0);
 		    this.height = ko.observable(0);
 			this.sprite_items = ko.observableArray();
-			this.image = new Image();
-			this.image_loaded = ko.observable(false);
+		    // this.image = null;
 
 			this.update(options);
 		}
 
+		SpriteSheet.prototype.get_mapping_options = function() {
+			return {
+		        key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        create: function(options) {
+		        	return new SpriteSheetItem(options.data);
+		        }
+		    };
+		};
 
 		SpriteSheet.prototype.update = function(options) {
+			this.id(options.id || -1);
 			this.sheet(options.sheet || null);
 			this.width(options.width || 0);
 			this.height(options.height || 0);
+			// this.image = options.image || null;
 
-			this.sprite_items.removeAll();
-			if(options.sprite_items) {
-				var i,item,items = options.sprite_items;
-
-				for (var i = 0; i < items.length; i++) {
-					item = items[i];
-
-					var sheet_item = new SpriteSheetItem(item);
-					this.sprite_items().push(sheet_item);
-				};
+			// update mapped sprite items
+			if(options.sprite_items && options.sprite_items.length > 0) {
+				this.sprite_items = mapping.fromJS(options.sprite_items, this.get_mapping_options());
 			}
 
-			if(options.image){
-				this.image = options.image;
-				this.image_loaded(true);
-			}
+			// if this image isnt being created (id will be -1) then preload the image
+			// if(!this.image && this.id() != -1){
+			// 	this.image = new Image();
+			// 	this.image.src = this.to_url();
+			// }
 		};
 
 		SpriteSheet.prototype.item_within = function(x,y,width,height) {

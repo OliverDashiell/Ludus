@@ -1,51 +1,45 @@
 define(
-	["jquery", "knockout", "./players_editor", "./spritesheet_editor", "./layers_editor", "./properties_editor", "./model/sprite_list_item"], 
-	function($, ko, PlayersEditor, SpritesheetEditor, LayersEditor, PropertiesEditor, SpriteListItem){
+	["jquery", "knockout", "knockout-mapping",
+	 "./players_editor", "./spritesheet_editor", "./layers_editor", "./properties_editor", "./model/sprite_list_item"], 
+	function($, ko, mapping, PlayersEditor, SpritesheetEditor, LayersEditor, PropertiesEditor, SpriteListItem){
 
 		function EditorPanel(appl){
 			this.appl = appl;
 			this.template = "editor-panel";
 
-			// selected tool
-			this.tool = ko.observable('Select');
 
-			// selected sprite
-			this.editing_sprite = ko.observable(null);
-
-			// sprite name editing
-			this.edit_name_visible = ko.observable(null);
-			this.edit_name_value = ko.observable(null);
-
-			// game state
-			this.game = ko.observable();
-			this.game_id = ko.observable();
-			this.game_sync = ko.observable();
-
-			// sprites
-			this.sprite_list = ko.observableArray();
+			//---- Game State Variables ----//
+			this.game = ko.observable(null);				// view model (ko.mapping)
+			this.game_raw = null;							// raw data
+			this.game_sync = ko.observable(false);			// changes flag
 			
-			// grid variables
-			this.grid_size = ko.observable(16);
-			this.map_width = ko.observable(48);
-			this.map_height = ko.observable(33);
-			this.show_mapgrid = ko.observable(true);
 
-			// panels
-			this.players_editor = new PlayersEditor(appl, this.game_id);
+			//---- Map Panel Variables ----//
+			this.show_mapgrid = ko.observable(true);		// map grid visible flag
+			this.tool = ko.observable('Select'); 			// selected tool
+			this.editing_sprite = ko.observable(null);		// selected sprite
+			this.edit_name_visible = ko.observable(null); 	// sprite name editing
+			this.edit_name_value = ko.observable(null);		// input value
+
+
+			//---- Sub panels ----//
+			this.players_editor = new PlayersEditor(appl, this);
 			this.spritesheet_editor = new SpritesheetEditor(appl, this);
 			this.layers_editor = new LayersEditor(appl, this);
 			this.properties_editor = new PropertiesEditor(appl, this);
 
+
+			//---- Computed Values ----//
 			this.game_name = ko.computed({
 		        read: function () {
-		        	if(this.game()) {
-		        		return this.game().name;
+		        	if( this.game() ) {
+		        		return this.game().name();
 		        	}
 		        	return 'no name';
 		        },
 		        write: function (value) {
-		            if (this.game()) { 
-		            	this.game().name = value;
+		            if ( this.game() ) { 
+		            	this.game().name(value);
 		            }
 		        },
 		        owner: this
@@ -53,19 +47,71 @@ define(
 
 			this.game_state = ko.computed({
 		        read: function () {
-		        	if(this.game()) {
+		        	if( this.game() ) {
 		        		return ko.toJSON(this.game().state, null, 4);
 		        	}
 		        	return '{}';
 		        },
 		        write: function (value) {
-		            if (this.game()) { 
-		            	this.game().state = $.parseJSON(value);
+		            if ( this.game() ) {
+		            	// this doesnt seem to map back to the model
+		            	// so the save reverts back to the original data
+		            	mapping.fromJS($.parseJSON(value), this.game().state);
 		            }
 		        },
 		        owner: this
 		    });
 
+			this.grid_size = ko.computed({
+				read: function () {
+		        	if( this.game() ) {
+		        		return this.game().state.map.scale();
+		        	}
+		        	return 16;
+		        },
+		        write: function (value) {
+		            if ( this.game() ) { 
+		            	this.game().state.map.scale( parseInt(value) );
+		            	this.save_game();
+		            }
+		        },
+		        owner: this
+		    });
+
+			this.map_width = ko.computed({
+				read: function () {
+		        	if( this.game() ) {
+		        		return this.game().state.map.width();
+		        	}
+		        	return 49;
+		        },
+		        write: function (value) {
+		            if ( this.game() ) { 
+		            	this.game().state.map.width( parseInt(value) );
+		            	this.save_game();
+		            }
+		        },
+		        owner: this
+		    });
+
+			this.map_height = ko.computed({
+				read: function () {
+		        	if( this.game() ) {
+		        		return this.game().state.map.height();
+		        	}
+		        	return 33;
+		        },
+		        write: function (value) {
+		            if ( this.game() ) { 
+		            	this.game().state.map.height( parseInt(value) );
+		            	this.save_game();
+		            }
+		        },
+		        owner: this
+		    });
+
+
+			//---- Subscriptions ----//
 		    this.editing_sprite.subscribe(function() {
 				if(this.editing_sprite() != this.edit_name_visible()){
 					this.edit_name_value(null);
@@ -73,14 +119,8 @@ define(
 				}
 			}, this);
 
-			this.sprite_list.subscribe(function() {
-				if(this.editing_sprite() && this.get_sprite_index( this.editing_sprite().name() ) == -1){
-					this.editing_sprite(null);
-				}
-			}, this);
-
-			// if active sprite is null default to select tool
 		    this.spritesheet_editor.active_sprite.subscribe(function(value){
+		    	// if active sprite is null default to select tool
 		    	if(!value){
 		    		if(this.tool() == 'Draw' || this.tool() == 'Fill'){
 		    			this.tool('Select');
@@ -88,69 +128,130 @@ define(
 		    	}
 		    }, this);
 
-		    this.grid_size.subscribe(function(value){
-		    	this.game().state.map.scale = parseInt(value);
-		    	this.save_game();
-		    }, this);
 
-			this.map_width.subscribe(function(value){
-				this.game().state.map.width = parseInt(value);
-				this.save_game();
-			}, this);
-
-			this.map_height.subscribe(function(value){
-				this.game().state.map.height = parseInt(value);
-				this.save_game();
-			}, this);
-
+		    //---- Websocket broadcast handling ----//
 			this.appl.subscribe_to_broadcasts(function(msg){
 				if(msg.signal == 'deleted_game'){
-					if(this.game_id() == msg.message){
+					if(this.game() && this.game().id() == msg.message){
 						this.appl.close_editor();
 					}
 				}
 				else if(msg.signal == 'saved_game'){
-					if(this.game_id() == msg.message.id) {
+					if(this.game() && this.game().id() == msg.message.id) {
 						this.update_game(msg.message);
 					}
 				}
 			}, this);
 		}
 
+		EditorPanel.prototype.get_mapping_options = function() {
+			var player_mapping = this.players_editor.get_mapping_options(),
+				layers_mapping = this.layers_editor.get_mapping_options(),
+				sheets_mapping = this.spritesheet_editor.get_sheet_mapping_options(),
+				sprite_mapping = this.spritesheet_editor.get_sprite_mapping_options();
+
+			var object_mapping = {
+				key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        create:function(options){
+		        	return new SpriteListItem(options.data);
+		        }
+			}
+
+			var mapping = {
+			    key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        'players': player_mapping,
+		        'layers': layers_mapping,
+		        'layer': layers_mapping,
+		        'spritesheets': sheets_mapping,
+		        'tiles': sheets_mapping,
+		        'sprite_items': sprite_mapping,
+		        'objects': object_mapping,
+		        'ignore': ["image"]
+			};
+
+			return mapping;
+		};
+
 		EditorPanel.prototype.edit_game = function(id) {
-			this.game_id(id);
+			// clear editor state
 			this.game(null);
+			this.game_raw = null;
 			this.game_sync(true);
 
-			this.sprite_list.removeAll();
+			this.show_mapgrid(true);
+			this.tool('Select');
 			this.editing_sprite(null);
+			this.edit_name_visible(null);
+			this.edit_name_value(null);
 
-			this.players_editor.selected_player(null);
-			this.players_editor.user_lookup(null);
-			this.players_editor.players.removeAll();
+			// clear sub panel state
+			this.players_editor._init_();
+			this.spritesheet_editor._init_();
+			this.layers_editor._init_();
+			this.properties_editor._init_();
 
-			this.spritesheet_editor.selected_sheet(null);
-			this.spritesheet_editor.selected_sprite(null);
-
+			// request game info from server
 			this.appl.send({method:"get_game", kwargs:{game_id:id}}, function(response) {
 				if(response.error) {
 					this.appl.error(response.error);
 				}
 				else {
+					// apply view model mapping
+					this.game( mapping.fromJS(response.result, this.get_mapping_options()) );
+
+					// update views
 					this.update_game(response.result);
-					this.players_editor.players(response.result.players);
 				}
 			}, this);
+		};
+
+		EditorPanel.prototype.update_game = function(game) {
+			// if game update comes in before changes have been saved
+			if(this.game_sync() == false) {
+				// alert user - game desyncronised updating with other user changes
+				this.appl.notify("Another user has saved over your changes, try again.", "error", 4000);
+			}
+			this.game_sync(true);
+
+			// update raw
+			this.game_raw = game;
+
+			// update mapping
+			mapping.fromJS(game, this.game());
+
+			// update players view with new data
+			this.players_editor.players( this.game().players() );
+
+			// update layers view with new data
+			this.layers_editor.update( this.game().state.layers(), this.game().state.layers_seed );
+
+			// update sprite sheet view with new data
+			this.spritesheet_editor.update( this.game().state.sheets, this.game().state.sheets_seed );
+
+			// resolve selected sprite to updated object
+			// if(this.editing_sprite() && sprite.name() == this.editing_sprite().name()) {
+			// 	this.editing_sprite(sprite);
+			// }
 		};
 
 		EditorPanel.prototype.save_game = function() {
 			this.game_sync(true);
 
-			this.appl.send({method:"save_game", kwargs:{
-														game_id:this.game_id(),
-														name:this.game_name(),
-														state:this.game().state,
-														}}, 
+			this.game_raw = mapping.toJS( this.game() );
+
+			this.appl.send(
+				{
+					method:"save_game", 
+					kwargs:{
+						game_id:this.game().id(),
+						name:this.game_name(),
+						state:this.game_raw.state,
+					}
+				}, 
 				function(response) {
 					if(response.error) {
 						this.appl.error(response.error);
@@ -160,92 +261,7 @@ define(
 		};
 
 		EditorPanel.prototype.play_game = function() {
-			this.appl.play({
-				id: this.game_id(),
-				name: this.game().name,
-				state: this.game().state,
-				players: this.players_editor.players()
-			});
-		};
-
-		EditorPanel.prototype.update_game = function(game) {
-			this.game(game);
-
-			if(this.game_sync() == false) {
-				// alert user - game desyncronised updating with other user changes
-				this.appl.notify("Another user has saved over your changes, try again.", "error", 4000);
-			}
-
-			this.game_sync(true);
-
-			// add sprite list items
-			if(game.state.objects) {
-				this.sprite_list.removeAll();
-
-				var i,item,items = game.state.objects;
-
-				for (i = 0; i < items.length; i++) {
-					item = items[i];
-
-					var sprite = new SpriteListItem(item);
-
-					this.sprite_list.push(sprite);
-
-					if(this.editing_sprite() && sprite.name() == this.editing_sprite().name()) {
-						this.editing_sprite(sprite);
-					}
-				};
-			}
-
-			this.grid_size( game.state.map.scale );
-			this.map_width( game.state.map.width );
-			this.map_height( game.state.map.height );
-
-			this.spritesheet_editor.set_game(game);
-
-			this.layers_editor.set_game(game.state.layers);
-		};
-
-		EditorPanel.prototype.update_sprite_name = function(form) {
-			if(this.edit_name_value()) {
-
-				if(this.edit_name_value() != this.editing_sprite().name()) {
-					var index = this.get_sprite_index( this.edit_name_value() );
-
-					if(index == -1) {
-						index = this.get_sprite_index( this.edit_name_visible().name() );
-
-						this.game().state.objects[index].name = this.edit_name_value();
-						this.save_game();
-
-						this.sprite_list()[index].name( this.edit_name_value() );
-						this.editing_sprite( this.sprite_list()[index] );
-					}
-					else {
-						this.appl.notify("A object with that name already exists", "warning", 4000);
-					}
-				}
-
-			}
-			else {
-				this.appl.notify("Cannot change object name to nothing", "warning", 4000);
-			}
-			
-			this.edit_name_value(null);
-			this.edit_name_visible(null);
-		};
-
-		EditorPanel.prototype.remove_selected_sprite = function() {
-			if(this.editing_sprite()) {
-				var index = this.get_sprite_index( this.editing_sprite().name() );
-
-				var deleted = this.remove_sprite_by_index( index );
-
-				if(deleted) {
-					this.save_game();
-					this.editing_sprite(null);
-				}
-			}
+			this.appl.play(mapping.toJS( this.game() ));
 		};
 
 		EditorPanel.prototype.show_name_edit = function(obj) {
@@ -272,6 +288,19 @@ define(
 			btn.blur();
 
 			return true;
+		};
+
+		EditorPanel.prototype.show_property_editor = function() {
+			$('#editor-tabs-right a[href="#properties"]').tab('show') // Show the properties tab
+		};
+
+		EditorPanel.prototype.get_object_seed_id = function() {
+			var seed = this.game().state.objects_seed();
+
+			// increment the seed
+			this.game().state.objects_seed( seed+1 );
+
+			return seed;
 		};
 
 		EditorPanel.prototype.snap_to_grid_width = function(val){
@@ -313,39 +342,17 @@ define(
 			}
 		};
 
-		EditorPanel.prototype.get_sheet_by_name = function(name) { 
-			var i,item,items = this.game().state.sheets.spritesheets;
-
-			for (i = 0; i < items.length; i++) {
-				item = items[i];
-
-				if(item.sheet == name) {
-					return item; 
-				}
-			};
-
-			i,item,items = this.game().state.sheets.tiles;
-
-			for (i = 0; i < items.length; i++) {
-				item = items[i];
-
-				if(item.sheet == name) {
-					return item; 
-				}
-			};
-		};
-
 		EditorPanel.prototype.get_sprite_index = function(name) {
-			if(!this.game() || !this.game().state.objects) {
+			if(!this.game() || !this.game().state.objects()) {
 				return -1;
 			}
 
-			var i,item,items = this.game().state.objects;
+			var i,item,items = this.game().state.objects();
 
 			for (i = 0; i < items.length; i++) {
 				item = items[i];
 
-				if(item.name == name) {
+				if(item.name() == name) {
 					return i; 
 				}
 			};
@@ -353,11 +360,27 @@ define(
 			return -1;
 		};
 
-		EditorPanel.prototype.remove_sprite_by_index = function(index) {
-			if(index != -1 && index < this.game().state.objects.length) {
-				this.game().state.objects.splice(index, 1);
-				this.sprite_list.splice(index, 1);
+		EditorPanel.prototype.get_sprite_by_name = function(name) {
+			if(!this.game() || !this.game().state.objects()) {
+				return null;
+			}
 
+			var i,item,items = this.game().state.objects();
+
+			for (i = 0; i < items.length; i++) {
+				item = items[i];
+
+				if(item.name() == name) {
+					return item; 
+				}
+			};
+
+			return null;
+		};
+
+		EditorPanel.prototype.remove_sprite_by_index = function(index) {
+			if(index != -1 && index < this.game().state.objects().length) {
+				this.game().state.objects.splice(index, 1);
 				return true;
 			}
 			return false;
@@ -367,60 +390,56 @@ define(
 			var deleted = true;
 			var removed = [];
 
-			if(this.game().state.objects) {
-				var i,item,items = this.game().state.objects;
+			var i,item,items = this.game().state.objects();
 
-				for (i = items.length-1; i > -1; i--) {
-					item = items[i];
+			for (i = items.length-1; i > -1; i--) {
+				item = items[i];
 
-					if(item.layer.name == layer) {
-						deleted = this.remove_sprite_by_index(i);
+				if(item.layer().name() == layer) {
+					deleted = this.remove_sprite_by_index(i);
 
-						if(!deleted) {
-							// roll back
-							var j,rollback_item,rollback_items = removed;
+					if(!deleted) {
+						// roll back
+						var j,rollback_item,rollback_items = removed;
 
-							for (j = rollback_items.length-1; j > -1; j--) { 
-								rollback_item = rollback_items[i];
+						for (j = rollback_items.length-1; j > -1; j--) { 
+							rollback_item = rollback_items[i];
 
-								this.game().state.objects.push(rollback_item);
-								this.sort_by_layer( this.game().state.objects );
-							}
-
-							return deleted;
+							this.game().state.objects.push(rollback_item);
+							this.sort_by_layer( this.game().state.objects );
 						}
-						else {
-							removed.push(item);
-						}
+
+						return deleted;
 					}
-				};
-			}
+					else {
+						removed.push(item);
+					}
+				}
+			};
 
 			return deleted;
 		};
 
 		EditorPanel.prototype.update_sprites_by_layer = function(orig_layer, new_layer) {
-			if(this.game().state.objects) {
-				var i,item,items = this.game().state.objects;
+			var i,item,items = this.game().state.objects();
 
-				for (i = items.length-1; i > -1; i--) {
-					item = items[i];
+			for (i = items.length-1; i > -1; i--) {
+				item = items[i];
 
-					if(item.layer.name == orig_layer.name()) {
-						item.layer.name = new_layer.name();
-						item.layer.properties = new_layer.properties();
+				if(item.layer().name() == orig_layer.name()) {
+					item.layer().name( new_layer.name() );
+					item.layer().properties( new_layer.properties() );
 
-						// update name if user has not changed it to keep it unique
-						var name_check = new RegExp('^object_');
+					// update name if user has not changed it to keep it unique
+					var name_check = new RegExp('^object_');
 
-						if(name_check.test(item.name)) {
-							var name = 'object_'+ item.map_x + item.map_y + new_layer.name();
+					if(name_check.test( item.name() )) {
+						var name = 'object_'+ item.map_x() + item.map_y() + new_layer.name();
 
-							item.name = name;
-						}
+						item.name(name);
 					}
-				};
-			}
+				}
+			};
 		};
 
 		EditorPanel.prototype.add_layer_property = function(layer, item) {
@@ -434,7 +453,7 @@ define(
 		};
 
 		EditorPanel.prototype.get_overlapping_sprite = function(x,y,width,height,layer,name) {
-			var i,item,items = this.sprite_list();
+			var i,item,items = this.game().state.objects();
 
 			for (i = 0; i < items.length; i++) {
 				item = items[i];
@@ -459,7 +478,7 @@ define(
 		};
 
 		EditorPanel.prototype.get_sprite_clicked = function(x,y,layer) {
-			var i,item,items = this.sprite_list();
+			var i,item,items = this.game().state.objects();
 
 			for (i = 0; i < items.length; i++) {
 				item = items[i];
@@ -490,15 +509,19 @@ define(
 			var item = this.get_overlapping_sprite(x,y,width,height,this.layers_editor.selected_layer().name());
 
 			if(!item){
+				var seed = this.get_object_seed_id();
+
 				var name = 'object_'+ x + y + this.layers_editor.selected_layer().name();
 
 				var item_layer = {
+					id: this.layers_editor.selected_layer().id(),
 					name: this.layers_editor.selected_layer().name(),
 					properties: this.layers_editor.selected_layer().properties()
 				}
 
 				// create item
 				item = new SpriteListItem({
+					id: seed,
 					name: name,
 					layer: item_layer,
 					map_x: x,
@@ -511,20 +534,49 @@ define(
 					height: height
 				});
 
-				this.sprite_list.push(item);
-				this.sort_by_layer(this.sprite_list());
-
-				// if default objects list is null on game state create the list
-				if(this.game().state.objects) {
-					this.game().state.objects.push(item);
-					this.sort_by_layer(this.game().state.objects);
-				}
-				else {
-					this.game().state.objects = new Array();
-					this.game().state.objects.push(item);
-				}
+				this.game().state.objects.push(item);
+				this.sort_by_layer(this.game().state.objects);
 
 				this.game_sync(false);
+			}
+		};
+
+		EditorPanel.prototype.update_sprite_name = function(form) {
+			if(this.edit_name_value()) {
+
+				if(this.edit_name_value() != this.editing_sprite().name()) {
+					var index = this.get_sprite_index( this.edit_name_value() );
+
+					if(index == -1) {
+						index = this.get_sprite_index( this.edit_name_visible().name() );
+
+						this.game().state.objects()[index].name( this.edit_name_value() );
+						this.save_game();
+					}
+					else {
+						this.appl.notify("A object with that name already exists", "warning", 4000);
+					}
+				}
+
+			}
+			else {
+				this.appl.notify("Cannot change object name to nothing", "warning", 4000);
+			}
+			
+			this.edit_name_value(null);
+			this.edit_name_visible(null);
+		};
+
+		EditorPanel.prototype.remove_selected_sprite = function() {
+			if(this.editing_sprite()) {
+				var index = this.get_sprite_index( this.editing_sprite().name() );
+
+				var deleted = this.remove_sprite_by_index( index );
+
+				if(deleted) {
+					this.save_game();
+					this.editing_sprite(null);
+				}
 			}
 		};
 
@@ -548,7 +600,7 @@ define(
 					y = this.grid_size()*this.map_height() - height;
 				}
 
-				var item = this.get_overlapping_sprite(x,y,width,height,layer.name(), name);
+				var item = this.get_overlapping_sprite(x,y,width,height,layer.name(),name);
 
 				if(!item){
 					var index = this.get_sprite_index(name);
@@ -560,16 +612,12 @@ define(
 						if(name_check.test(name)) {
 							name = 'object_'+ x + y + layer.name();
 
-							this.game().state.objects[index].name = name;
-							this.sprite_list()[index].name(name);
+							this.game().state.objects()[index].name(name);
 						}
 
 						// update x and y coords of object
-						this.game().state.objects[index].map_x = x;
-						this.game().state.objects[index].map_y = y;
-
-						this.sprite_list()[index].map_x(x);
-						this.sprite_list()[index].map_y(y);
+						this.game().state.objects()[index].map_x(x);
+						this.game().state.objects()[index].map_y(y);
 
 						this.game_sync(false);
 					}

@@ -5,28 +5,30 @@
 	<ul class="list-group" data-bind="foreach:players">
 		<li class="list-group-item">
 			
-			<i class="fa fa-user icon" data-bind="visible:!image"></i>
+			<i class="fa fa-user icon" data-bind="visible:!image()"></i>
 			<img src="" class="img-responsive player-image" alt="Responsive image"
-				 data-bind="visible:image, attr:{ src:image?'/uploads/'+image:null }">
+				 data-bind="visible:image(), attr:{ src:image()?'/uploads/'+image():null }">
 
 			<span class="item-name" data-bind="text:name"></span>
-			<i class="fa fa-lock icon" data-bind="visible:role == 'owner'"></i>
+			<i class="fa fa-lock icon" data-bind="visible:role() == 'owner'"></i>
 
 			<!-- ko ifnot:$parent.is_owner -->
-			<i class="fa fa-wrench icon pull-right" data-bind="visible:role == 'builder'"></i>
-			<i class="fa fa-gamepad icon pull-right" data-bind="visible:role == 'player'"></i>
+			<i class="fa fa-wrench icon pull-right" data-bind="visible:role() == 'builder'"></i>
+			<i class="fa fa-gamepad icon pull-right" data-bind="visible:role() == 'player'"></i>
 			<!-- /ko -->
 
 			<!-- ko if:$parent.is_owner -->
-			<div class="align-right" data-bind="if:role != 'owner'">
+			<div class="align-right" data-bind="if:role() != 'owner'">
 				<div class="btn-group">
 					<button type="button" class="btn btn-default btn-custom" 
-										  data-bind="css:{active:role == 'builder'}, click:$.proxy($parent.change_role, $parent, 'builder')">
+										  data-bind="css:{active:role() == 'builder'}, 
+										  			 click:$.proxy($parent.change_role, $parent, 'builder')">
 						<i class="fa fa-wrench icon"></i>
 						<!-- Builder -->
 					</button>
 					<button type="button" class="btn btn-default btn-custom" 
-										  data-bind="css:{active:role == 'player'}, click:$.proxy($parent.change_role, $parent, 'player')">
+										  data-bind="css:{active:role() == 'player'}, 
+										  			 click:$.proxy($parent.change_role, $parent, 'player')">
 						<i class="fa fa-gamepad icon"></i>
 						<!-- Player -->
 					</button>
@@ -52,8 +54,8 @@
 		<div class="form-group">
 			<label class="sr-only" for="name">Name</label>
 			<input type="name" class="user_lookup" placeholder="Enter name" data-bind="select2Value:user_lookup,
-		   																		   select2:{minimumInputLength: 1, 
-		   																		   			query:$.proxy(lookup_user, $data)}">
+		   																			   select2:{minimumInputLength: 1, 
+		   																		   				query:$.proxy(lookup_user, $data)}">
 		</div>
 	</form>
 

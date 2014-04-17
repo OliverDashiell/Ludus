@@ -42,13 +42,15 @@
 				<!-- Gridded map area -->
 				<div id="map" class="panel-body panel-body-custom grid-container"
 					 data-bind="click_drag:{data:$data, action:$.proxy(do_action, $data)}">
-		            <!-- ko foreach:sprite_list -->
-		                <img class="map-item" 
-		                	 draggable="false"
-		                	 data-bind="style:$data.to_style(),
-		                	 			css:{active:$parent.editing_sprite() == $data},
-		                	 			attr:{id:$data.name}, 
-		                	 			sprite:{obj:$data}">
+					<!-- ko if:game() -->
+			            <!-- ko foreach:game().state.objects -->
+			                <img class="map-item" 
+			                	 draggable="false"
+			                	 data-bind="style:$data.to_style(),
+			                	 			css:{active:$parent.editing_sprite() == $data},
+			                	 			attr:{id:$data.name}, 
+			                	 			sprite:{obj:$data}">
+			            <!-- /ko -->
 		            <!-- /ko -->
 		            
 					<img class="sudo-cursor"
@@ -105,13 +107,13 @@
 							<i class="fa fa-pencil icon"></i>
 							Draw
 						</button>
-						<button class="btn btn-default btn-custom"
+						<!-- <button class="btn btn-default btn-custom"
 								data-bind="click:$.proxy(tool, $data, 'Fill'),
 										   css:{ active:tool()=='Fill' },
 										   enable:spritesheet_editor.active_sprite()">
 							<i class="fa fa-tint icon"></i>
 							Fill
-						</button>
+						</button> -->
 						<button class="btn btn-default btn-custom"
 								data-bind="click:$.proxy(tool, $data, 'Erase'),
 										   css:{ active:tool()=='Erase' }">
@@ -147,38 +149,40 @@
 							</tr>
 						</thead>
 						<tbody>
-							<!-- ko foreach:sprite_list -->
-							<tr class="t-row"
-								data-bind="css:{active:$parent.editing_sprite() == $data}, 
-											   click:$parent.editing_sprite,
-											   event:{ dblclick:$.proxy($parent.show_name_edit, $parent) }, 
-											   clickBubble:false">
-								<td class="spacer"></td> <!-- spacer -->
-								<td class="primary">
-									<span data-bind="text:$data.name(),
-													 visible:$parent.edit_name_visible() != $data"></span>
+							<!-- ko if:game() -->
+				            	<!-- ko foreach:game().state.objects -->
+								<tr class="t-row"
+									data-bind="css:{active:$parent.editing_sprite() == $data}, 
+												   click:$parent.editing_sprite,
+												   event:{ dblclick:$.proxy($parent.show_name_edit, $parent) }, 
+												   clickBubble:false">
+									<td class="spacer"></td> <!-- spacer -->
+									<td class="primary">
+										<span data-bind="text:$data.name(),
+														 visible:$parent.edit_name_visible() != $data"></span>
 
-									<form class="form-inline form-inline-condensed form-overlay" role="form" 
-										  data-bind="submit:$.proxy($parent.update_sprite_name, $parent), 
-										  			 visible:$parent.edit_name_visible() == $data">
-										<div class="form-group">
-											<label class="sr-only" for="update_name">Update Sprite Name</label>
-											<input class="form-control input-custom" id="update_sprite_name" 
-												   type="text" placeholder="Enter name"
-												   data-bind="value:$parent.edit_name_value, 
-												   			  valueUpdate:'keyup', 
-												   			  hasFocus:$parent.edit_name_visible() == $data">
-										</div>
-									</form>
-								</td>
-								<td class="secondary" data-bind="text:$data.layer().name"></td> 
-								<td class="secondary" data-bind="text:$data.sheet()"></td>
-							</tr>
+										<form class="form-inline form-inline-condensed form-overlay" role="form" 
+											  data-bind="submit:$.proxy($parent.update_sprite_name, $parent), 
+											  			 visible:$parent.edit_name_visible() == $data">
+											<div class="form-group">
+												<label class="sr-only" for="update_name">Update Sprite Name</label>
+												<input class="form-control input-custom" id="update_sprite_name" 
+													   type="text" placeholder="Enter name"
+													   data-bind="value:$parent.edit_name_value, 
+													   			  valueUpdate:'keyup', 
+													   			  hasFocus:$parent.edit_name_visible() == $data">
+											</div>
+										</form>
+									</td>
+									<td class="secondary" data-bind="text:$data.layer().name"></td> 
+									<td class="secondary" data-bind="text:$data.sheet()"></td>
+								</tr>
+								<!-- /ko -->
 							<!-- /ko -->
 						</tbody>
 					</table>
 
-		  			<div class="placeholder-center" data-bind="visible:sprite_list().length == 0">
+		  			<div class="placeholder-center" data-bind="visible:!game() || game().state.objects().length == 0">
 						<div class="circle">
 							<i class="fa fa-bug icon"></i>
 						</div>
@@ -193,7 +197,7 @@
 						Delete
 					</button>
 					<button class="btn btn-default pull-right btn-custom btn-left-set"
-							data-bind="enable:$data.editing_sprite()">
+							data-bind="enable:$data.editing_sprite(), click:$.proxy($data.show_property_editor, $data)">
 						<i class="fa fa-gear icon"></i>
 						Edit
 					</button>
@@ -209,14 +213,17 @@
 					<textarea rows="20" class="form-control" data-bind="value:game_state"></textarea>
 				</div>
 				<div class="panel-footer panel-footer-custom">
-					<button class="btn btn-default btn-custom" data-bind="click:$.proxy(save_game, $data)">Save</button>
+					<button class="btn btn-default btn-custom" data-bind="click:$.proxy(save_game, $data)">
+						<i class="fa fa-save icon"></i>
+						Save
+					</button>
 				</div>
 		  	</div>
 		  </div>
 		</div>
 	</div>
 	<div class="col-md-5 game-col">
-		<ul class="nav nav-tabs nav-justified nav-tabs-custom">
+		<ul id="editor-tabs-right" class="nav nav-tabs nav-justified nav-tabs-custom">
 		  <li class="active">
 		  	<a href="#spritesheets" data-toggle="tab">
 		  		<i class="fa fa-picture-o icon"></i>

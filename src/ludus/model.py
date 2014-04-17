@@ -12,6 +12,9 @@ import re  # @UnresolvedImport
 import json  # @UnresolvedImport
 
 DEFAULT_GAME = {
+    "layers_seed":2,
+    "sheets_seed":1,
+    "objects_seed":1,
     "map": {
         "width":49,
         "height":33,
@@ -19,14 +22,17 @@ DEFAULT_GAME = {
     },
     "layers":[
         {
+         "id":1,
          "name":"background",
          "properties":[]
         }
     ],
     "sheets": {
+       "sprite_seed":1,
        "spritesheets":[],
        "tiles":[]
-   }
+    },
+    "objects":[]
 }
 
 
