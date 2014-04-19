@@ -1,28 +1,33 @@
-<form class="property-edit" role="form">
+<form class="property-edit" role="form"
+	  data-bind="submit:$.proxy($parents[2].update_property, $parents[2], $data)">
 	<label class="label-custom property-edit-label" for="osc_x_val">X</label>
 		<input class="form-control input-custom property-edit-input" id="osc_x_val" 
 			   type="text" placeholder="0"
 			   data-bind="value:x">
 </form>
-<form class="property-edit" role="form">
+<form class="property-edit" role="form"
+	  data-bind="submit:$.proxy($parents[2].update_property, $parents[2], $data)">
 	<label class="label-custom property-edit-label" for="osc_y_val">Y</label>
 		<input class="form-control input-custom property-edit-input" id="osc_y_val" 
 			   type="text" placeholder="0"
 			   data-bind="value:y">
 </form>
-<form class="property-edit" role="form">
+<form class="property-edit" role="form"
+	  data-bind="submit:$.proxy($parents[2].update_property, $parents[2], $data)">
 	<label class="label-custom property-edit-label" for="osc_trigger_val">Trigger</label>
 		<input class="form-control input-custom property-edit-input" id="osc_trigger_val" 
 			   type="text" placeholder="start"
 			   data-bind="value:trigger">
 </form>
-<form class="property-edit" role="form">
+<form class="property-edit" role="form"
+	  data-bind="submit:$.proxy($parents[2].update_property, $parents[2], $data)">
 	<label class="label-custom property-edit-label" for="osc_timeout_val">Timeout</label>
 		<input class="form-control input-custom property-edit-input" id="osc_timeout_val" 
 			   type="text" placeholder="100"
 			   data-bind="value:timeout">
 </form>
-<form class="property-edit" role="form">
+<form class="property-edit" role="form"
+	  data-bind="submit:$.proxy($parents[2].update_property, $parents[2], $data)">
 	<label class="label-custom property-edit-label" for="osc_duration_val">Duration</label>
 		<input class="form-control input-custom property-edit-input" id="osc_duration_val" 
 			   type="text" placeholder="1000"

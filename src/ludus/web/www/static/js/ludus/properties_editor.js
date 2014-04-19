@@ -114,7 +114,7 @@ define(
 			for (i = 0; i < items.length; i++) {
 				item = items[i];
 
-				if(item == property){
+				if(item.name == property.name){
 					return i;
 				}
 			}
@@ -190,16 +190,21 @@ define(
 			}			
 		};
 
-		PropertiesEditor.prototype.update_property = function(form) {
+		PropertiesEditor.prototype.update_property = function(property) {
 			var index = this.editor.get_sprite_index( this.editor.editing_sprite().name() );
 
 			if(index != -1) {
 				var objects = this.editor.game().state.objects();
 
-				if(objects[index].properties && this.property_exists( objects[index].properties(), form.name)){ 
-					var p_index = this.get_property_index(objects[index].properties, form.name);
+				if(objects[index].properties && this.property_exists( objects[index].properties(), property )){ 
+					// save property change
+					this.editor.save_game();
+				}
+				else if(objects[index].layer().properties && this.property_exists( objects[index].layer().properties(), property )) {
+					var layer = objects[index].layer();
 
-					// update at p_index
+					// pass off update to function on layers editor
+					this.editor.update_layer_property(layer, property);
 				}
 			}
 		};

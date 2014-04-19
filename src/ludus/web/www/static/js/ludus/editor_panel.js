@@ -242,7 +242,7 @@ define(
 			this.game_raw = game;
 
 			// update mapping
-			mapping.fromJS(game, this.game());
+			mapping.fromJS(game, this.get_mapping_options(), this.game());
 
 			// update players view with new data
 			this.players_editor.players( this.game().players() );
@@ -473,6 +473,11 @@ define(
 		EditorPanel.prototype.add_layer_property = function(layer, item) {
 			// pass through to funtion on layers editor
 			this.layers_editor.add_layer_property(layer, item);
+		};
+
+		EditorPanel.prototype.update_layer_property = function(layer, item) {
+			// pass through to funtion on layers editor
+			this.layers_editor.update_layer_property(layer, item);
 		};
 
 		EditorPanel.prototype.remove_layer_property = function(layer, item) {

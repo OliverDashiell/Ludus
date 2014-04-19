@@ -24,7 +24,7 @@ define(
 					for (i = 0; i < items.length; i++) {
 						item = items[i];
 
-						that.objects.push(new Obj(item));
+						that.objects.push(new Obj(item, that.map.scale));
 					}
 				}
 

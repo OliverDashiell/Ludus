@@ -270,6 +270,21 @@ define(
 			}
 		};
 
+		LayersEditor.prototype.update_layer_property = function(layer, item) {
+			var index = this.get_layer_index(layer.name());
+
+			if(index != -1) {
+				var p_index = this.get_property_index(layer, item.name);
+
+				this.layers()[index].properties[p_index] = item;
+
+				// update sprite list layers
+				this.editor.update_sprites_by_layer(this.layers()[index], layer);
+
+				this.editor.save_game();
+			}
+		};
+
 		LayersEditor.prototype.remove_layer_property = function(layer, item) {
 			var index = this.get_layer_index(layer.name());
 

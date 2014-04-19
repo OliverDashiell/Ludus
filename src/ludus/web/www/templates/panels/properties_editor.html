@@ -35,6 +35,7 @@
 			<!-- Layer Properties -->
 			<div class="property-title layer-name">
 				<i class="fa fa-sort-amount-asc icon"></i>
+				Layer: 
 				<span class="title-item" data-bind="text:$data.layer().name"></span>
 			</div>
 			<div class="list-group layer-body" data-bind="sortable:{ data:$data.layer().properties, 
@@ -45,7 +46,13 @@
 									   event:{ dblclick:$.proxy($parents[1].show_edit, $parents[1], $data) }, 
 									   clickBubble:false">
 
-					<div class="property-name" data-bind="text:$data.name"></div>
+					<div class="property-name">
+						<span data-bind="text:$data.name"></span>
+						<i class="fa fa-caret-up icon pull-right" data-bind="visible:$data.visible && $data.visible(),
+																			 click:$.proxy($parents[1].show_edit, $parents[1], $data)"></i>
+						<i class="fa fa-caret-down icon pull-right" data-bind="visible:$data.visible && !$data.visible(),
+																			   click:$.proxy($parents[1].show_edit, $parents[1], $data)"></i>
+					</div>
 					<div class="property-detail" data-bind="visible:$data.visible && $data.visible()">
 						<!-- ko template:{name:$data.template, data:$data} -->
 						<!-- /ko -->

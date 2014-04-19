@@ -2,9 +2,10 @@ define(
 	["jquery", "crafty"], 
 	function($, Crafty){
 
-		function Obj(data){
+		function Obj(data, scale){
 			var that = this;
 			this.data = data;
+			this.scale = scale;
 			this.name = this.data.name;
 
 			var loc = {};
@@ -134,8 +135,8 @@ define(
 		};
 
 		Obj.prototype.oscillate = function(item) {
-			var move_x = this.data.map_x + item.x,
-				move_y = this.data.map_y + item.y;
+			var move_x = this.data.map_x + (parseInt(item.x)*this.scale),
+				move_y = this.data.map_y + (parseInt(item.y)*this.scale);
 
 			if(this.e.x == this.data.map_x && this.e.y == this.data.map_y){
 				this.e.tween({x:move_x, y:move_y}, item.duration);
@@ -144,7 +145,7 @@ define(
 				this.e.tween({x:this.data.map_x, y:this.data.map_y}, item.duration);
 			}
 
-			setTimeout($.proxy(this.oscillate, this, item), item.duration + item.timeout);
+			setTimeout($.proxy(this.oscillate, this, item), parseInt(item.duration) + parseInt(item.timeout));
 		};
 
 		Obj.prototype.collectable_by = function(who) {
