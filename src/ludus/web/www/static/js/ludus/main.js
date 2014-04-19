@@ -7,6 +7,7 @@ define(
 			this.error = ko.observable();
 			this.ws = new Ws();
 			this.user = ko.observable();
+			this.username = ko.observable(null);
 
 			this.panel = ko.observable();
 			this.games_panel = new GamesPanel(this);
@@ -30,6 +31,12 @@ define(
 							this.notify(value, "debug");
 						}
 					},this);
+				}
+			},this);
+
+			this.user.subscribe(function(value){
+				if(this.user().name != this.username()){
+					this.username(this.user().name);
 				}
 			},this);
 		}

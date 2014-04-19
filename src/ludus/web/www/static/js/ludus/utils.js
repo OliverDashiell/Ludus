@@ -1,6 +1,10 @@
 define(
-	["jquery", "knockout", "select2", "domready"], 
-	function($, ko){
+	[
+		"jquery", "knockout",
+		"./model/properties/oscillate",
+		"select2", "domready"
+	], 
+	function($, ko, Oscillate){
 
 		// select2 support
 		ko.bindingHandlers.select2 = {
@@ -331,9 +335,9 @@ define(
 
 					if(value.sprite && value.sheet) {
 						// hide real cursor
-						$cursor.parent().css({
-							cursor: 'none'
-						});
+						// $cursor.parent().css({
+						// 	cursor: 'none'
+						// });
 
 						// create sudo cursor
 						var url = value.sheet.to_url(),
@@ -353,9 +357,9 @@ define(
 					}
 					else {
 						// show real cursor
-						$cursor.parent().css({
-							cursor: 'pointer'
-						});
+						// $cursor.parent().css({
+						// 	cursor: 'pointer'
+						// });
 
 						// clear sudo-cursor
 						$cursor.attr('src', null);
@@ -364,9 +368,9 @@ define(
 				}
 				else {
 					// show real cursor
-					$cursor.parent().css({
-						cursor: 'pointer'
-					});
+					// $cursor.parent().css({
+					// 	cursor: 'pointer'
+					// });
 
 					// clear sudo-cursor
 					$cursor.attr('src', null);
@@ -429,6 +433,65 @@ define(
 		}
 
 
+		function get_property_mapping_options() {
+			return {
+				key: function(data) {
+		            return ko.utils.unwrapObservable(data.id);
+		        },
+		        create:function(options){
+		        	var property = null;
+
+		        	if(options.data.name == 'Oscillate') {
+		        		property = new Oscillate(options.data);
+		        	}
+		        	else if(options.data.name == 'Twoway') {
+		        		property = {
+							name:"Twoway",
+							move_speed:3,
+							jump_speed:3
+						};
+		        	}
+		        	else if(options.data.name == 'Fourway') {
+		        		property = {
+							name:"Fourway",
+							move_speed:3
+						};
+		        	}
+		        	else if(options.data.name == 'Stop On') {
+		        		property = {
+							name:"Stop On",
+							what:["Solid"]
+						};
+		        	}
+		        	else if(options.data.name == 'Gravity') {
+		        		property = {
+							name:"Gravity"
+						};
+		        	}
+		        	else if(options.data.name == 'Solid') {
+		        		property = {
+							name:"Solid"
+						};
+		        	}
+		        	else if(options.data.name == 'Collector') {
+		        		property = {
+							name:"Collector",
+							to_collect:4,
+							on_finish:"End Game"
+						};
+		        	}
+		        	else if(options.data.name == 'Collectable') {
+		        		property = {
+							name:"Collectable",
+							who:["Collector"]
+						};
+		        	}
+
+		        	return property;
+		        }
+		    };
+		};
+
 		function intersectRect(r1, r2) {
 			return !(r2.left > r1.right || 
 					 r2.right < r1.left || 
@@ -439,6 +502,7 @@ define(
 		var utils = {};
 
 		utils.intersectRect = intersectRect;
+		utils.get_property_mapping_options = get_property_mapping_options;
 
 		return utils;
 	}

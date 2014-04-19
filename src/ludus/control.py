@@ -170,7 +170,7 @@ class Control(object):
             return {'user_id':user_id, 'name':name}
         
     
-    def update_password(self, user_id, old_password, password):
+    def update_password(self, user_id, password, old_password):
         if not password or password is None:
             raise Exception("Cannot update to empty password")
         
@@ -180,7 +180,7 @@ class Control(object):
             if user is None:
                 raise Exception("No such user")
             
-            if user._password is not old_password:
+            if user._password != old_password:
                 raise Exception("Old password does not match.")
             
             user._password = password

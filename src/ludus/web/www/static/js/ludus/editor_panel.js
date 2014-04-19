@@ -128,6 +128,25 @@ define(
 		    	}
 		    }, this);
 
+		    this.tool.subscribe(function() {
+		    	// switch cursor icon
+		    	if(this.tool() == 'Erase'){
+	    			$('#map').css({
+						cursor: 'url(static/images/erase_cur.png),url(static/images/erase_cur.cur),pointer'
+					});
+	    		}
+	    		else if(this.tool() == 'Draw'){
+	    			$('#map').css({
+						cursor: 'url(static/images/draw_cur.cur),url(static/images/draw_cur.png),pointer'
+					});
+	    		}
+	    		else {
+	    			$('#map').css({
+						cursor: 'url(static/images/select_cur.cur),url(static/images/select_cur.png),pointer'
+					});
+	    		}
+		    }, this);
+
 
 		    //---- Websocket broadcast handling ----//
 			this.appl.subscribe_to_broadcasts(function(msg){
@@ -148,7 +167,8 @@ define(
 			var player_mapping = this.players_editor.get_mapping_options(),
 				layers_mapping = this.layers_editor.get_mapping_options(),
 				sheets_mapping = this.spritesheet_editor.get_sheet_mapping_options(),
-				sprite_mapping = this.spritesheet_editor.get_sprite_mapping_options();
+				sprite_mapping = this.spritesheet_editor.get_sprite_mapping_options(),
+				property_mapping = this.properties_editor.get_mapping_options();
 
 			var object_mapping = {
 				key: function(data) {
@@ -170,7 +190,8 @@ define(
 		        'tiles': sheets_mapping,
 		        'sprite_items': sprite_mapping,
 		        'objects': object_mapping,
-		        'ignore': ["image"]
+		        'properties': property_mapping,
+		        'ignore': ["image", "visible", "template"]
 			};
 
 			return mapping;
@@ -231,11 +252,6 @@ define(
 
 			// update sprite sheet view with new data
 			this.spritesheet_editor.update( this.game().state.sheets, this.game().state.sheets_seed );
-
-			// resolve selected sprite to updated object
-			// if(this.editing_sprite() && sprite.name() == this.editing_sprite().name()) {
-			// 	this.editing_sprite(sprite);
-			// }
 		};
 
 		EditorPanel.prototype.save_game = function() {
@@ -437,6 +453,18 @@ define(
 						var name = 'object_'+ item.map_x() + item.map_y() + new_layer.name();
 
 						item.name(name);
+					}
+
+					if(!new_layer.visible()){
+						item.layer().visible(false);
+
+						// if item is selected, deselect as it will become hidden
+						if(this.editing_sprite() && item.name() == this.editing_sprite().name()){
+							this.editing_sprite(null);
+						}
+					}
+					else {
+						item.layer().visible(true);
 					}
 				}
 			};

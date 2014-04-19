@@ -7,6 +7,12 @@
 							   click:$.proxy($parent.selected_layer, $parent),
 							   event:{ dblclick:$.proxy($parent.show_edit, $parent) }, 
 							   clickBubble:false">
+			<span class="show-hide-layer pull-right" data-bind="click:$.proxy($parent.show_hide_layer, $parent, $data)">
+				<i class="fa fa-eye icon" data-bind="visible:$data.visible()"></i>
+				<i class="fa fa-eye-slash icon" data-bind="visible:!$data.visible()"></i>
+			</span>
+			
+
 			<span data-bind="text:$data.name(), visible:$parent.edit_visible() != $data"></span>
 
 			<form class="form-inline form-inline-condensed form-overlay" role="form" 

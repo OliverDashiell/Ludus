@@ -1,7 +1,7 @@
 <div class="row" data-bind="with:panel">
 <div class="col-md-12 user-details">
 	<div class="row details-panel">
-		<div class="col-md-4 image-col">
+		<div class="col-md-3 image-col">
 			<div class="image-area">
 				<div class="user-image-placeholder user-image" data-bind="visible:!image_url()">
 					<i class="fa fa-user icon"></i>
@@ -15,22 +15,33 @@
 				Change Profile Picture
 			</button>
 		</div>
-		<div class="col-md-8 info-col">
-			<h1 class="username" id="username" 
-				data-toggle="tooltip" data-placement="top" title="Double click to edit."
-				data-bind="text:user().name"></h1>
+		<div class="col-md-9 info-col">
+			<div class="username">
+				<h1 class="username-value" 
+					data-toggle="tooltip" data-placement="top" title="Double click to edit."
+					data-bind="text:edit_name(),
+							   visible:!edit_name_visible(),
+							   event:{ dblclick:$.proxy(edit_name_visible, $data, true) }"></h1>
+				<form class="form-inline form-inline-condensed form-overlay" role="form" 
+					  data-bind="submit:$.proxy(change_username, $data), 
+								 visible:edit_name_visible()">
+					<div class="form-group">
+						<label class="sr-only" for="update_username">Update Username</label>
+						<input class="form-control input-custom username-input" id="update_username" 
+							   type="text" placeholder="Enter name"
+							   data-bind="value:edit_name, 
+							   			  valueUpdate:'keyup', 
+							   			  hasFocus:edit_name_visible()">
+					</div>
+				</form>
+			</div>
 			<h3 class="email" id="email" 
 				data-toggle="tooltip" data-placement="bottom" title="Cannot change email."
 				data-bind="text:user().email"></h3>
 
 			<div class="row edit-buttons">
-				<!-- <button class="btn btn-default btn-custom btn-left-set">
-						data-bind="click:$.proxy(change_username, $data)">
-					<i class="fa fa-search icon"></i>
-					Change Username
-				</button> -->
-				<button class="btn btn-default btn-custom">
-						<!-- data-bind="click:$.proxy(change_password, $data)"> -->
+				<button class="btn btn-default btn-custom"
+						data-bind="click:$.proxy(get_password, $data)">
 					<i class="fa fa-key icon"></i>
 					Change Password
 				</button>
@@ -38,32 +49,4 @@
 		</div>
 	</div>
 </div>
-</div>
-<div class="row user-data">
-	<div class="col-md-2"></div>
-	<div class="col-md-2">
-		<div class="big-number">3</div>
-		<p class="note">
-			<i class="fa fa-globe icon"></i>
-		</p>
-	</div>
-	<div class="col-md-1">
-		<div class="spacer center-block"></div>
-	</div>
-	<div class="col-md-2">
-		<div class="big-number">4</div>
-		<p class="note">
-			<i class="fa fa-wrench icon"></i>
-		</p>
-	</div>
-	<div class="col-md-1">
-		<div class="spacer center-block"></div>
-	</div>
-	<div class="col-md-2">
-		<div class="big-number">12</div>
-		<p class="note">
-			<i class="fa fa-gamepad icon"></i>
-		</p>
-	</div>
-	<div class="col-md-2"></div>
 </div>

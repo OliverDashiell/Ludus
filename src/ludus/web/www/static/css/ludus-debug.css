@@ -812,6 +812,52 @@ input[readonly] {
 	overflow: auto;
 }
 
+.property-item {
+	padding: 0px;
+}
+
+.property-name {
+	padding: 10px 15px;
+}
+
+.property-name .icon {
+	cursor: pointer;
+	padding-top: 3px;
+}
+
+.property-detail {
+	margin-bottom: 7px;
+}
+
+.property-edit {
+	overflow: hidden;
+	margin: 0px 5px;
+	margin-bottom: 3px;
+}
+
+.property-edit-input {
+	display: inline-block;
+	max-width: 190px;
+	padding: 3px;
+	height: 25px;
+	border-radius: 0px;
+	border-width: 1px;
+}
+
+.property-edit-label {
+	font-weight: normal;
+	display: inline-block;
+	padding: 3px;
+	height: 25px;
+	text-align: center;
+	margin: 0px;
+	width: 100px;
+	background-color: transparent;
+}
+
+.property-item.active .property-edit-label {
+	color: #F2F2F2;
+}
 
 /* ================================= */
 /* == Main CSS Stuff =============== */
@@ -892,6 +938,10 @@ html,body {
 	box-shadow: 0px 0px 10px rgba(251,140,31,1);
 }
 
+.show-hide-layer {
+	cursor: pointer;
+}
+
 
 /* ================================= */
 /* == About Page =================== */
@@ -965,7 +1015,6 @@ html,body {
 /* == User Page ==================== */
 /* ================================= */
 .user-details {
-	height: 100%;
 	padding: 100px 20px;
 	color: #F2F2F2;
 
@@ -976,15 +1025,13 @@ html,body {
 }
 
 .details-panel {
-	text-align: center;
 	padding-left: 80px;
-	height: 100%;
+	height: 250px;
 }
 
 .details-panel .info-col {
-	text-align: left;
-	height: 100%;
-	padding-top: 90px;
+	padding-left: 0px;
+	padding-top: 74px;
 }
 
 .info-col .edit-buttons {
@@ -993,7 +1040,15 @@ html,body {
 }
 
 .details-panel .username {
-	margin-top: -5px;
+	height: 50px;
+}
+
+.username-value {
+	margin: 0px;
+}
+
+.username-input {
+	font-size: 35px;
 }
 
 .details-panel .email {
@@ -1015,6 +1070,7 @@ html,body {
 }
 
 .user-image-placeholder {
+	text-align: center;
 	padding-top: 50px;
 	background-color: #F2F2F2;
 
@@ -1042,51 +1098,6 @@ html,body {
 	   -moz-border-radius-bottomleft: 	3px;
 			border-bottom-right-radius: 3px;
 			border-bottom-left-radius: 	3px;
-}
-
-.user-data {
-	text-align: center;
-}
-
-.user-data .big-number {
-	cursor: default;
-	margin-top: 30px;
-	font-size: 100px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-
-	background-color: #222;
-	color: transparent;
-	text-shadow: 0px 2px 3px rgba(255,255,255,0.2);
-	-webkit-background-clip: text;
-	   -moz-background-clip: text;
-			background-clip: text;
-}
-
-.user-data .note {
-	font-weight: bold;
-	font-size: 50px;
-	margin-top: 0px;
-}
-
-.user-data .note .icon {
-	background-color: #222;
-	color: transparent;
-	text-shadow: 0px 2px 3px rgba(255,255,255,0.2);
-	-webkit-background-clip: text;
-	   -moz-background-clip: text;
-			background-clip: text;
-}
-
-.user-data .spacer {
-	margin-top: 35px;
-	margin-bottom: 30px;
-	width: 2px;
-	min-height: 230px;
-
-	background: -webkit-linear-gradient(#333, #222);
-	background:    -moz-linear-gradient(#333, #222);
-	background:       o-linear-gradient(#333, #222);
-	background:         linear-gradient(#333, #222);
 }
 
 

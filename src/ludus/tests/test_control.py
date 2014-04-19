@@ -118,7 +118,7 @@ class Test(unittest.TestCase):
         self.assertIsNotNone(user_id)
         
         # correctly updates password
-        self.control.update_password(user_id, "123_secure")
+        self.control.update_password(user_id, "123_secure", "test")
         
         with self.control._session_ as session:
             user = session.query(model.User).get(user_id)
@@ -128,7 +128,7 @@ class Test(unittest.TestCase):
         
         # wont update password to empty string
         try:
-            self.control.update_password(user_id, "")
+            self.control.update_password(user_id, "", "123_secure")
         except Exception as ex:
             result = ex.args[0]
             
@@ -136,7 +136,7 @@ class Test(unittest.TestCase):
         
         # wont update missing user
         try:
-            self.control.update_password(3, "my_new_password")
+            self.control.update_password(3, "my_new_password", "123_secure")
         except Exception as ex:
             result = ex.args[0]
             
@@ -164,11 +164,11 @@ class Test(unittest.TestCase):
         # properly formed default game object
         state = game['state']
         # map
-        self.assertEquals(48, state['map']['width'])
+        self.assertEquals(49, state['map']['width'])
         self.assertEquals(33, state['map']['height'])
         self.assertEquals(16, state['map']['scale'])
         # layers
-        self.assertEquals("background", state['layers'][0])
+        self.assertEquals("background", state['layers'][0]['name'])
         # sheets
         self.assertFalse(state['sheets']['spritesheets'])
         self.assertFalse(state['sheets']['tiles'])
@@ -263,11 +263,11 @@ class Test(unittest.TestCase):
         # properly formed game object
         state = game['state']
         # map
-        self.assertEquals(48, state['map']['width'])
+        self.assertEquals(49, state['map']['width'])
         self.assertEquals(33, state['map']['height'])
         self.assertEquals(16, state['map']['scale'])
         # layers
-        self.assertEquals("background", state['layers'][0])
+        self.assertEquals("background", state['layers'][0]['name'])
         # sheets
         self.assertFalse(state['sheets']['spritesheets'])
         self.assertFalse(state['sheets']['tiles'])

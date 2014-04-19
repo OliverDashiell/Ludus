@@ -1,6 +1,6 @@
 define(
-	["jquery", "crafty", "./obj", "./player"], 
-	function($, Crafty, Obj, Player){
+	["jquery", "crafty", "./obj"], 
+	function($, Crafty, Obj){
 
 		function Game(data, elem){
 			var that = this;

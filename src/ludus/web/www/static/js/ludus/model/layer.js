@@ -1,11 +1,13 @@
 define(
-	["knockout", "knockout-mapping"], 
-	function(ko, mapping){
+	["knockout", "knockout-mapping", "../utils"], 
+	function(ko, mapping, utils){
 
 		function Layer(options){
 			this.id = ko.observable();
 			this.name = ko.observable();
 			this.properties = ko.observableArray();
+
+			this.visible = ko.observable(true);
 
 			this.update(options);
 		}
@@ -15,7 +17,7 @@ define(
 			this.name(options.name || 'default');
 
 			if(options.properties && options.properties.length > 0){
-				mapping.fromJS(options.properties, {}, this.properties);
+				mapping.fromJS(options.properties, utils.get_property_mapping_options(), this.properties);
 			}
 		};
 

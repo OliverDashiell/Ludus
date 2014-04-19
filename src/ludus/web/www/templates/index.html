@@ -52,7 +52,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<span data-bind="text:settings.user.name"></span> <b class="caret"></b>
+							<span data-bind="text:username"></span> <b class="caret"></b>
 						</a>
 
 						<ul class="dropdown-menu">
@@ -114,7 +114,7 @@
     				<h4 class="modal-title">Kicked</h4>
     			</div>
     			<div class="modal-body modal-body-custom">
-    				<strong style="color:#d9534f;">Ruh Roh!</strong>
+    				<strong style="color:#d9534f;">Oh no!</strong>
     				<br>
     				<p> Looks like you just got kicked from the game. You wont be able to access this game anymore. </p>
     			</div>
@@ -134,7 +134,7 @@
     				<h4 class="modal-title">No Longer a Builder</h4>
     			</div>
     			<div class="modal-body modal-body-custom">
-    				<strong style="color:#d9534f;">Ruh Roh!</strong>
+    				<strong style="color:#d9534f;">Oh no!</strong>
     				<br>
     				<p> Mr Admin just revoked your rights. You can't edit this game anymore but don't worry you can still play the game. </p>
     			</div>
@@ -257,6 +257,39 @@
     			</div>
     		</div><!-- /.modal-content -->
     	</div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- CHANGE PASSWORD MODAL -->
+    <div id="change_password_dlog" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <button type="button" class="close modal-close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Change Password</h4>
+                </div>
+                <div class="modal-body modal-body-custom">
+                    <form class="form" role="form">
+                        <div class="form-group">
+                            <label for="old_val">Old Password</label>
+                            <input class="form-control input-custom" id="old_val" 
+                                   type="text" placeholder="Enter old password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_val">New Password</label>
+                            <input class="form-control input-custom" id="new_val" 
+                                   type="text" placeholder="Enter new password">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer modal-footer-custom">
+                    <button type="button" class="btn btn-default btn-custom" data-dismiss="modal">Cancel</button>
+                    <button id="change_password_button" type="button" class="btn btn-default btn-custom btn-custom-danger">
+                        <i class="fa fa-key icon"></i>
+                        Change Password
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
 

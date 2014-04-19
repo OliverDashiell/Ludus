@@ -11,6 +11,7 @@
 		<div class="list-group" data-bind="foreach:games, visible:games().length>0">
 			<a href="#" class="list-group-item list-group-item-custom" data-bind="css:{active:$parent.selected_game() == $data}, 
 														   click:$.proxy($parent.selected_game, $parent), 
+														   event:{ dblclick:$.proxy($parent.edit_game, $parent) },
 														   clickBubble:false">
 				<span data-bind="text:name"></span>
 			</a>

@@ -11,8 +11,10 @@ ToDo:
 - if locking objects on selected, must resolve layers deleting cascade
 - must also resolve point deletes from sprite list view and erase tool
 
+
 Done:
 - prevent loss of active sprite on update /
 - get click through map grid working /
 - move duplicate overlap function to utils /
 - generate true unique default obj name /
+- show hide layer /

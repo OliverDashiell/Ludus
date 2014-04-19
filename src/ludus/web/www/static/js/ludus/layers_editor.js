@@ -76,6 +76,32 @@ define(
 			}
 		};
 
+		LayersEditor.prototype.show_hide_layer = function(layer) {
+			var visible = true;
+
+			// toggle visibility
+			if(layer.visible()) {
+				visible = false;
+			}
+
+			// get layer index
+			index = this.get_layer_index( layer.name() );
+
+			// create object for update
+			var new_layer = new Layer({
+				id: this.layers()[index].id(),
+				name: this.layers()[index].name(),
+				properties: this.layers()[index].properties()
+			});
+
+			new_layer.visible(visible);
+
+			// update sprite list layers
+			this.editor.update_sprites_by_layer(this.layers()[index], new_layer);
+
+			this.layers()[index].visible(visible);
+		};
+
 		LayersEditor.prototype.get_layer_index = function(name) {
 			var i,item,items = this.layers();
 

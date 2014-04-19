@@ -1,6 +1,6 @@
 define(
-	["jquery", "knockout"], 
-	function($, ko){
+	["jquery", "knockout", "./utils", "./model/properties/oscillate"], 
+	function($, ko, utils, Oscillate){
 
 		function PropertiesEditor(appl, editor){
 			this.appl = appl;
@@ -35,14 +35,7 @@ define(
 
 			//---- Prototype Action Objects ----//
 			this.actions = ko.observableArray([
-				{
-					name:"Oscillate",
-					y: 0,
-	                x: 5*16,
-	                trigger: "Start",
-	                timeout: 100,
-	                duration: 1000
-				},
+				new Oscillate({}),
 				{
 					name:"Twoway",
 					move_speed:3,
@@ -82,6 +75,23 @@ define(
 			this.selected_property(null);
 			this.selected_layer_property(null);
 			this.show_property_edit(null);
+		};
+
+		PropertiesEditor.prototype.get_mapping_options = function() {
+			return utils.get_property_mapping_options();
+		};
+
+		PropertiesEditor.prototype.show_edit = function(property) {
+			if(property.visible){
+
+				if(property.visible()){
+					property.visible(false);
+				}
+				else {
+					property.visible(true);
+				}
+				
+			}
 		};
 
 		PropertiesEditor.prototype.property_exists = function(list, property) {

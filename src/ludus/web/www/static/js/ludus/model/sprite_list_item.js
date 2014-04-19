@@ -37,7 +37,7 @@ define(
 			this.layer(new Layer(options.layer) || new Layer());
 
 			if(options.properties && options.properties.length > 0){
-				mapping.fromJS(options.properties, {}, this.properties);
+				mapping.fromJS(options.properties, utils.get_property_mapping_options(), this.properties);
 			}
 		};
 
