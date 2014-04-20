@@ -230,7 +230,7 @@ define(
 			this.game_raw = game;
 
 			// update raw panel observable
-			this.game_state( ko.toJSON(this.game_raw.state, null, 4) );
+			// this.game_state( ko.toJSON(this.game_raw.state, null, 4) );
 
 			// update mapping
 			mapping.fromJS(game, this.get_mapping_options(), this.game());

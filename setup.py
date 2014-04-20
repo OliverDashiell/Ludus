@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.01'
+version = '1.02'
 
 setup(name='Ludus',
       version=version,
