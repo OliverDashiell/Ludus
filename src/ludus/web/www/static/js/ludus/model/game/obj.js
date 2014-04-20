@@ -75,11 +75,12 @@ define(
 				if(item.name == 'Collector') {
 					this.collectables = [];
 					var trigger = item.on_finish;
+					var limit = parseInt(item.to_collect);
 
 					this.collect_binding = Crafty.bind('item_collected', function(collectable){
 						that.collectables.push(collectable.name);
 
-						if( that.collectables.length >= parseInt(item.to_collect) ){
+						if( that.collectables.length >= limit){
 							that.collectables = [];
 							Crafty.unbind('item_collected', that.collect_binding);
 							Crafty.trigger(trigger, that);
