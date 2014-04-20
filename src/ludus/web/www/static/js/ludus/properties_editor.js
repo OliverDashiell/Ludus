@@ -22,6 +22,9 @@ define(
 					name:"Solid"
 				},
 				{
+					name:"Deadly"
+				},
+				{
 					name:"Collector",
 					to_collect:4,
 					on_finish:"End Game"
@@ -48,6 +51,11 @@ define(
 				{
 					name:"Stop On",
 					what:["Solid"]
+				},
+				{
+					name:"Die On",
+					what:["Deadly"],
+					on_death:"End Game"
 				}
 			]);
 

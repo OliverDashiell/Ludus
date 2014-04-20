@@ -151,7 +151,7 @@ define(
 			    $('.top-left').notify({
 			    	type: "success",
 			        message: { html: "<strong>Success</strong> " + message },
-			        fadeOut: { enabled: false }
+			        fadeOut: { enabled: false, delay: duration || 2000 }
 			    }).show();
 			}  else if (type==='debug'){
 				if(this.debug() === true){

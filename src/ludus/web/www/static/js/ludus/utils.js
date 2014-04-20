@@ -486,6 +486,18 @@ define(
 							who:["Collector"]
 						};
 		        	}
+		        	else if(options.data.name == 'Deadly') {
+		        		property = {
+							name:"Deadly"
+						};
+		        	}
+		        	else if(options.data.name == 'Die On') {
+		        		property = {
+							name:"Die On",
+							what:["Deadly"],
+							on_death:"End Game"
+						};
+		        	}
 
 		        	return property;
 		        }

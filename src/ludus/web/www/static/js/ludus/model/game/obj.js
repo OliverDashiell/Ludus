@@ -95,6 +95,10 @@ define(
 		        	this.stop_on(item.what);
 		        }
 
+		        if(item.name == 'Die On') {
+		        	this.die_on(item.what, item.on_death);
+		        }
+
 				if(item.name == 'Move To') {
 		        	this.e.addComponent('Tween');
 		        	Crafty.bind(item.trigger, $.proxy(this.move_to, this, item));
@@ -126,6 +130,21 @@ define(
 			            this.x -= this._movement.x;
 			            this.y -= this._movement.y;
 			        }
+				});
+			};
+		};
+
+		Obj.prototype.die_on = function(what, trigger) {
+			this.e.addComponent('Collision');
+
+			var that = this;
+			var i, item, items = what;
+
+			for (i = 0; i < items.length; i++) {
+				item = items[i];
+
+				this.e.onHit(item, function(hit_list){
+					Crafty.trigger(trigger, that);
 				});
 			};
 		};
