@@ -1,0 +1,7 @@
+<form class="property-edit" role="form"
+	  data-bind="submit:$.proxy($parents[2].update_property, $parents[2], $data)">
+	<label class="label-custom property-edit-label" for="to_collect">To Collect</label>
+		<input class="form-control input-custom property-edit-input" id="to_collect" 
+			   type="text" placeholder="0"
+			   data-bind="value:to_collect">
+</form>

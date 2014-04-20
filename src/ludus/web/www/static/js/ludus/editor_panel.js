@@ -243,6 +243,13 @@ define(
 
 			// update sprite sheet view with new data
 			this.spritesheet_editor.update( this.game().state.sheets, this.game().state.sheets_seed );
+
+			// update property view with new data
+			this.properties_editor.id_seed = this.game().state.properties_seed;
+
+			if( this.editing_sprite() && !this.get_sprite_by_name( this.editing_sprite().name() ) ){
+				this.editing_sprite(null);
+			}
 		};
 
 		EditorPanel.prototype.save_game = function() {

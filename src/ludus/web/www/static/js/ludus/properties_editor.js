@@ -1,6 +1,6 @@
 define(
-	["jquery", "knockout", "./utils", "./model/properties/oscillate"], 
-	function($, ko, utils, Oscillate){
+	["jquery", "knockout", "./utils", "./model/properties/oscillate", "./model/properties/collector"], 
+	function($, ko, utils, Oscillate, Collector){
 
 		function PropertiesEditor(appl, editor){
 			this.appl = appl;
@@ -8,6 +8,7 @@ define(
 
 
 			//---- Property Variables ----//
+			this.id_seed = ko.observable(-1);
 			this.selected_property = ko.observable(null);
 			this.selected_layer_property = ko.observable(null);
 			this.show_property_edit = ko.observable(null);
@@ -15,23 +16,23 @@ define(
 
 			//---- Prototype Component Objects ----//
 			this.components = ko.observableArray([
+				new Collector({}),
 				{
+					id:-1,
+					name:"Collectable",
+					who:["Collector"]
+				},
+				{
+					id:-1,
 					name:"Gravity"
 				},
 				{
+					id:-1,
 					name:"Solid"
 				},
 				{
+					id:-1,
 					name:"Deadly"
-				},
-				{
-					name:"Collector",
-					to_collect:4,
-					on_finish:"End Game"
-				},
-				{
-					name:"Collectable",
-					who:["Collector"]
 				}
 			]);
 
@@ -40,19 +41,23 @@ define(
 			this.actions = ko.observableArray([
 				new Oscillate({}),
 				{
+					id:-1,
 					name:"Twoway",
 					move_speed:3,
 					jump_speed:3
 				},
 				{
+					id:-1,
 					name:"Fourway",
 					move_speed:3
 				},
 				{
+					id:-1,
 					name:"Stop On",
 					what:["Solid"]
 				},
 				{
+					id:-1,
 					name:"Die On",
 					what:["Deadly"],
 					on_death:"End Game"
@@ -87,6 +92,15 @@ define(
 
 		PropertiesEditor.prototype.get_mapping_options = function() {
 			return utils.get_property_mapping_options();
+		};
+
+		PropertiesEditor.prototype.get_seed_id = function() {
+			var seed = this.id_seed();
+
+			// increment the seed
+			this.id_seed( seed+1 );
+
+			return seed;
 		};
 
 		PropertiesEditor.prototype.show_edit = function(property) {
@@ -141,6 +155,9 @@ define(
 					var layer_properties = this.editor.editing_sprite().layer().properties();
 
 					if(!this.property_exists( layer_properties, item)) {
+						var id = this.get_seed_id();
+						item.id = id;
+
 						objects[index].properties.push(item);
 						this.editor.save_game();
 						return item;
@@ -161,6 +178,9 @@ define(
 				var properties = layer.properties();
 
 				if(!this.property_exists( properties, item)) {
+					var id = this.get_seed_id();
+					item.id = id;
+
 					// pass off update to function on layers editor
 					this.editor.add_layer_property(layer, item);
 				}

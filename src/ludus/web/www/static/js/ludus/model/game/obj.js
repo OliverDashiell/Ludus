@@ -79,7 +79,7 @@ define(
 					this.collect_binding = Crafty.bind('item_collected', function(collectable){
 						that.collectables.push(collectable.name);
 
-						if(that.collectables.length >= item.to_collect){
+						if( that.collectables.length >= parseInt(item.to_collect) ){
 							that.collectables = [];
 							Crafty.unbind('item_collected', that.collect_binding);
 							Crafty.trigger(trigger, that);

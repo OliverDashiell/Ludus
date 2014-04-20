@@ -1,10 +1,10 @@
 define(
 	[
 		"jquery", "knockout",
-		"./model/properties/oscillate",
+		"./model/properties/oscillate", "./model/properties/collector",
 		"select2", "domready"
 	], 
-	function($, ko, Oscillate){
+	function($, ko, Oscillate, Collector){
 
 		// select2 support
 		ko.bindingHandlers.select2 = {
@@ -446,6 +446,7 @@ define(
 		        	}
 		        	else if(options.data.name == 'Twoway') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Twoway",
 							move_speed:3,
 							jump_speed:3
@@ -453,46 +454,49 @@ define(
 		        	}
 		        	else if(options.data.name == 'Fourway') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Fourway",
 							move_speed:3
 						};
 		        	}
 		        	else if(options.data.name == 'Stop On') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Stop On",
 							what:["Solid"]
 						};
 		        	}
 		        	else if(options.data.name == 'Gravity') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Gravity"
 						};
 		        	}
 		        	else if(options.data.name == 'Solid') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Solid"
 						};
 		        	}
 		        	else if(options.data.name == 'Collector') {
-		        		property = {
-							name:"Collector",
-							to_collect:4,
-							on_finish:"End Game"
-						};
+		        		property = new Collector(options.data);
 		        	}
 		        	else if(options.data.name == 'Collectable') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Collectable",
 							who:["Collector"]
 						};
 		        	}
 		        	else if(options.data.name == 'Deadly') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Deadly"
 						};
 		        	}
 		        	else if(options.data.name == 'Die On') {
 		        		property = {
+		        			id:options.data.id,
 							name:"Die On",
 							what:["Deadly"],
 							on_death:"End Game"
