@@ -68,6 +68,7 @@ define(
 		};
 
 		SpriteListItem.prototype.to_style = function(){
+			// console.log( this.id() );
 			return { top: this.map_y() + "px",
 					 left: this.map_x() + "px",
 					 width: this.width() + "px",
@@ -75,6 +76,7 @@ define(
 		};
 
 		SpriteListItem.prototype.to_canvas = function(accessor) {
+			// console.log( this.id() );
 			var x = this.offset_x(),
 				y = this.offset_y(),
 				width = this.width(),

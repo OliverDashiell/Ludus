@@ -12,6 +12,7 @@ define(
 			this.game = ko.observable(null);				// view model (ko.mapping)
 			this.game_raw = null;							// raw data
 			this.game_sync = ko.observable(false);			// changes flag
+			this.game_state = ko.observable(null);			// raw panel game state
 			
 
 			//---- Map Panel Variables ----//
@@ -42,24 +43,8 @@ define(
 		            	this.game().name(value);
 		            }
 		        },
-		        owner: this
-		    });
-
-			this.game_state = ko.computed({
-		        read: function () {
-		        	if( this.game() ) {
-		        		return ko.toJSON(this.game().state, null, 4);
-		        	}
-		        	return '{}';
-		        },
-		        write: function (value) {
-		            if ( this.game() ) {
-		            	// this doesnt seem to map back to the model
-		            	// so the save reverts back to the original data
-		            	mapping.fromJS($.parseJSON(value), this.game().state);
-		            }
-		        },
-		        owner: this
+		        owner: this,
+		        deferEvaluation: true
 		    });
 
 			this.grid_size = ko.computed({
@@ -75,7 +60,8 @@ define(
 		            	this.save_game();
 		            }
 		        },
-		        owner: this
+		        owner: this,
+		        deferEvaluation: true
 		    });
 
 			this.map_width = ko.computed({
@@ -91,7 +77,8 @@ define(
 		            	this.save_game();
 		            }
 		        },
-		        owner: this
+		        owner: this,
+		        deferEvaluation: true
 		    });
 
 			this.map_height = ko.computed({
@@ -107,7 +94,8 @@ define(
 		            	this.save_game();
 		            }
 		        },
-		        owner: this
+		        owner: this,
+		        deferEvaluation: true
 		    });
 
 
@@ -240,6 +228,9 @@ define(
 
 			// update raw
 			this.game_raw = game;
+
+			// update raw panel observable
+			this.game_state( ko.toJSON(this.game_raw.state, null, 4) );
 
 			// update mapping
 			mapping.fromJS(game, this.get_mapping_options(), this.game());

@@ -25,14 +25,14 @@ define(
 					}
 				}
 				return false;
-			}, this);
+			}, this, {deferEvaluation: true});
 
 			this.can_remove_player = ko.computed(function(){
 				if(this.selected_player() && this.selected_player().role() != 'owner' && this.is_owner()){
 					return true;
 				}
 				return false;
-			}, this);
+			}, this, {deferEvaluation: true});
 
 
 			//---- Websocket broadcast handling ----//
