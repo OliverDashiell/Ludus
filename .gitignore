@@ -8,3 +8,4 @@
 *.db
 /uploads
 /old_dbs
+.idea
